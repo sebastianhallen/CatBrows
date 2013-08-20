@@ -3,6 +3,9 @@
 	As a math idiot
 	I want to be told the sum of two numbers
 
+Background: 
+	Given I have a browser when running the background
+
 Scenario: No tags at all
 	Then the test method should throw a no browser exception
 

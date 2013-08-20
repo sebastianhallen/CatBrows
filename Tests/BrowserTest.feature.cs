@@ -23,6 +23,8 @@ namespace Tests
     public partial class BrowserTestFeature
     {
         
+        private string Browser;
+        
         private static TechTalk.SpecFlow.ITestRunner testRunner;
         
 #line 1 "BrowserTest.feature"
@@ -58,11 +60,20 @@ namespace Tests
         public virtual void ScenarioSetup(TechTalk.SpecFlow.ScenarioInfo scenarioInfo)
         {
             testRunner.OnScenarioStart(scenarioInfo);
+            ScenarioContext.Current.Add("Browser", this.Browser);
         }
         
         public virtual void ScenarioCleanup()
         {
             testRunner.CollectScenarioErrors();
+        }
+        
+        public virtual void FeatureBackground()
+        {
+#line 6
+#line 7
+ testRunner.Given("I have a browser when running the background", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line hidden
         }
         
         [NUnit.Framework.TestAttribute()]
@@ -71,9 +82,11 @@ namespace Tests
         {
             throw new BrowserTestGenerator.NoBrowserDefinedException();
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("No tags at all", ((string[])(null)));
-#line 6
+#line 9
 this.ScenarioSetup(scenarioInfo);
-#line 7
+#line 6
+this.FeatureBackground();
+#line 10
  testRunner.Then("the test method should throw a no browser exception", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             this.ScenarioCleanup();
@@ -87,9 +100,11 @@ this.ScenarioSetup(scenarioInfo);
             throw new BrowserTestGenerator.NoBrowserDefinedException();
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Tags but no browser tag", new string[] {
                         "some-tag"});
-#line 10
+#line 13
 this.ScenarioSetup(scenarioInfo);
-#line 11
+#line 6
+this.FeatureBackground();
+#line 14
  testRunner.Then("the test method should throw a no browser exception", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             this.ScenarioCleanup();
@@ -101,12 +116,14 @@ this.ScenarioSetup(scenarioInfo);
         [NUnit.Framework.TestCaseAttribute("chrome")]
         public virtual void SingleBrowserTagChrome(string browser)
         {
-            ScenarioContext.Current.Add("Browser", browser);;
+            this.Browser = browser;
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Single browser tag chrome", new string[] {
                         "Browser:chrome"});
-#line 14
+#line 17
 this.ScenarioSetup(scenarioInfo);
-#line 15
+#line 6
+this.FeatureBackground();
+#line 18
  testRunner.Then("the test method should have 1 testcase", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             this.ScenarioCleanup();
@@ -120,13 +137,15 @@ this.ScenarioSetup(scenarioInfo);
         [NUnit.Framework.TestCaseAttribute("chrome")]
         public virtual void MultipleBrowserTags(string browser)
         {
-            ScenarioContext.Current.Add("Browser", browser);;
+            this.Browser = browser;
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Multiple browser tags", new string[] {
                         "Browser:firefox",
                         "Browser:chrome"});
-#line 19
+#line 22
 this.ScenarioSetup(scenarioInfo);
-#line 20
+#line 6
+this.FeatureBackground();
+#line 23
  testRunner.Then("the test method should have 2 testcases", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             this.ScenarioCleanup();

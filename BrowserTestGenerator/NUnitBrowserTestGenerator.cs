@@ -38,6 +38,9 @@
         {
             CodeDomHelper.AddAttribute(generationContext.TestClass, TESTFIXTURE_ATTR);
             CodeDomHelper.AddAttribute(generationContext.TestClass, DESCRIPTION_ATTR, featureTitle);
+
+            //add a string Browser field that we will use to set ScenarioContext.Current["Browser"] in each test
+            generationContext.TestClass.Members.Add(new CodeMemberField(typeof (string), "Browser"));
         }
 
         public void SetTestClassCategories(TestClassGenerationContext generationContext, IEnumerable<string> featureCategories)
@@ -70,6 +73,10 @@
         public void SetTestInitializeMethod(TestClassGenerationContext generationContext)
         {
             CodeDomHelper.AddAttribute(generationContext.TestInitializeMethod, TESTSETUP_ATTR);
+
+            //add browser to the scenario context
+            //browser is set at the top of each test method
+            generationContext.ScenarioInitializeMethod.Statements.Add(new CodeSnippetStatement(@"            ScenarioContext.Current.Add(""Browser"", this.Browser);"));
         }
 
         public void SetTestCleanupMethod(TestClassGenerationContext generationContext)
@@ -103,7 +110,7 @@
             {
                 //Augument the test method with a browser argument
                 testMethod.Parameters.Insert(0, new CodeParameterDeclarationExpression("System.string", "browser"));
-
+                
                 //add TestCase-Attributes with first argument == the browser value
                 foreach (var browser in browsers)
                 {
@@ -111,14 +118,12 @@
                     this.CodeDomHelper.AddAttribute(testMethod, ROW_ATTR, browserArgument);
                 }
 
-                //start by removing the throw statement added by SetTestMethod
+                //remove the throw statement added by SetTestMethod
                 testMethod.Statements.RemoveAt(0);
                 //... and replace it with a browser initialization
-                var browserInitializationStatment = new CodeExpressionStatement(new CodeSnippetExpression(@"ScenarioContext.Current.Add(""Browser"", browser);"));
-                testMethod.Statements.Insert(0, browserInitializationStatment);
-                        
+                testMethod.Statements.Insert(0, new CodeSnippetStatement(@"            this.Browser = browser;"));
             }
-            //when no browser tag is present, replace method body with a throw new NoBrowserDefinedException
+             //when no browser tag is present, replace method body with a throw new NoBrowserDefinedException
             else
             {
                 this.ReplaceMethodBody(testMethod, CreateThrowStatement<NoBrowserDefinedException>());

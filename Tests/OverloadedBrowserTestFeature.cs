@@ -5,7 +5,7 @@
     {
         public OverloadedBrowserTestFeature()
         {
-           // this.FeatureSetup();
+            this.FeatureSetup();
         }
     }
 
