@@ -77,7 +77,6 @@ namespace Tests
         }
         
         [NUnit.Framework.TestAttribute()]
-        [NUnit.Framework.DescriptionAttribute("No tags at all")]
         public virtual void NoTagsAtAll()
         {
             throw new BrowserTestGenerator.NoBrowserDefinedException();
@@ -93,7 +92,6 @@ this.FeatureBackground();
         }
         
         [NUnit.Framework.TestAttribute()]
-        [NUnit.Framework.DescriptionAttribute("Tags but no browser tag")]
         [NUnit.Framework.CategoryAttribute("some-tag")]
         public virtual void TagsButNoBrowserTag()
         {
@@ -111,9 +109,8 @@ this.FeatureBackground();
         }
         
         [NUnit.Framework.TestAttribute()]
-        [NUnit.Framework.DescriptionAttribute("Single browser tag chrome")]
         [NUnit.Framework.CategoryAttribute("chrome")]
-        [NUnit.Framework.TestCaseAttribute("chrome")]
+        [NUnit.Framework.TestCaseAttribute("chrome", Description="Single browser tag chrome (chrome)")]
         public virtual void SingleBrowserTagChrome(string browser)
         {
             this.Browser = browser;
@@ -130,11 +127,10 @@ this.FeatureBackground();
         }
         
         [NUnit.Framework.TestAttribute()]
-        [NUnit.Framework.DescriptionAttribute("Multiple browser tags")]
         [NUnit.Framework.CategoryAttribute("firefox")]
         [NUnit.Framework.CategoryAttribute("chrome")]
-        [NUnit.Framework.TestCaseAttribute("firefox")]
-        [NUnit.Framework.TestCaseAttribute("chrome")]
+        [NUnit.Framework.TestCaseAttribute("firefox", Description="Multiple browser tags (firefox)")]
+        [NUnit.Framework.TestCaseAttribute("chrome", Description="Multiple browser tags (chrome)")]
         public virtual void MultipleBrowserTags(string browser)
         {
             this.Browser = browser;
@@ -167,13 +163,15 @@ this.FeatureBackground();
         }
         
         [NUnit.Framework.TestAttribute()]
+        [NUnit.Framework.CategoryAttribute("sometag")]
         public virtual void TagsButNoBrowserTagScenarioOutline(string header, string[] exampleTags)
         {
             throw new BrowserTestGenerator.NoBrowserDefinedException();
         }
         
         [NUnit.Framework.TestAttribute()]
-        [NUnit.Framework.TestCaseAttribute("scenario-outline-browser", "value", null)]
+        [NUnit.Framework.CategoryAttribute("scenario-outline-browser")]
+        [NUnit.Framework.TestCaseAttribute("scenario-outline-browser", "value", null, Description="scenario outline with single browser tag (scenario-outline-browser)")]
         public virtual void ScenarioOutlineWithSingleBrowserTag(string browser, string header, string[] exampleTags)
         {
             this.Browser = browser;
@@ -195,8 +193,10 @@ this.FeatureBackground();
         }
         
         [NUnit.Framework.TestAttribute()]
-        [NUnit.Framework.TestCaseAttribute("chrome", "value", null)]
-        [NUnit.Framework.TestCaseAttribute("firefox", "value", null)]
+        [NUnit.Framework.CategoryAttribute("chrome")]
+        [NUnit.Framework.CategoryAttribute("firefox")]
+        [NUnit.Framework.TestCaseAttribute("chrome", "value", null, Description="scenario outline with two browser tags (chrome)")]
+        [NUnit.Framework.TestCaseAttribute("firefox", "value", null, Description="scenario outline with two browser tags (firefox)")]
         public virtual void ScenarioOutlineWithTwoBrowserTags(string browser, string header, string[] exampleTags)
         {
             this.Browser = browser;

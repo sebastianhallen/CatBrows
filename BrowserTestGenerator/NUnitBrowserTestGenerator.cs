@@ -88,7 +88,10 @@
         public void SetTestMethod(TestClassGenerationContext generationContext, CodeMemberMethod testMethod, string scenarioTitle)
         {
             CodeDomHelper.AddAttribute(testMethod, TEST_ATTR);
-            CodeDomHelper.AddAttribute(testMethod, DESCRIPTION_ATTR, scenarioTitle);
+            //CodeDomHelper.AddAttribute(testMethod, DESCRIPTION_ATTR, scenarioTitle);
+
+            //store the description for later
+            testMethod.UserData.Add(DESCRIPTION_ATTR, scenarioTitle);
 
             //add a throw statement as the first line, this will be removed by SetTestMethodCategories but is needed in the cases where no tags at all are supplied
             testMethod.Statements.Insert(0, CreateThrowStatement<NoBrowserDefinedException>());
@@ -110,15 +113,20 @@
             {
                 //Augument the test method with a browser argument
                 testMethod.Parameters.Insert(0, new CodeParameterDeclarationExpression("System.string", "browser"));
+
                 
-                
+                var description = (string)testMethod.UserData[DESCRIPTION_ATTR];
                 foreach (var browser in browsers)
                 {
                     //store browser in user data so we can use it later if this is a row test/scenario ouline
                     testMethod.UserData.Add(BROWSER_TAG_PREFIX + browser, browser);
-
+                    
                     //add TestCase-Attributes with first argument == the browser value
-                    var browserArgument = new[] { new CodeAttributeArgument(new CodePrimitiveExpression(browser)) };
+                    var browserArgument = new[]
+                        {
+                            new CodeAttributeArgument(new CodePrimitiveExpression(browser)),
+                            new CodeAttributeArgument("Description", new CodePrimitiveExpression(description + " (" + browser + ")"))
+                        };
                     this.CodeDomHelper.AddAttribute(testMethod, ROW_ATTR, browserArgument);
                 }
 
@@ -148,11 +156,11 @@
         public void SetRow(TestClassGenerationContext generationContext, CodeMemberMethod testMethod, IEnumerable<string> arguments, IEnumerable<string> tags, bool isIgnored)
         {
             //remove TestCaseAttributes added from SetTestMethod - they will only have 
-            //a single argument when the "real" will have two since the example tags
-            //is added by SpecFlow
+            //a two arguments (browser + Description) when the "real" will have at least three:
+            //browser, arguments-from-example..., exampleTags
             var superfluousAttributes = testMethod.CustomAttributes
                                                   .Cast<CodeAttributeDeclaration>()
-                                                  .Where(attribute => attribute.Arguments.Count == 1)
+                                                  .Where(attribute => attribute.Arguments.Count == 2)
                                                   .ToArray();
             foreach (var attribute in superfluousAttributes)
             {
@@ -183,10 +191,13 @@
                 args.Add(new CodeAttributeArgument("Ignored", new CodePrimitiveExpression(true)));
  #endregion
 
+            var description = (string)testMethod.UserData[DESCRIPTION_ATTR];
             foreach (var browser in browsers)
             {
                 var browserAugmentedArgs = new[] {new CodeAttributeArgument(new CodePrimitiveExpression(browser))}
-                    .Concat(args).ToArray();
+                    .Concat(args)
+                    .Concat(new[] { new CodeAttributeArgument("Description", new CodePrimitiveExpression(description + " (" + browser + ")")) })
+                    .ToArray();
                 CodeDomHelper.AddAttribute(testMethod, ROW_ATTR, browserAugmentedArgs);
             }
             

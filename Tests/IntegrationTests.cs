@@ -127,6 +127,29 @@
             Assert.That(firefoxRow, Is.Not.Null);
         }
 
+        [Test]
+        public void Should_set_browser_tagged_description_to_scenario()
+        {
+            var testCaseAttributes = this.GetMethodAttributes<TestCaseAttribute>(() => this.generatedTestCase.SingleBrowserTagChrome("browser"));
+
+            var testCase = testCaseAttributes.SingleOrDefault();
+
+            var expectedDescription = "Single browser tag chrome" + " (chrome)";
+            Assert.That(testCase.Description, Is.EqualTo(expectedDescription));
+        }
+
+        [Test]
+        public void Should_set_browser_tagged_description_to_scenario_outline_testcase()
+        {
+            var testCaseAttributes = this.GetMethodAttributes<TestCaseAttribute>(() => this.generatedTestCase.ScenarioOutlineWithSingleBrowserTag("browser", "", null));
+
+            var testCase = testCaseAttributes.SingleOrDefault();
+
+            var expectedDescription = "scenario outline with single browser tag (scenario-outline-browser)";
+            Assert.That(testCase.Description, Is.EqualTo(expectedDescription));
+        }
+
+
         private TAttribute[] GetMethodAttributes<TAttribute>(Expression<Action> expression)
             where TAttribute : Attribute
         {
