@@ -111,9 +111,13 @@
                 //Augument the test method with a browser argument
                 testMethod.Parameters.Insert(0, new CodeParameterDeclarationExpression("System.string", "browser"));
                 
-                //add TestCase-Attributes with first argument == the browser value
+                
                 foreach (var browser in browsers)
                 {
+                    //store browser in user data so we can use it later if this is a row test/scenario ouline
+                    testMethod.UserData.Add(BROWSER_TAG_PREFIX + browser, browser);
+
+                    //add TestCase-Attributes with first argument == the browser value
                     var browserArgument = new[] { new CodeAttributeArgument(new CodePrimitiveExpression(browser)) };
                     this.CodeDomHelper.AddAttribute(testMethod, ROW_ATTR, browserArgument);
                 }
@@ -143,6 +147,28 @@
 
         public void SetRow(TestClassGenerationContext generationContext, CodeMemberMethod testMethod, IEnumerable<string> arguments, IEnumerable<string> tags, bool isIgnored)
         {
+            //remove TestCaseAttributes added from SetTestMethod - they will only have 
+            //a single argument when the "real" will have two since the example tags
+            //is added by SpecFlow
+            var superfluousAttributes = testMethod.CustomAttributes
+                                                  .Cast<CodeAttributeDeclaration>()
+                                                  .Where(attribute => attribute.Arguments.Count == 1)
+                                                  .ToArray();
+            foreach (var attribute in superfluousAttributes)
+            {
+                testMethod.CustomAttributes.Remove(attribute);
+            }
+
+
+            //we extracted the browser and added it to testMethod.UserData so we could have access to it here.
+            var browsers = testMethod.UserData
+                                     .Keys.OfType<string>()
+                                     .Where(key => key.StartsWith(BROWSER_TAG_PREFIX))
+                                     .Select(key => key.Replace(BROWSER_TAG_PREFIX, ""))
+                                     .ToArray();
+
+
+ #region specflows NUnitTestGeneratorProvider.cs
             var args = arguments.Select(
               arg => new CodeAttributeArgument(new CodePrimitiveExpression(arg))).ToList();
 
@@ -155,8 +181,15 @@
 
             if (isIgnored)
                 args.Add(new CodeAttributeArgument("Ignored", new CodePrimitiveExpression(true)));
+ #endregion
 
-            CodeDomHelper.AddAttribute(testMethod, ROW_ATTR, args.ToArray());
+            foreach (var browser in browsers)
+            {
+                var browserAugmentedArgs = new[] {new CodeAttributeArgument(new CodePrimitiveExpression(browser))}
+                    .Concat(args).ToArray();
+                CodeDomHelper.AddAttribute(testMethod, ROW_ATTR, browserAugmentedArgs);
+            }
+            
         }
 
         public void SetTestMethodAsRow(TestClassGenerationContext generationContext, CodeMemberMethod testMethod, string scenarioTitle, string exampleSetName, string variantName, IEnumerable<KeyValuePair<string, string>> arguments)

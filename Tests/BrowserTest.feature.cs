@@ -150,6 +150,73 @@ this.FeatureBackground();
 #line hidden
             this.ScenarioCleanup();
         }
+        
+        [NUnit.Framework.TestAttribute()]
+        public virtual void NoTagsScenarioOutline(string header, string[] exampleTags)
+        {
+            throw new BrowserTestGenerator.NoBrowserDefinedException();
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("No tags scenario outline", exampleTags);
+#line 26
+this.ScenarioSetup(scenarioInfo);
+#line 6
+this.FeatureBackground();
+#line 27
+ testRunner.Then("the test method should throw a no browser exception", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+            this.ScenarioCleanup();
+        }
+        
+        [NUnit.Framework.TestAttribute()]
+        public virtual void TagsButNoBrowserTagScenarioOutline(string header, string[] exampleTags)
+        {
+            throw new BrowserTestGenerator.NoBrowserDefinedException();
+        }
+        
+        [NUnit.Framework.TestAttribute()]
+        [NUnit.Framework.TestCaseAttribute("scenario-outline-browser", "value", null)]
+        public virtual void ScenarioOutlineWithSingleBrowserTag(string browser, string header, string[] exampleTags)
+        {
+            this.Browser = browser;
+            string[] @__tags = new string[] {
+                    "Browser:scenario-outline-browser"};
+            if ((exampleTags != null))
+            {
+                @__tags = System.Linq.Enumerable.ToArray(System.Linq.Enumerable.Concat(@__tags, exampleTags));
+            }
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("scenario outline with single browser tag", @__tags);
+#line 40
+this.ScenarioSetup(scenarioInfo);
+#line 6
+this.FeatureBackground();
+#line 41
+ testRunner.Then("the test method should throw a no browser exception", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+            this.ScenarioCleanup();
+        }
+        
+        [NUnit.Framework.TestAttribute()]
+        [NUnit.Framework.TestCaseAttribute("chrome", "value", null)]
+        [NUnit.Framework.TestCaseAttribute("firefox", "value", null)]
+        public virtual void ScenarioOutlineWithTwoBrowserTags(string browser, string header, string[] exampleTags)
+        {
+            this.Browser = browser;
+            string[] @__tags = new string[] {
+                    "Browser:chrome",
+                    "Browser:firefox"};
+            if ((exampleTags != null))
+            {
+                @__tags = System.Linq.Enumerable.ToArray(System.Linq.Enumerable.Concat(@__tags, exampleTags));
+            }
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("scenario outline with two browser tags", @__tags);
+#line 48
+this.ScenarioSetup(scenarioInfo);
+#line 6
+this.FeatureBackground();
+#line 49
+ testRunner.Then("the test method should throw a no browser exception", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+            this.ScenarioCleanup();
+        }
     }
 }
 #pragma warning restore

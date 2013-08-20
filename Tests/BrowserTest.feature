@@ -21,3 +21,32 @@ Scenario: Single browser tag chrome
 @Browser:chrome
 Scenario: Multiple browser tags
 	Then the test method should have 2 testcases
+
+
+Scenario Outline: No tags scenario outline
+	Then the test method should throw a no browser exception
+Examples:
+| header |
+| value  |
+
+@sometag
+Scenario Outline: Tags but no browser tag scenario outline
+	Then the test method should throw a no browser exception
+Examples:
+| header |
+| value  |
+
+@Browser:scenario-outline-browser
+Scenario Outline: scenario outline with single browser tag
+	Then the test method should throw a no browser exception
+Examples:
+| header |
+| value  |
+
+@Browser:chrome
+@Browser:firefox
+Scenario Outline: scenario outline with two browser tags
+	Then the test method should throw a no browser exception
+Examples:
+| header |
+| value  |

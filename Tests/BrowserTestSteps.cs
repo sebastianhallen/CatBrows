@@ -7,9 +7,11 @@ namespace Tests
     public class BrowserTestSteps
     {
         public static bool BackgroundRun;
+        public static bool BackgroundHasBrowser;
         public BrowserTestSteps()
         {
             BackgroundRun = false;
+            BackgroundHasBrowser = false;
         }
 
         [Given(@"I have a browser when running the background")]
@@ -21,6 +23,7 @@ namespace Tests
             {
                 throw new Exception("No browser when running background");
             }
+            BackgroundHasBrowser = true;
 
         }
 

@@ -1,15 +1,12 @@
 ﻿namespace Tests
 {
     using System;
-    using System.Collections.Generic;
     using System.Linq;
     using System.Linq.Expressions;
     using BrowserTestGenerator;
     using NUnit.Framework;
     using TechTalk.SpecFlow;
-    using TechTalk.SpecFlow.Generator;
-    using TechTalk.SpecFlow.Utils;
-
+    
     [TestFixture]
     public class IntegrationTests
     {
@@ -46,6 +43,19 @@
         {
             Assert.Throws<NoBrowserDefinedException>(() => this.generatedTestCase.TagsButNoBrowserTag());
         }
+
+        [Test]
+        public void Should_throw_no_browser_defined_exception_for_scenario_outlines_without_tags()
+        {
+            Assert.Throws<NoBrowserDefinedException>(() => this.generatedTestCase.NoTagsScenarioOutline("some value", null));
+        }
+
+        [Test]
+        public void Should_throw_no_browser_defined_exception_for_scenario_outlines_with_tags_but_without_browser_tags()
+        {
+            Assert.Throws<NoBrowserDefinedException>(() => this.generatedTestCase.TagsButNoBrowserTagScenarioOutline("some value", null));
+        }
+
 
         [Test]
         public void Should_add_each_browser_as_category_to_scenario_methods()
@@ -87,8 +97,34 @@
             this.generatedTestCase.SingleBrowserTagChrome("some browser");
 
             Assert.That(ScenarioContext.Current["Browser"], Is.EqualTo("some browser"));
+        }
 
-            Assert.That(BrowserTestSteps.BackgroundRun);
+        [Test]
+        public void Browser_should_be_set_when_background_is_invoked()
+        {
+            this.generatedTestCase.SingleBrowserTagChrome("some browser");
+
+            Assert.That(BrowserTestSteps.BackgroundHasBrowser);
+        }
+
+        [Test]
+        public void Should_add_one_test_case_per_browser_for_each_row_in_a_scenario_ouline_example()
+        {
+            var categories = this.GetMethodAttributes<TestCaseAttribute>(() => this.generatedTestCase.ScenarioOutlineWithTwoBrowserTags("browser", "", null));
+
+            Assert.That(categories.Count(), Is.EqualTo(2));
+        }
+
+        [Test]
+        public void Row_test_attributes_should_have_browser_as_first_argument()
+        {
+            var categories = this.GetMethodAttributes<TestCaseAttribute>(() => this.generatedTestCase.ScenarioOutlineWithTwoBrowserTags("foo", "bar", null));
+
+            var chromeRow = categories.SingleOrDefault(a => a.Arguments.First().Equals("chrome"));
+            var firefoxRow = categories.SingleOrDefault(a => a.Arguments.First().Equals("firefox"));
+
+            Assert.That(chromeRow, Is.Not.Null);
+            Assert.That(firefoxRow, Is.Not.Null);
         }
 
         private TAttribute[] GetMethodAttributes<TAttribute>(Expression<Action> expression)
