@@ -12,16 +12,34 @@ CatBrows will add a {"Browser", "some browser"} key-value to ScenarioContext.Cur
 ```Cucumber
 @Browser:chrome
 @Browser:firefox
-Scenario: Run same test case with multiple browser
+Scenario: Run same test case with multiple browsers
   Given I have a web test case
   When I run my Browser-tagged scenario
   Then the scenario should be run for both firefox and chrome
+```  
+Will generate (not really but almost):
+```C#
+[TestCase("chrome")]
+[TestCase("firefox")]
+public void RunSameTestCaseWithMultipleBrowsers(string browser)
+{
+  ScenarioContext.Current.Add("Browser", browser);
+  /* ... */
+}
+```
   
   
+```Cucumber  
 Scenario: Run a test without a Browser tag
   Given I have a scenario without a Browser tag
   When I run my scenario
   Then the test run should explode since I did not provide a Browser tag
-  
-```  
-
+```
+yields
+```C#
+[Test]
+public void RunATestWithoutABrowserTag()
+{
+  throw new NoBrowserDefinedException()
+}
+```
