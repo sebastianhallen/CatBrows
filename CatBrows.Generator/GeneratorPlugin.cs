@@ -4,7 +4,6 @@ using TechTalk.SpecFlow.Infrastructure;
 [assembly: GeneratorPlugin(typeof(GeneratorPlugin))]
 namespace CatBrows.Generator
 {
-	using BrowserTestGenerator;
 	using BoDi;
 	using TechTalk.SpecFlow.Generator.Configuration;
 	using TechTalk.SpecFlow.Generator.Plugins;

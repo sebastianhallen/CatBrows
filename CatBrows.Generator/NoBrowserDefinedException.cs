@@ -1,8 +1,8 @@
-﻿namespace BrowserTestGenerator
+﻿namespace CatBrows.Generator
 {
-    using System;
+	using System;
 
-    public class NoBrowserDefinedException
+	public class NoBrowserDefinedException
         : Exception
     {
     }

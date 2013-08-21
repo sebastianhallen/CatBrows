@@ -1,14 +1,14 @@
-﻿namespace BrowserTestGenerator
+﻿namespace CatBrows.Generator
 {
-    using System;
-    using System.CodeDom;
-    using System.Collections.Generic;
-    using System.Linq;
-    using TechTalk.SpecFlow.Generator;
-    using TechTalk.SpecFlow.Generator.UnitTestProvider;
-    using TechTalk.SpecFlow.Utils;
+	using System;
+	using System.CodeDom;
+	using System.Collections.Generic;
+	using System.Linq;
+	using TechTalk.SpecFlow.Generator;
+	using TechTalk.SpecFlow.Generator.UnitTestProvider;
+	using TechTalk.SpecFlow.Utils;
 
-    public class NUnitBrowserTestGenerator
+	public class NUnitBrowserTestGenerator
         : IUnitTestGeneratorProvider
     {
         private const string TESTFIXTURE_ATTR = "NUnit.Framework.TestFixtureAttribute";
@@ -21,6 +21,8 @@
         private const string TESTTEARDOWN_ATTR = "NUnit.Framework.TearDownAttribute";
         private const string IGNORE_ATTR = "NUnit.Framework.IgnoreAttribute";
         private const string DESCRIPTION_ATTR = "NUnit.Framework.DescriptionAttribute";
+
+		private const string NO_BROWSER_DEFINED = "No browser defined, please specify @Browser:someBrowser for your scenario.";
 
         private const string BROWSER_TAG_PREFIX = "Browser:";
 
@@ -94,7 +96,7 @@
             testMethod.UserData.Add(DESCRIPTION_ATTR, scenarioTitle);
 
             //add a throw statement as the first line, this will be removed by SetTestMethodCategories but is needed in the cases where no tags at all are supplied
-            testMethod.Statements.Insert(0, CreateThrowStatement<NoBrowserDefinedException>());
+			testMethod.Statements.Insert(0, CreateThrowStatement<Exception>(NO_BROWSER_DEFINED));
         }
 
         public void SetTestMethodCategories(TestClassGenerationContext generationContext, CodeMemberMethod testMethod, IEnumerable<string> scenarioCategories)
@@ -138,7 +140,7 @@
              //when no browser tag is present, replace method body with a throw new NoBrowserDefinedException
             else
             {
-                this.ReplaceMethodBody(testMethod, CreateThrowStatement<NoBrowserDefinedException>());
+                this.ReplaceMethodBody(testMethod, CreateThrowStatement<Exception>(NO_BROWSER_DEFINED));
             }
         }
 
@@ -219,10 +221,10 @@
             testMethod.Statements.Add(newBody);
         }
         
-        private static CodeStatement CreateThrowStatement<TException>()
+        private static CodeStatement CreateThrowStatement<TException>(string message)
             where TException : Exception
         {
-            return new CodeThrowExceptionStatement(new CodeObjectCreateExpression(typeof(TException)));
+            return new CodeThrowExceptionStatement(new CodeObjectCreateExpression(typeof(TException), new CodePrimitiveExpression(message)));
         }
     }
 }

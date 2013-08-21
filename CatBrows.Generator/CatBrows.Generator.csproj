@@ -54,7 +54,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="GeneratorPlugin.cs" />
-    <Compile Include="NoBrowserDefinedException.cs" />
     <Compile Include="NUnitBrowserTestGenerator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

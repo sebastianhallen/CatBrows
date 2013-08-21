@@ -79,7 +79,7 @@ namespace Tests
         [NUnit.Framework.TestAttribute()]
         public virtual void NoTagsAtAll()
         {
-            throw new BrowserTestGenerator.NoBrowserDefinedException();
+            throw new System.Exception("No browser defined, please specify @Browser:someBrowser for your scenario.");
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("No tags at all", ((string[])(null)));
 #line 9
 this.ScenarioSetup(scenarioInfo);
@@ -95,7 +95,7 @@ this.FeatureBackground();
         [NUnit.Framework.CategoryAttribute("some-tag")]
         public virtual void TagsButNoBrowserTag()
         {
-            throw new BrowserTestGenerator.NoBrowserDefinedException();
+            throw new System.Exception("No browser defined, please specify @Browser:someBrowser for your scenario.");
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Tags but no browser tag", new string[] {
                         "some-tag"});
 #line 13
@@ -150,7 +150,7 @@ this.FeatureBackground();
         [NUnit.Framework.TestAttribute()]
         public virtual void NoTagsScenarioOutline(string header, string[] exampleTags)
         {
-            throw new BrowserTestGenerator.NoBrowserDefinedException();
+            throw new System.Exception("No browser defined, please specify @Browser:someBrowser for your scenario.");
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("No tags scenario outline", exampleTags);
 #line 26
 this.ScenarioSetup(scenarioInfo);
@@ -166,7 +166,7 @@ this.FeatureBackground();
         [NUnit.Framework.CategoryAttribute("sometag")]
         public virtual void TagsButNoBrowserTagScenarioOutline(string header, string[] exampleTags)
         {
-            throw new BrowserTestGenerator.NoBrowserDefinedException();
+            throw new System.Exception("No browser defined, please specify @Browser:someBrowser for your scenario.");
         }
         
         [NUnit.Framework.TestAttribute()]

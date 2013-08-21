@@ -3,7 +3,7 @@
     using System;
     using System.Linq;
     using System.Linq.Expressions;
-    using BrowserTestGenerator;
+    using CatBrows.Generator;
     using NUnit.Framework;
     using TechTalk.SpecFlow;
     
@@ -35,25 +35,25 @@
         [Test]
         public void Should_throw_exception_when_no_tags_at_all_are_supplied()
         {
-            Assert.Throws<NoBrowserDefinedException>(() => this.generatedTestCase.NoTagsAtAll());
+			this.VerifyNoBrowserDefinedException(() => this.generatedTestCase.NoTagsAtAll());
         }
 
         [Test]
         public void Should_throw_exception_when_no_browser_tag_is_supplied_with_other_tags()
         {
-            Assert.Throws<NoBrowserDefinedException>(() => this.generatedTestCase.TagsButNoBrowserTag());
+			this.VerifyNoBrowserDefinedException(() => this.generatedTestCase.TagsButNoBrowserTag());
         }
 
         [Test]
         public void Should_throw_no_browser_defined_exception_for_scenario_outlines_without_tags()
         {
-            Assert.Throws<NoBrowserDefinedException>(() => this.generatedTestCase.NoTagsScenarioOutline("some value", null));
+			this.VerifyNoBrowserDefinedException(() => this.generatedTestCase.NoTagsScenarioOutline("some value", null));
         }
 
         [Test]
         public void Should_throw_no_browser_defined_exception_for_scenario_outlines_with_tags_but_without_browser_tags()
         {
-            Assert.Throws<NoBrowserDefinedException>(() => this.generatedTestCase.TagsButNoBrowserTagScenarioOutline("some value", null));
+			this.VerifyNoBrowserDefinedException(() => this.generatedTestCase.TagsButNoBrowserTagScenarioOutline("some value", null));
         }
 
 
@@ -148,6 +148,13 @@
             var expectedDescription = "scenario outline with single browser tag (scenario-outline-browser)";
             Assert.That(testCase.Description, Is.EqualTo(expectedDescription));
         }
+
+		private void VerifyNoBrowserDefinedException(Action action)
+		{
+			var exception = Assert.Throws<Exception>(() => action());
+
+			Assert.That(exception.Message, Is.EqualTo("No browser defined, please specify @Browser:someBrowser for your scenario."));
+		}
 
 
         private TAttribute[] GetMethodAttributes<TAttribute>(Expression<Action> expression)
