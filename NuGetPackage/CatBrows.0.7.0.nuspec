@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2013/01/nuspec.xsd">
+    <metadata minClientVersion="0.7.0">
+        <id>CatBrows</id>
+        <version>0.7.0</version>
+        <title>CatBrows</title>
+        <authors>Sebastian Hallén</authors>
+        <projectUrl>https://github.com/sebastianhallen/CatBrows</projectUrl>
+        <dependencies>
+          <dependency id="SpecFlow" />
+          <dependency id="NUnit" />
+        </dependencies>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <description>CatBrows is a SpecFlow generator plugin that adds @Browser:browser tags to scenarios. Actually, when using this generator you are forced to add a Browser-tag or else your scenario will throw an exception when run.</description>
+        <summary>Browser tagging for spec flow scenarios.</summary>
+    </metadata>
+    <files>
+        <file src="..\CatBrows.Generator\bin\Release\CatBrows.Generator.SpecFlowPlugin.dll" target="tools\CatBrows.Generator.SpecFlowPlugin.dll" />
+	<file src="App.config.transform" target="content" />
+    </files>
+</package>
