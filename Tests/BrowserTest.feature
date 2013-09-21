@@ -9,7 +9,7 @@ Background:
 Scenario: No tags at all
 	Then the test method should throw a no browser exception
 
-@some-tag
+@SomeTag
 Scenario: Tags but no browser tag
 	Then the test method should throw a no browser exception
 
@@ -26,37 +26,39 @@ Scenario: Multiple browser tags
 Scenario Outline: No tags scenario outline
 	Then the test method should throw a no browser exception
 Examples:
-| header |
-| value  |
+| header      |
+| value       |
+| other value |
 
 @sometag
 Scenario Outline: Tags but no browser tag scenario outline
 	Then the test method should throw a no browser exception
 Examples:
-| header |
-| value  |
+| header      |
+| value       |
+| other value |
 
 @Browser:scenario-outline-browser
 Scenario Outline: scenario outline with single browser tag
-	Then the test method should throw a no browser exception
+	Then the test method should have 1 testcases
 Examples:
-| header |
-| value  |
+| header      |
+| value       |
 
 @Browser:chrome
 @Browser:firefox
 Scenario Outline: scenario outline with two browser tags
-	Then the test method should throw a no browser exception
+	Then the test method should have 2 testcases
 Examples:
-| header |
-| value  |
+| header      |
+| value       |
 
 
 @Browser:chrome
 @Browser:firefox
 @OutlineTag
 Scenario Outline: scenario outline with two browser tags and tagged examples
-	Then the test method should throw a no browser exception
+	Then the test method should have 4 testcases
 @nightly
 Examples:
 | header  |

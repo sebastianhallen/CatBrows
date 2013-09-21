@@ -41,7 +41,7 @@
             CodeDomHelper.AddAttribute(generationContext.TestClass, TESTFIXTURE_ATTR);
             CodeDomHelper.AddAttribute(generationContext.TestClass, DESCRIPTION_ATTR, featureTitle);
 
-            //add a string Browser field that we will use to set ScenarioContext.Current["Browser"] in each test
+            //add a string field, Browser, to the generated test class that we will use to set ScenarioContext.Current["Browser"] in each test
             generationContext.TestClass.Members.Add(new CodeMemberField(typeof (string), "Browser"));
         }
 
@@ -90,13 +90,12 @@
         public void SetTestMethod(TestClassGenerationContext generationContext, CodeMemberMethod testMethod, string scenarioTitle)
         {
             CodeDomHelper.AddAttribute(testMethod, TEST_ATTR);
-            //CodeDomHelper.AddAttribute(testMethod, DESCRIPTION_ATTR, scenarioTitle);
 
             //store the description for later
             testMethod.UserData.Add(DESCRIPTION_ATTR, scenarioTitle);
 
             //add a throw statement as the first line, this will be removed by SetTestMethodCategories but is needed in the cases where no tags at all are supplied
-			testMethod.Statements.Insert(0, CreateThrowStatement<Exception>(NO_BROWSER_DEFINED));
+			testMethod.Statements.Insert(0, CreateThrowStatement(NO_BROWSER_DEFINED));
         }
 
         public void SetTestMethodCategories(TestClassGenerationContext generationContext, CodeMemberMethod testMethod, IEnumerable<string> scenarioCategories)
@@ -114,10 +113,9 @@
             
             if (browsers.Any())
             {
-                //Augument the test method with a browser argument as the first argument
+                //inject an argument, string browser, as the first argument in the test method
                 testMethod.Parameters.Insert(0, new CodeParameterDeclarationExpression("System.string", "browser"));
 
-                
                 var description = (string)testMethod.UserData[DESCRIPTION_ATTR];
                 foreach (var browser in browsers)
                 {
@@ -142,10 +140,10 @@
                 //... and replace it with a browser initialization
                 testMethod.Statements.Insert(0, new CodeSnippetStatement(@"            this.Browser = browser;"));
             }
-             //when no browser tag is present, replace method body with a throw new NoBrowserDefinedException
+            //when no browser tag is present, replace method body with a throw new Exception(NO_BROWSER_DEFINED)
             else
             {
-                this.ReplaceMethodBody(testMethod, CreateThrowStatement<Exception>(NO_BROWSER_DEFINED));
+                this.ReplaceMethodBody(testMethod, CreateThrowStatement(NO_BROWSER_DEFINED));
             }
         }
 
@@ -162,28 +160,14 @@
 
         public void SetRow(TestClassGenerationContext generationContext, CodeMemberMethod testMethod, IEnumerable<string> arguments, IEnumerable<string> tags, bool isIgnored)
         {
-            //remove TestCaseAttributes added from SetTestMethod - they will only have 
-            //three arguments (browser + Description + category) when the "real" will have at least four:
-            //browser, arguments-from-example..., exampleTags
-            var superfluousAttributes = testMethod.CustomAttributes
-                                                  .Cast<CodeAttributeDeclaration>()
-                                                  .Where(attribute => attribute.Arguments.Count == 3)
-                                                  .ToArray();
-            foreach (var attribute in superfluousAttributes)
-            {
-                testMethod.CustomAttributes.Remove(attribute);
-            }
-
-
             //we extracted the browser and added it to testMethod.UserData so we could have access to it here.
             var browsers = testMethod.UserData
                                      .Keys.OfType<string>()
                                      .Where(key => key.StartsWith(BROWSER_TAG_PREFIX))
-                                     .Select(key => key.Replace(BROWSER_TAG_PREFIX, ""))
+                                     .Select(key => testMethod.UserData[key])
                                      .ToArray();
 
-
- #region specflows NUnitTestGeneratorProvider.cs
+            #region specflows NUnitTestGeneratorProvider.cs
             var args = arguments.Select(
               arg => new CodeAttributeArgument(new CodePrimitiveExpression(arg))).ToList();
 
@@ -198,21 +182,43 @@
                 args.Add(new CodeAttributeArgument("Ignored", new CodePrimitiveExpression(true)));
  #endregion
 
-            var description = (string)testMethod.UserData[DESCRIPTION_ATTR];
-            foreach (var browser in browsers)
+            if (browsers.Any())
             {
-                var categories = tags.Union(new[] {browser});
-                var browserAugmentedArgs = new[] {new CodeAttributeArgument(new CodePrimitiveExpression(browser))}
-                    .Concat(args)
-                    .Concat(new[]
+                //remove TestCaseAttributes added from SetTestMethod
+                // TestCaseAttributes from SetTestMethod will only have 
+                //three arguments (browser + Description + category) when the "real" will have at least four:
+                //browser, arguments-from-example..., exampleTags
+                var superfluousAttributes = testMethod.CustomAttributes
+                                                      .Cast<CodeAttributeDeclaration>()
+                                                      .Where(attribute => attribute.Arguments.Count == 3)
+                                                      .ToArray();
+                foreach (var attribute in superfluousAttributes)
+                {
+                    testMethod.CustomAttributes.Remove(attribute);
+                }
+
+                //add a testcase row for each occurrence of @Browser-tag
+                var description = (string)testMethod.UserData[DESCRIPTION_ATTR];
+                foreach (var browser in browsers)
+                {
+                    var categories = tags.Union(new[] { browser });
+                    var rowArguments = new[] { new CodeAttributeArgument(new CodePrimitiveExpression(browser)) }
+                        .Concat(args)
+                        .Concat(new[]
                         {
                             new CodeAttributeArgument("Description", new CodePrimitiveExpression(description + " (" + browser + ")")),
                             new CodeAttributeArgument("Category", new CodePrimitiveExpression(string.Join(",", categories)))
                         })
-                    .ToArray();
-                CodeDomHelper.AddAttribute(testMethod, ROW_ATTR, browserAugmentedArgs);
+                        .ToArray();
+                    CodeDomHelper.AddAttribute(testMethod, ROW_ATTR, rowArguments);
+                }
             }
-            
+            else
+            {
+                //no browser tag present, add the default test case attribute and let the "no browser defined"-exception explode when running the test
+                CodeDomHelper.AddAttribute(testMethod, ROW_ATTR, args.ToArray());
+                this.ReplaceMethodBody(testMethod, CreateThrowStatement(NO_BROWSER_DEFINED));
+            }
         }
 
         public void SetTestMethodAsRow(TestClassGenerationContext generationContext, CodeMemberMethod testMethod, string scenarioTitle, string exampleSetName, string variantName, IEnumerable<KeyValuePair<string, string>> arguments)
@@ -231,10 +237,9 @@
             testMethod.Statements.Add(newBody);
         }
         
-        private static CodeStatement CreateThrowStatement<TException>(string message)
-            where TException : Exception
+        private static CodeStatement CreateThrowStatement(string message)
         {
-            return new CodeThrowExceptionStatement(new CodeObjectCreateExpression(typeof(TException), new CodePrimitiveExpression(message)));
+            return new CodeThrowExceptionStatement(new CodeObjectCreateExpression(typeof(Exception), new CodePrimitiveExpression(message)));
         }
     }
 }

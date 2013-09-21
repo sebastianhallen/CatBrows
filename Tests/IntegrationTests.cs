@@ -57,6 +57,15 @@
         }
 
         [Test]
+        public void Should_not_remove_test_case_rows_when_browser_is_not_set_for_scenario_outlines()
+        {
+            var testCaseAttributes = this.GetMethodAttributes<TestCaseAttribute>(() => this.generatedTestCase.TagsButNoBrowserTagScenarioOutline("some value", null));
+
+            Assert.That(testCaseAttributes.Any());
+        }
+
+
+        [Test]
         public void Should_add_browser_as_category_to_scenario_testrows()
         {
             var testCaseAttributes = this.GetMethodAttributes<TestCaseAttribute>(() => this.generatedTestCase.MultipleBrowserTags("browser"));
