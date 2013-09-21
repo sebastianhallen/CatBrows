@@ -56,7 +56,6 @@
 			this.VerifyNoBrowserDefinedException(() => this.generatedTestCase.TagsButNoBrowserTagScenarioOutline("some value", null));
         }
 
-
         [Test]
         public void Should_add_browser_as_category_to_scenario_testrows()
         {
@@ -110,10 +109,28 @@
         [Test]
         public void Should_add_one_test_case_per_browser_for_each_row_in_a_scenario_ouline_example()
         {
-            var categories = this.GetMethodAttributes<TestCaseAttribute>(() => this.generatedTestCase.ScenarioOutlineWithTwoBrowserTags("browser", "", null));
+            var rows = this.GetMethodAttributes<TestCaseAttribute>(() => this.generatedTestCase.ScenarioOutlineWithTwoBrowserTags("browser", "", null));
 
-            Assert.That(categories.Count(), Is.EqualTo(2));
+            Assert.That(rows.Count(), Is.EqualTo(2));
         }
+
+        [Test]
+        public void Should_include_scenario_outline_example_tags_in_test_case_row_categories()
+        {
+            var rows = this.GetMethodAttributes<TestCaseAttribute>(() =>
+                this.generatedTestCase.ScenarioOutlineWithTwoBrowserTagsAndTaggedExamples("browser", "header", null)).ToArray();
+
+            var tagCombinations = rows.Select(row => row.Categories.OfType<string>());
+            
+            Assert.That(tagCombinations, Is.EquivalentTo(new []
+            {
+                new [] {"nightly", "chrome" },
+                new [] {"nightly", "firefox" },
+                new [] {"each-commit", "chrome" },
+                new [] {"each-commit", "firefox" }
+            }));
+        }
+
 
         [Test]
         public void Row_test_attributes_should_have_browser_as_first_argument()

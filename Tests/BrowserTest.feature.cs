@@ -213,30 +213,32 @@ this.FeatureBackground();
         }
         
         [NUnit.Framework.TestAttribute()]
+        [NUnit.Framework.CategoryAttribute("OutlineTag")]
         [NUnit.Framework.TestCaseAttribute("chrome", "nightly", new string[] {
-                "nightly"}, Description="scenario outline with two browser tags and tagged examples (chrome)", Category="chrome")]
+                "nightly"}, Description="scenario outline with two browser tags and tagged examples (chrome)", Category="nightly,chrome")]
         [NUnit.Framework.TestCaseAttribute("firefox", "nightly", new string[] {
-                "nightly"}, Description="scenario outline with two browser tags and tagged examples (firefox)", Category="firefox")]
+                "nightly"}, Description="scenario outline with two browser tags and tagged examples (firefox)", Category="nightly,firefox")]
         [NUnit.Framework.TestCaseAttribute("chrome", "each-commit", new string[] {
-                "each-commit"}, Description="scenario outline with two browser tags and tagged examples (chrome)", Category="chrome")]
+                "each-commit"}, Description="scenario outline with two browser tags and tagged examples (chrome)", Category="each-commit,chrome")]
         [NUnit.Framework.TestCaseAttribute("firefox", "each-commit", new string[] {
-                "each-commit"}, Description="scenario outline with two browser tags and tagged examples (firefox)", Category="firefox")]
+                "each-commit"}, Description="scenario outline with two browser tags and tagged examples (firefox)", Category="each-commit,firefox")]
         public virtual void ScenarioOutlineWithTwoBrowserTagsAndTaggedExamples(string browser, string header, string[] exampleTags)
         {
             this.Browser = browser;
             string[] @__tags = new string[] {
                     "Browser:chrome",
-                    "Browser:firefox"};
+                    "Browser:firefox",
+                    "OutlineTag"};
             if ((exampleTags != null))
             {
                 @__tags = System.Linq.Enumerable.ToArray(System.Linq.Enumerable.Concat(@__tags, exampleTags));
             }
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("scenario outline with two browser tags and tagged examples", @__tags);
-#line 57
+#line 58
 this.ScenarioSetup(scenarioInfo);
 #line 6
 this.FeatureBackground();
-#line 58
+#line 59
  testRunner.Then("the test method should throw a no browser exception", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             this.ScenarioCleanup();

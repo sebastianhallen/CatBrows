@@ -201,12 +201,13 @@
             var description = (string)testMethod.UserData[DESCRIPTION_ATTR];
             foreach (var browser in browsers)
             {
+                var categories = tags.Union(new[] {browser});
                 var browserAugmentedArgs = new[] {new CodeAttributeArgument(new CodePrimitiveExpression(browser))}
                     .Concat(args)
                     .Concat(new[]
                         {
                             new CodeAttributeArgument("Description", new CodePrimitiveExpression(description + " (" + browser + ")")),
-                            new CodeAttributeArgument("Category", new CodePrimitiveExpression(browser))
+                            new CodeAttributeArgument("Category", new CodePrimitiveExpression(string.Join(",", categories)))
                         })
                     .ToArray();
                 CodeDomHelper.AddAttribute(testMethod, ROW_ATTR, browserAugmentedArgs);

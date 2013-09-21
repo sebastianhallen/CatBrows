@@ -54,6 +54,7 @@ Examples:
 
 @Browser:chrome
 @Browser:firefox
+@OutlineTag
 Scenario Outline: scenario outline with two browser tags and tagged examples
 	Then the test method should throw a no browser exception
 @nightly
