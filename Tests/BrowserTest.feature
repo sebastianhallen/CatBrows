@@ -50,3 +50,17 @@ Scenario Outline: scenario outline with two browser tags
 Examples:
 | header |
 | value  |
+
+
+@Browser:chrome
+@Browser:firefox
+Scenario Outline: scenario outline with two browser tags and tagged examples
+	Then the test method should throw a no browser exception
+@nightly
+Examples:
+| header  |
+| nightly |
+@each-commit
+Examples:
+| header      |
+| each-commit |

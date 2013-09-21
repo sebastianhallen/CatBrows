@@ -101,11 +101,12 @@
 
         public void SetTestMethodCategories(TestClassGenerationContext generationContext, CodeMemberMethod testMethod, IEnumerable<string> scenarioCategories)
         {
-            //we don't want the "Browser:"-part of the browser categories
-            var categories = scenarioCategories.Select(category => category.Replace(BROWSER_TAG_PREFIX, ""));
-            CodeDomHelper.AddAttributeForEachValue(testMethod, CATEGORY_ATTR, categories);
+            //we don't want "@Browser:browser" as separate categories. We only want these categories on the actual test case rows.
+            var categories = scenarioCategories.ToArray();
+            var categoriesForAllTests = categories.Where(category => !category.StartsWith(BROWSER_TAG_PREFIX));
+            CodeDomHelper.AddAttributeForEachValue(testMethod, CATEGORY_ATTR, categoriesForAllTests);
 
-            var browsers = scenarioCategories
+            var browsers = categories
                 .Where(category => category.StartsWith(BROWSER_TAG_PREFIX))
                 .Select(category => category.Replace(BROWSER_TAG_PREFIX, ""))
                 .ToArray();
@@ -113,7 +114,7 @@
             
             if (browsers.Any())
             {
-                //Augument the test method with a browser argument
+                //Augument the test method with a browser argument as the first argument
                 testMethod.Parameters.Insert(0, new CodeParameterDeclarationExpression("System.string", "browser"));
 
                 
@@ -123,11 +124,15 @@
                     //store browser in user data so we can use it later if this is a row test/scenario ouline
                     testMethod.UserData.Add(BROWSER_TAG_PREFIX + browser, browser);
                     
-                    //add TestCase-Attributes with first argument == the browser value
+                    //add TestCase-Attributes ...
                     var browserArgument = new[]
                         {
+                            // first argument == the browser value
                             new CodeAttributeArgument(new CodePrimitiveExpression(browser)),
-                            new CodeAttributeArgument("Description", new CodePrimitiveExpression(description + " (" + browser + ")"))
+                            // description
+                            new CodeAttributeArgument("Description", new CodePrimitiveExpression(description + " (" + browser + ")")),
+                            // add browser value as category
+                            new CodeAttributeArgument("Category", new CodePrimitiveExpression(browser))
                         };
                     this.CodeDomHelper.AddAttribute(testMethod, ROW_ATTR, browserArgument);
                 }
@@ -158,11 +163,11 @@
         public void SetRow(TestClassGenerationContext generationContext, CodeMemberMethod testMethod, IEnumerable<string> arguments, IEnumerable<string> tags, bool isIgnored)
         {
             //remove TestCaseAttributes added from SetTestMethod - they will only have 
-            //a two arguments (browser + Description) when the "real" will have at least three:
+            //three arguments (browser + Description + category) when the "real" will have at least four:
             //browser, arguments-from-example..., exampleTags
             var superfluousAttributes = testMethod.CustomAttributes
                                                   .Cast<CodeAttributeDeclaration>()
-                                                  .Where(attribute => attribute.Arguments.Count == 2)
+                                                  .Where(attribute => attribute.Arguments.Count == 3)
                                                   .ToArray();
             foreach (var attribute in superfluousAttributes)
             {
@@ -198,7 +203,11 @@
             {
                 var browserAugmentedArgs = new[] {new CodeAttributeArgument(new CodePrimitiveExpression(browser))}
                     .Concat(args)
-                    .Concat(new[] { new CodeAttributeArgument("Description", new CodePrimitiveExpression(description + " (" + browser + ")")) })
+                    .Concat(new[]
+                        {
+                            new CodeAttributeArgument("Description", new CodePrimitiveExpression(description + " (" + browser + ")")),
+                            new CodeAttributeArgument("Category", new CodePrimitiveExpression(browser))
+                        })
                     .ToArray();
                 CodeDomHelper.AddAttribute(testMethod, ROW_ATTR, browserAugmentedArgs);
             }

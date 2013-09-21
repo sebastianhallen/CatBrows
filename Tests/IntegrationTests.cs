@@ -58,15 +58,15 @@
 
 
         [Test]
-        public void Should_add_each_browser_as_category_to_scenario_methods()
+        public void Should_add_browser_as_category_to_scenario_testrows()
         {
-            var categories = this.GetMethodAttributes<CategoryAttribute>(() => this.generatedTestCase.MultipleBrowserTags("browser"));
+            var testCaseAttributes = this.GetMethodAttributes<TestCaseAttribute>(() => this.generatedTestCase.MultipleBrowserTags("browser"));
 
-            var chrome = categories.SingleOrDefault(category => category.Name.Equals("chrome"));
-            var firefox = categories.SingleOrDefault(category => category.Name.Equals("firefox"));
-
-            Assert.That(chrome, Is.Not.Null, "Chrome was not set as category");
-            Assert.That(firefox, Is.Not.Null, "Firefox was not set as category");
+            var chromeCase = testCaseAttributes.Single(attr => "chrome".Equals(attr.Category));
+            var firefoxCase = testCaseAttributes.Single(attr => "firefox".Equals(attr.Category));
+            
+            Assert.That(chromeCase.Categories.Count, Is.EqualTo(1), "Chrome was not set as category");
+            Assert.That(firefoxCase.Categories.Count, Is.EqualTo(1), "Firefox was not set as category");
         }
 
         [Test]
