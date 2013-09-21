@@ -1,9 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <configuration xmlns:xdt="http://schemas.microsoft.com/XML-Document-Transform">
-  <specFlow>
-    <plugins xdt:Transform="Remove" />
-    <plugins xdt:Transform="Insert">
-      <add name="CatBrows" path="..\packages\CatBrows.0.7.1\tools" type="Generator"/>
+  <specFlow xdt:Transform="InsertIfMissing">
+    <plugins xdt:Transform="InsertIfMissing" />
+  </specFlow>
+  
+  <specFlow> 
+    <unitTestProvider name="NUnit" xdt:Transform="InsertIfMissing"/>
+
+    <plugins>
+      <add name="CatBrows" type="Generator" xdt:Transform="InsertIfMissing" xdt:Locator="Match(type)"/>
+      <add name="CatBrows" path="..\packages\CatBrows.0.7.1\tools" type="Generator" xdt:Transform="SetAttributes" xdt:Locator="Match(type)"/>
     </plugins>
+    
   </specFlow>
 </configuration>

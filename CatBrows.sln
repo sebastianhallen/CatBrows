@@ -14,9 +14,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CatBrows.Generator", "CatBr
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NuGetPackage", "NuGetPackage", "{16F0561C-D7EC-4456-98E0-A215DC135100}"
 	ProjectSection(SolutionItems) = preProject
-		NuGetPackage\App.config.transform = NuGetPackage\App.config.transform
-		NuGetPackage\CatBrows.0.7.0.nupkg = NuGetPackage\CatBrows.0.7.0.nupkg
-		NuGetPackage\CatBrows.0.7.0.nuspec = NuGetPackage\CatBrows.0.7.0.nuspec
+		NuGetPackage\App.config.install.xdt = NuGetPackage\App.config.install.xdt
+		NuGetPackage\App.config.uninstall.xdt = NuGetPackage\App.config.uninstall.xdt
+		NuGetPackage\CatBrows.nuspec = NuGetPackage\CatBrows.nuspec
 	EndProjectSection
 EndProject
 Global
