@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2013/01/nuspec.xsd">
-    <metadata minClientVersion="0.7.0">
+    <metadata minClientVersion="0.7.1">
         <id>CatBrows</id>
-        <version>0.7.0</version>
+        <version>0.7.1</version>
         <title>CatBrows</title>
         <authors>Sebastian Hallén</authors>
         <projectUrl>https://github.com/sebastianhallen/CatBrows</projectUrl>
@@ -16,6 +16,7 @@
     </metadata>
     <files>
         <file src="..\CatBrows.Generator\bin\Release\CatBrows.Generator.SpecFlowPlugin.dll" target="tools\CatBrows.Generator.SpecFlowPlugin.dll" />
-	<file src="App.config.transform" target="content" />
+        <file src="App.config.install.xdt" target="content" />
+        <file src="App.config.uninstall.xdt" target="content" />
     </files>
 </package>
