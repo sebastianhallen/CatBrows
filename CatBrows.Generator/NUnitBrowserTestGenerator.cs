@@ -11,7 +11,7 @@
 	public class NUnitBrowserTestGenerator
         : IUnitTestGeneratorProvider
     {
-        private const string TESTFIXTURE_ATTR = "NUnit.Framework.TestFixtureAttribute";
+	    private const string TESTFIXTURE_ATTR = "NUnit.Framework.TestFixtureAttribute";
         private const string TEST_ATTR = "NUnit.Framework.TestAttribute";
         private const string ROW_ATTR = "NUnit.Framework.TestCaseAttribute";
         private const string CATEGORY_ATTR = "NUnit.Framework.CategoryAttribute";
@@ -23,6 +23,7 @@
         private const string DESCRIPTION_ATTR = "NUnit.Framework.DescriptionAttribute";
 
         private const string NO_BROWSER_DEFINED = "No browser defined, please specify @Browser:someBrowser for your scenario.";
+	    private const string GUARD_BROWSER_TAG_PRESENCE_METHOD_NAME = "GuardBrowserTagMissing";
 
         private const string BROWSER_TAG_PREFIX = "Browser:";
 
@@ -38,12 +39,31 @@
 
         public void SetTestClass(TestClassGenerationContext generationContext, string featureTitle, string featureDescription)
         {
+            generationContext.Namespace.Imports.Add(new CodeNamespaceImport("System.Configuration"));
+
             CodeDomHelper.AddAttribute(generationContext.TestClass, TESTFIXTURE_ATTR);
             CodeDomHelper.AddAttribute(generationContext.TestClass, DESCRIPTION_ATTR, featureTitle);
 
-            //add a string field, Browser, to the generated test class that we will use to set ScenarioContext.Current["Browser"] in each test
+            //add a private string field, Browser, to the generated test class that we will use to set ScenarioContext.Current["Browser"] in each test
             generationContext.TestClass.Members.Add(new CodeMemberField(typeof (string), "Browser"));
+
+            var guardBrowserTagMissing = CreateMethod(GUARD_BROWSER_TAG_PRESENCE_METHOD_NAME, new[]
+                {
+                    CreateStatement(@"var enforceExistenceOfBrowserTagRaw = ConfigurationManager.AppSettings[""CatBrowsEnforcesExistenceOfBrowserTag""]"),
+                    CreateStatement(@"bool enforceExistenceOfBrowserTag"),
+                    //CreateStatement(@"bool.TryParse(enforceExistenceOfBrowserTagRaw, out enforceExistenceOfBrowserTag)"),
+                    new CodeConditionStatement(
+                        new CodeVariableReferenceExpression("bool.TryParse(enforceExistenceOfBrowserTagRaw, out enforceExistenceOfBrowserTag) && enforceExistenceOfBrowserTag"), 
+                            new CodeConditionStatement(new CodeSnippetExpression("string.IsNullOrEmpty(this.Browser)"),
+                                CreateThrowStatement(NO_BROWSER_DEFINED)
+                            )
+                    )
+                });
+
+            generationContext.TestClass.Members.Add(guardBrowserTagMissing);
         }
+
+
 
         public void SetTestClassCategories(TestClassGenerationContext generationContext, IEnumerable<string> featureCategories)
         {
@@ -75,10 +95,12 @@
         public void SetTestInitializeMethod(TestClassGenerationContext generationContext)
         {
             CodeDomHelper.AddAttribute(generationContext.TestInitializeMethod, TESTSETUP_ATTR);
-
+            generationContext.TestInitializeMethod.Statements.Insert(0, CreateStatement("this.Browser = null"));
+           
             //add browser to the scenario context
-            //browser is set at the top of each test method
-            generationContext.ScenarioInitializeMethod.Statements.Add(new CodeSnippetStatement(@"            ScenarioContext.Current.Add(""Browser"", this.Browser);"));
+            //browser is set at the top of each test method for features with @Browser tags
+            var setBrowserOnContext = CreateStatement(@"ScenarioContext.Current.Add(""Browser"", this.Browser)");
+            generationContext.ScenarioInitializeMethod.Statements.Add(setBrowserOnContext);
         }
 
         public void SetTestCleanupMethod(TestClassGenerationContext generationContext)
@@ -94,8 +116,8 @@
             //store the description for later
             testMethod.UserData.Add(DESCRIPTION_ATTR, scenarioTitle);
 
-            //add a throw statement as the first line, this will be removed by SetTestMethodCategories but is needed in the cases where no tags at all are supplied
-            testMethod.Statements.Insert(0, CreateThrowStatement(NO_BROWSER_DEFINED));
+            //inject the guard statement
+            testMethod.Statements.Insert(0, CreateStatement(GUARD_BROWSER_TAG_PRESENCE_METHOD_NAME + "()"));
         }
 
         public void SetTestMethodCategories(TestClassGenerationContext generationContext, CodeMemberMethod testMethod, IEnumerable<string> scenarioCategories)
@@ -135,15 +157,8 @@
                     this.CodeDomHelper.AddAttribute(testMethod, ROW_ATTR, browserArgument);
                 }
 
-                //remove the throw statement added by SetTestMethod
-                testMethod.Statements.RemoveAt(0);
-                //... and replace it with a browser initialization
-                testMethod.Statements.Insert(0, new CodeSnippetStatement(@"            this.Browser = browser;"));
-            }
-            //when no browser tag is present, replace method body with a throw new Exception(NO_BROWSER_DEFINED)
-            else
-            {
-                this.ReplaceMethodBody(testMethod, CreateThrowStatement(NO_BROWSER_DEFINED));
+                //Yay, we have a browser tag
+                testMethod.Statements.Insert(0, CreateStatement("this.Browser = browser"));
             }
         }
 
@@ -215,9 +230,8 @@
             }
             else
             {
-                //no browser tag present, add the default test case attribute and let the "no browser defined"-exception explode when running the test
+                //no browser tag present, add the default test case attribute and let the browser tag guard handle this at run time
                 CodeDomHelper.AddAttribute(testMethod, ROW_ATTR, args.ToArray());
-                this.ReplaceMethodBody(testMethod, CreateThrowStatement(NO_BROWSER_DEFINED));
             }
         }
 
@@ -226,17 +240,21 @@
             // doing nothing since we support RowTest
         }
 
-        private void ReplaceMethodBody(CodeMemberMethod testMethod, CodeStatement newBody)
+        private static CodeMemberMethod CreateMethod(string name, IEnumerable<CodeStatement> statements)
         {
-            var numberOfRows = testMethod.Statements.Count;
-            for (var i = numberOfRows; i > 0; --i)
+            var method = new CodeMemberMethod { Name = name };
+            foreach (var statement in statements)
             {
-                testMethod.Statements.RemoveAt(0);
+                method.Statements.Add(statement);
             }
-
-            testMethod.Statements.Add(newBody);
+            return method;
         }
-        
+
+        private static CodeStatement CreateStatement(string statement)
+        {
+            return new CodeSnippetStatement(@"            " + statement + ";");
+        }
+
         private static CodeStatement CreateThrowStatement(string message)
         {
             return new CodeThrowExceptionStatement(new CodeObjectCreateExpression(typeof(Exception), new CodePrimitiveExpression(message)));

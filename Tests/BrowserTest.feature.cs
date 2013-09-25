@@ -14,6 +14,7 @@
 namespace CatBrows.Generator.Tests
 {
     using TechTalk.SpecFlow;
+    using System.Configuration;
     
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("TechTalk.SpecFlow", "1.9.0.77")]
@@ -49,6 +50,7 @@ namespace CatBrows.Generator.Tests
         [NUnit.Framework.SetUpAttribute()]
         public virtual void TestInitialize()
         {
+            this.Browser = null;
         }
         
         [NUnit.Framework.TearDownAttribute()]
@@ -76,11 +78,24 @@ namespace CatBrows.Generator.Tests
 #line hidden
         }
         
+        private void GuardBrowserTagMissing()
+        {
+            var enforceExistenceOfBrowserTagRaw = ConfigurationManager.AppSettings["CatBrowsEnforcesExistenceOfBrowserTag"];
+            bool enforceExistenceOfBrowserTag;
+            if (bool.TryParse(enforceExistenceOfBrowserTagRaw, out enforceExistenceOfBrowserTag) && enforceExistenceOfBrowserTag)
+            {
+                if (string.IsNullOrEmpty(this.Browser))
+                {
+                    throw new System.Exception("No browser defined, please specify @Browser:someBrowser for your scenario.");
+                }
+            }
+        }
+        
         [NUnit.Framework.TestAttribute()]
         [NUnit.Framework.IgnoreAttribute()]
         public virtual void NoTagsAtAll()
         {
-            throw new System.Exception("No browser defined, please specify @Browser:someBrowser for your scenario.");
+            GuardBrowserTagMissing();
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("No tags at all", new string[] {
                         "ignore"});
 #line 10
@@ -98,7 +113,7 @@ this.FeatureBackground();
         [NUnit.Framework.CategoryAttribute("SomeTag")]
         public virtual void TagsButNoBrowserTag()
         {
-            throw new System.Exception("No browser defined, please specify @Browser:someBrowser for your scenario.");
+            GuardBrowserTagMissing();
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Tags but no browser tag", new string[] {
                         "SomeTag",
                         "ignore"});
@@ -117,6 +132,7 @@ this.FeatureBackground();
         public virtual void SingleBrowserTagChrome(string browser)
         {
             this.Browser = browser;
+            GuardBrowserTagMissing();
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Single browser tag chrome", new string[] {
                         "Browser:chrome"});
 #line 19
@@ -135,6 +151,7 @@ this.FeatureBackground();
         public virtual void MultipleBrowserTags(string browser)
         {
             this.Browser = browser;
+            GuardBrowserTagMissing();
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Multiple browser tags", new string[] {
                         "Browser:firefox",
                         "Browser:chrome"});
@@ -154,7 +171,22 @@ this.FeatureBackground();
         [NUnit.Framework.TestCaseAttribute("other value", null)]
         public virtual void NoTagsScenarioOutline(string header, string[] exampleTags)
         {
-            throw new System.Exception("No browser defined, please specify @Browser:someBrowser for your scenario.");
+            GuardBrowserTagMissing();
+            string[] @__tags = new string[] {
+                    "ignore"};
+            if ((exampleTags != null))
+            {
+                @__tags = System.Linq.Enumerable.ToArray(System.Linq.Enumerable.Concat(@__tags, exampleTags));
+            }
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("No tags scenario outline", @__tags);
+#line 28
+this.ScenarioSetup(scenarioInfo);
+#line 6
+this.FeatureBackground();
+#line 29
+ testRunner.Then("the test method should throw a no browser exception", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+            this.ScenarioCleanup();
         }
         
         [NUnit.Framework.TestAttribute()]
@@ -164,7 +196,23 @@ this.FeatureBackground();
         [NUnit.Framework.TestCaseAttribute("other value", null)]
         public virtual void TagsButNoBrowserTagScenarioOutline(string header, string[] exampleTags)
         {
-            throw new System.Exception("No browser defined, please specify @Browser:someBrowser for your scenario.");
+            GuardBrowserTagMissing();
+            string[] @__tags = new string[] {
+                    "sometag",
+                    "ignore"};
+            if ((exampleTags != null))
+            {
+                @__tags = System.Linq.Enumerable.ToArray(System.Linq.Enumerable.Concat(@__tags, exampleTags));
+            }
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Tags but no browser tag scenario outline", @__tags);
+#line 37
+this.ScenarioSetup(scenarioInfo);
+#line 6
+this.FeatureBackground();
+#line 38
+ testRunner.Then("the test method should throw a no browser exception", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+            this.ScenarioCleanup();
         }
         
         [NUnit.Framework.TestAttribute()]
@@ -172,6 +220,7 @@ this.FeatureBackground();
         public virtual void ScenarioOutlineWithSingleBrowserTag(string browser, string header, string[] exampleTags)
         {
             this.Browser = browser;
+            GuardBrowserTagMissing();
             string[] @__tags = new string[] {
                     "Browser:scenario-outline-browser"};
             if ((exampleTags != null))
@@ -195,6 +244,7 @@ this.FeatureBackground();
         public virtual void ScenarioOutlineWithTwoBrowserTags(string browser, string header, string[] exampleTags)
         {
             this.Browser = browser;
+            GuardBrowserTagMissing();
             string[] @__tags = new string[] {
                     "Browser:chrome",
                     "Browser:firefox"};
@@ -226,6 +276,7 @@ this.FeatureBackground();
         public virtual void ScenarioOutlineWithTwoBrowserTagsAndTaggedExamples(string browser, string header, string[] exampleTags)
         {
             this.Browser = browser;
+            GuardBrowserTagMissing();
             string[] @__tags = new string[] {
                     "Browser:chrome",
                     "Browser:firefox",

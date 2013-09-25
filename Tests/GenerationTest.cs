@@ -10,7 +10,7 @@
         protected OverloadedBrowserTestFeature GeneratedTestCase;
 
         [SetUp]
-        public void Before()
+        public void BeforeGenerationTest()
         {
             this.GeneratedTestCase = new OverloadedBrowserTestFeature();
         }

@@ -2,7 +2,7 @@
 {
     using NUnit.Framework;
     using System;
-
+    
     [TestFixture]
     public class NoBrowserGuardTests
         : GenerationTest
