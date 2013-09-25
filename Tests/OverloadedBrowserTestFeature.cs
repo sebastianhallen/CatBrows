@@ -1,4 +1,4 @@
-﻿namespace Tests
+﻿namespace CatBrows.Generator.Tests
 {
     public class OverloadedBrowserTestFeature
         : BrowserTestFeature

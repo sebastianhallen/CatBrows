@@ -22,7 +22,7 @@
         private const string IGNORE_ATTR = "NUnit.Framework.IgnoreAttribute";
         private const string DESCRIPTION_ATTR = "NUnit.Framework.DescriptionAttribute";
 
-		private const string NO_BROWSER_DEFINED = "No browser defined, please specify @Browser:someBrowser for your scenario.";
+        private const string NO_BROWSER_DEFINED = "No browser defined, please specify @Browser:someBrowser for your scenario.";
 
         private const string BROWSER_TAG_PREFIX = "Browser:";
 
@@ -95,7 +95,7 @@
             testMethod.UserData.Add(DESCRIPTION_ATTR, scenarioTitle);
 
             //add a throw statement as the first line, this will be removed by SetTestMethodCategories but is needed in the cases where no tags at all are supplied
-			testMethod.Statements.Insert(0, CreateThrowStatement(NO_BROWSER_DEFINED));
+            testMethod.Statements.Insert(0, CreateThrowStatement(NO_BROWSER_DEFINED));
         }
 
         public void SetTestMethodCategories(TestClassGenerationContext generationContext, CodeMemberMethod testMethod, IEnumerable<string> scenarioCategories)

@@ -4,8 +4,11 @@ $regProperty = "MSBuildToolsPath"
 
 $msbuildExe = join-path -path (Get-ItemProperty $regKey).$regProperty -childpath "msbuild.exe"
 
-&$msbuildExe 
+&$msbuildExe CatBrows.Generator\CatBrows.Generator.csproj
 
 
-Copy-Item -Force -Path BrowserTestGenerator\bin\Debug\*.* -Destination Tests\plugin
-packages\SpecFlow.1.9.0\tools\specflow.exe generateall Tests\Tests.csproj
+Copy-Item -Force -Path CatBrows.Generator\bin\Debug\*.* -Destination Tests\plugin
+#Remove-Item -Path Tests\*.feature.cs
+#echo "" > .\Tests\BrowserTest.feature.cs
+packages\SpecFlow.1.9.0\tools\specflow.exe generateall Tests\CatBrows.Generator.Tests.csproj
+&$msbuildExe Tests\CatBrows.Generator.Tests.csproj

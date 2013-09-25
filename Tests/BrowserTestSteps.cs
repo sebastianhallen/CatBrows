@@ -1,8 +1,8 @@
-﻿using System;
-using TechTalk.SpecFlow;
-
-namespace Tests
+﻿namespace CatBrows.Generator.Tests
 {
+    using System;
+    using TechTalk.SpecFlow;
+
     [Binding]
     public class BrowserTestSteps
     {

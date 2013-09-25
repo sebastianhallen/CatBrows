@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{F3D34830-0F9C-4A22-BDEE-1AB14CC275AA}</ProjectGuid>
+    <ProjectGuid>{FFA38625-6746-4BEB-A0F5-30205A5E27E5}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>BrowserTestGenerator</RootNamespace>
-    <AssemblyName>BrowserTestGenerator.Generator.SpecFlowPlugin</AssemblyName>
+    <RootNamespace>CatBrows.Generator.Tests</RootNamespace>
+    <AssemblyName>CatBrows.Generator.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
@@ -32,6 +32,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="nunit.framework">
+      <HintPath>..\packages\NUnit.2.6.2\lib\nunit.framework.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -45,30 +48,68 @@
     <Reference Include="TechTalk.SpecFlow.Generator">
       <HintPath>..\packages\SpecFlow.CustomPlugin.1.9.0\lib\net40\TechTalk.SpecFlow.Generator.dll</HintPath>
     </Reference>
-    <Reference Include="TechTalk.SpecFlow.Parser">
-      <HintPath>..\packages\SpecFlow.CustomPlugin.1.9.0\lib\net40\TechTalk.SpecFlow.Parser.dll</HintPath>
-    </Reference>
     <Reference Include="TechTalk.SpecFlow.Utils">
       <HintPath>..\packages\SpecFlow.CustomPlugin.1.9.0\lib\net40\TechTalk.SpecFlow.Utils.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="GeneratorPlugin.cs" />
-    <Compile Include="NoBrowserDefinedException.cs" />
-    <Compile Include="NUnitBrowserTestGenerator.cs" />
+    <Compile Include="BrowserTest.feature.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>BrowserTest.feature</DependentUpon>
+    </Compile>
+    <Compile Include="CategoryTests.cs" />
+    <Compile Include="GenerationTest.cs" />
+    <Compile Include="NoBrowserGuardTests.cs" />
+    <Compile Include="OverloadedBrowserTestFeature.cs" />
+    <Compile Include="BrowserTestSteps.cs" />
+    <Compile Include="TestClassStructureTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TestCaseAttributeTests.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="BrowserTest.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>BrowserTest.feature.cs</LastGenOutput>
+    </None>
+    <None Include="goose.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="copy-plugin" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="plugin\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CatBrows.Generator\CatBrows.Generator.csproj">
+      <Project>{F3D34830-0F9C-4A22-BDEE-1AB14CC275AA}</Project>
+      <Name>CatBrows.Generator</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
+  <PropertyGroup>
+    <PluginTargetDirectory>plugin</PluginTargetDirectory>
+    <PluginSourceDirectory>..\BrowserTestGenerator\bin\Debug</PluginSourceDirectory>
+  </PropertyGroup>
+
   <Target Name="BeforeBuild">
+    <CreateItem Include="$(PluginSourceDirectory)\**\*.*">
+      <Output TaskParameter="Include" ItemName="BuiltPluginFiles" />
+    </CreateItem>
+
+    <Copy SourceFiles="@(BuiltPluginFiles)"
+          DestinationFiles="@(BuiltPluginFiles->'$(PluginTargetDirectory)\%(RecursiveDir)%(Filename)%(Extension)')" />
   </Target>
+-->
   <Target Name="AfterBuild">
   </Target>
-  -->
+  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
 </Project>

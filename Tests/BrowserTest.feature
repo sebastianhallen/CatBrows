@@ -6,10 +6,12 @@
 Background: 
 	Given I have a browser when running the background
 
+@ignore
 Scenario: No tags at all
 	Then the test method should throw a no browser exception
 
 @SomeTag
+@ignore
 Scenario: Tags but no browser tag
 	Then the test method should throw a no browser exception
 
@@ -22,7 +24,7 @@ Scenario: Single browser tag chrome
 Scenario: Multiple browser tags
 	Then the test method should have 2 testcases
 
-
+@ignore
 Scenario Outline: No tags scenario outline
 	Then the test method should throw a no browser exception
 Examples:
@@ -31,6 +33,7 @@ Examples:
 | other value |
 
 @sometag
+@ignore
 Scenario Outline: Tags but no browser tag scenario outline
 	Then the test method should throw a no browser exception
 Examples:
