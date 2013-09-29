@@ -4,16 +4,15 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{FFA38625-6746-4BEB-A0F5-30205A5E27E5}</ProjectGuid>
+    <ProjectGuid>{9A58CA80-78BD-404E-8A3B-BE7CBFF68F4B}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>CatBrows.Generator.Tests</RootNamespace>
-    <AssemblyName>CatBrows.Generator.Tests</AssemblyName>
+    <RootNamespace>TestSample.BrowserGuardEnabled</RootNamespace>
+    <AssemblyName>TestSample.BrowserGuardEnabled</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
-    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -23,7 +22,6 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -32,7 +30,6 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="nunit.framework">
@@ -46,64 +43,40 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="TechTalk.SpecFlow, Version=1.9.0.77, Culture=neutral, PublicKeyToken=0778194805d6db41, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="TechTalk.SpecFlow">
       <HintPath>..\packages\SpecFlow.1.9.0\lib\net35\TechTalk.SpecFlow.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CategoryTests.cs" />
-    <Compile Include="TestClassStructureTests.cs" />
+    <Compile Include="BrowserRequiredTest.feature.cs">
+      <DependentUpon>BrowserRequiredTest.feature</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="BrowserGuardEnabledTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TestCaseAttributeTests.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config">
-      <SubType>Designer</SubType>
+    <None Include="App.config" />
+    <None Include="BrowserRequiredTest.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>BrowserRequiredTest.feature.cs</LastGenOutput>
     </None>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
-    <ProjectReference Include="..\CatBrows.Generator\CatBrows.Generator.csproj">
-      <Project>{F3D34830-0F9C-4A22-BDEE-1AB14CC275AA}</Project>
-      <Name>CatBrows.Generator</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\TestSample.BrowserGuardDisabled\TestSample.BrowserGuardDisabled.csproj">
-      <Project>{ada9e599-9279-47c7-90d0-4162c4be4f73}</Project>
-      <Name>TestSample.BrowserGuardDisabled</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\TestSample.BrowserGuardEnabled\TestSample.BrowserGuardEnabled.csproj">
-      <Project>{9a58ca80-78bd-404e-8a3b-be7cbff68f4b}</Project>
-      <Name>TestSample.BrowserGuardEnabled</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\TestSample.DefaultSettings\TestSample.DefaultSettings.csproj">
-      <Project>{e42b76c3-eb7a-4a7f-a3f5-6d906e2434e0}</Project>
-      <Name>TestSample.DefaultSettings</Name>
-    </ProjectReference>
     <ProjectReference Include="..\TestSample\TestSample.csproj">
-      <Project>{966BF414-9A4F-4EFF-B8C4-8AEC02EC3152}</Project>
+      <Project>{966bf414-9a4f-4eff-b8c4-8aec02ec3152}</Project>
       <Name>TestSample</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
-  <PropertyGroup>
-    <PluginTargetDirectory>plugin</PluginTargetDirectory>
-    <PluginSourceDirectory>..\BrowserTestGenerator\bin\Debug</PluginSourceDirectory>
-  </PropertyGroup>
-
   <Target Name="BeforeBuild">
-    <CreateItem Include="$(PluginSourceDirectory)\**\*.*">
-      <Output TaskParameter="Include" ItemName="BuiltPluginFiles" />
-    </CreateItem>
-
-    <Copy SourceFiles="@(BuiltPluginFiles)"
-          DestinationFiles="@(BuiltPluginFiles->'$(PluginTargetDirectory)\%(RecursiveDir)%(Filename)%(Extension)')" />
   </Target>
--->
   <Target Name="AfterBuild">
   </Target>
-  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
+  -->
 </Project>

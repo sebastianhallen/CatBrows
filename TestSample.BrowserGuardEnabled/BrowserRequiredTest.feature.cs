@@ -11,7 +11,7 @@
 // ------------------------------------------------------------------------------
 #region Designer generated code
 #pragma warning disable
-namespace CatBrows.Generator.Tests
+namespace TestSample.BrowserGuardEnabled
 {
     using TechTalk.SpecFlow;
     using System.Configuration;
@@ -20,22 +20,19 @@ namespace CatBrows.Generator.Tests
     [System.CodeDom.Compiler.GeneratedCodeAttribute("TechTalk.SpecFlow", "1.9.0.77")]
     [System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     [NUnit.Framework.TestFixtureAttribute()]
-    [NUnit.Framework.DescriptionAttribute("BrowserTest")]
-    public partial class BrowserTestFeature
+    [NUnit.Framework.DescriptionAttribute("BrowserRequiredTest")]
+    public partial class BrowserRequiredTestFeature
     {
         
         private string Browser;
         
         private static TechTalk.SpecFlow.ITestRunner testRunner;
         
-#line 1 "BrowserTest.feature"
-#line hidden
-        
         [NUnit.Framework.TestFixtureSetUpAttribute()]
         public virtual void FeatureSetup()
         {
             testRunner = TechTalk.SpecFlow.TestRunnerManager.GetTestRunner();
-            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "BrowserTest", "In order to avoid silly mistakes\r\nAs a math idiot\r\nI want to be told the sum of t" +
+            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "BrowserRequiredTest", "In order to avoid silly mistakes\r\nAs a math idiot\r\nI want to be told the sum of t" +
                     "wo numbers", ProgrammingLanguage.CSharp, ((string[])(null)));
             testRunner.OnFeatureStart(featureInfo);
         }
@@ -72,19 +69,19 @@ namespace CatBrows.Generator.Tests
         
         public virtual void FeatureBackground()
         {
-#line 6
-#line 7
- testRunner.Given("I have a browser when running the background", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
-#line hidden
+            testRunner.Given("I have a browser when running the background", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
         }
         
         private void GuardBrowserTagMissing()
         {
             var enforceExistenceOfBrowserTagRaw = ConfigurationManager.AppSettings["CatBrowsEnforcesExistenceOfBrowserTag"];
             bool enforceExistenceOfBrowserTag;
-            if (bool.TryParse(enforceExistenceOfBrowserTagRaw, out enforceExistenceOfBrowserTag) && enforceExistenceOfBrowserTag)
+            bool hasConfigSetting = bool.TryParse(enforceExistenceOfBrowserTagRaw, out enforceExistenceOfBrowserTag);
+            bool hasBrowser = !string.IsNullOrEmpty(this.Browser);
+            bool shouldGuard = !(hasConfigSetting && !enforceExistenceOfBrowserTag);
+            if (shouldGuard)
             {
-                if (string.IsNullOrEmpty(this.Browser))
+                if (!hasBrowser)
                 {
                     throw new System.Exception("No browser defined, please specify @Browser:someBrowser for your scenario.");
                 }
@@ -98,13 +95,9 @@ namespace CatBrows.Generator.Tests
             GuardBrowserTagMissing();
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("No tags at all", new string[] {
                         "ignore"});
-#line 10
-this.ScenarioSetup(scenarioInfo);
-#line 6
-this.FeatureBackground();
-#line 11
- testRunner.Then("the test method should throw a no browser exception", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line hidden
+            this.ScenarioSetup(scenarioInfo);
+            this.FeatureBackground();
+            testRunner.Then("the test method should throw a no browser exception", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
             this.ScenarioCleanup();
         }
         
@@ -117,13 +110,9 @@ this.FeatureBackground();
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Tags but no browser tag", new string[] {
                         "SomeTag",
                         "ignore"});
-#line 15
-this.ScenarioSetup(scenarioInfo);
-#line 6
-this.FeatureBackground();
-#line 16
- testRunner.Then("the test method should throw a no browser exception", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line hidden
+            this.ScenarioSetup(scenarioInfo);
+            this.FeatureBackground();
+            testRunner.Then("the test method should throw a no browser exception", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
             this.ScenarioCleanup();
         }
         
@@ -135,13 +124,9 @@ this.FeatureBackground();
             GuardBrowserTagMissing();
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Single browser tag chrome", new string[] {
                         "Browser:chrome"});
-#line 19
-this.ScenarioSetup(scenarioInfo);
-#line 6
-this.FeatureBackground();
-#line 20
- testRunner.Then("the test method should have 1 testcase", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line hidden
+            this.ScenarioSetup(scenarioInfo);
+            this.FeatureBackground();
+            testRunner.Then("the test method should have 1 testcase", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
             this.ScenarioCleanup();
         }
         
@@ -155,13 +140,9 @@ this.FeatureBackground();
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Multiple browser tags", new string[] {
                         "Browser:firefox",
                         "Browser:chrome"});
-#line 24
-this.ScenarioSetup(scenarioInfo);
-#line 6
-this.FeatureBackground();
-#line 25
- testRunner.Then("the test method should have 2 testcases", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line hidden
+            this.ScenarioSetup(scenarioInfo);
+            this.FeatureBackground();
+            testRunner.Then("the test method should have 2 testcases", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
             this.ScenarioCleanup();
         }
         
@@ -179,13 +160,9 @@ this.FeatureBackground();
                 @__tags = System.Linq.Enumerable.ToArray(System.Linq.Enumerable.Concat(@__tags, exampleTags));
             }
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("No tags scenario outline", @__tags);
-#line 28
-this.ScenarioSetup(scenarioInfo);
-#line 6
-this.FeatureBackground();
-#line 29
- testRunner.Then("the test method should throw a no browser exception", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line hidden
+            this.ScenarioSetup(scenarioInfo);
+            this.FeatureBackground();
+            testRunner.Then("the test method should throw a no browser exception", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
             this.ScenarioCleanup();
         }
         
@@ -205,13 +182,9 @@ this.FeatureBackground();
                 @__tags = System.Linq.Enumerable.ToArray(System.Linq.Enumerable.Concat(@__tags, exampleTags));
             }
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Tags but no browser tag scenario outline", @__tags);
-#line 37
-this.ScenarioSetup(scenarioInfo);
-#line 6
-this.FeatureBackground();
-#line 38
- testRunner.Then("the test method should throw a no browser exception", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line hidden
+            this.ScenarioSetup(scenarioInfo);
+            this.FeatureBackground();
+            testRunner.Then("the test method should throw a no browser exception", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
             this.ScenarioCleanup();
         }
         
@@ -228,13 +201,9 @@ this.FeatureBackground();
                 @__tags = System.Linq.Enumerable.ToArray(System.Linq.Enumerable.Concat(@__tags, exampleTags));
             }
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("scenario outline with single browser tag", @__tags);
-#line 45
-this.ScenarioSetup(scenarioInfo);
-#line 6
-this.FeatureBackground();
-#line 46
- testRunner.Then("the test method should have 1 testcases", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line hidden
+            this.ScenarioSetup(scenarioInfo);
+            this.FeatureBackground();
+            testRunner.Then("the test method should have 1 testcases", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
             this.ScenarioCleanup();
         }
         
@@ -253,13 +222,9 @@ this.FeatureBackground();
                 @__tags = System.Linq.Enumerable.ToArray(System.Linq.Enumerable.Concat(@__tags, exampleTags));
             }
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("scenario outline with two browser tags", @__tags);
-#line 53
-this.ScenarioSetup(scenarioInfo);
-#line 6
-this.FeatureBackground();
-#line 54
- testRunner.Then("the test method should have 2 testcases", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line hidden
+            this.ScenarioSetup(scenarioInfo);
+            this.FeatureBackground();
+            testRunner.Then("the test method should have 2 testcases", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
             this.ScenarioCleanup();
         }
         
@@ -286,13 +251,9 @@ this.FeatureBackground();
                 @__tags = System.Linq.Enumerable.ToArray(System.Linq.Enumerable.Concat(@__tags, exampleTags));
             }
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("scenario outline with two browser tags and tagged examples", @__tags);
-#line 63
-this.ScenarioSetup(scenarioInfo);
-#line 6
-this.FeatureBackground();
-#line 64
- testRunner.Then("the test method should have 4 testcases", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line hidden
+            this.ScenarioSetup(scenarioInfo);
+            this.FeatureBackground();
+            testRunner.Then("the test method should have 4 testcases", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
             this.ScenarioCleanup();
         }
     }

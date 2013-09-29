@@ -1,24 +1,27 @@
-﻿namespace CatBrows.Generator.Tests
+﻿namespace TestSample
 {
     using System;
     using System.Linq;
     using System.Linq.Expressions;
     using NUnit.Framework;
 
-    public abstract class GenerationTest
+    public abstract class GenerationTest<TSample>
+        where TSample : class, new()
     {
-        protected OverloadedBrowserTestFeature GeneratedTestCase;
+        protected TSample Sample;
 
         [SetUp]
         public void BeforeGenerationTest()
         {
-            this.GeneratedTestCase = new OverloadedBrowserTestFeature();
+            this.Sample = new TSample();
+            this.Sample.GetType().GetMethod("FeatureSetup").Invoke(this.Sample, new object[0]);
         }
+
 
         [TearDown]
         public void After()
         {
-            this.GeneratedTestCase.FeatureTearDown();
+            this.Sample.GetType().GetMethod("FeatureTearDown").Invoke(this.Sample, new object[0]);
         }
 
 

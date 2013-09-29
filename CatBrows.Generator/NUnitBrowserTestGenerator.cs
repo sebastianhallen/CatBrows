@@ -51,10 +51,11 @@
                 {
                     CreateStatement(@"var enforceExistenceOfBrowserTagRaw = ConfigurationManager.AppSettings[""CatBrowsEnforcesExistenceOfBrowserTag""]"),
                     CreateStatement(@"bool enforceExistenceOfBrowserTag"),
-                    //CreateStatement(@"bool.TryParse(enforceExistenceOfBrowserTagRaw, out enforceExistenceOfBrowserTag)"),
-                    new CodeConditionStatement(
-                        new CodeVariableReferenceExpression("bool.TryParse(enforceExistenceOfBrowserTagRaw, out enforceExistenceOfBrowserTag) && enforceExistenceOfBrowserTag"), 
-                            new CodeConditionStatement(new CodeSnippetExpression("string.IsNullOrEmpty(this.Browser)"),
+                    CreateStatement(@"bool hasConfigSetting = bool.TryParse(enforceExistenceOfBrowserTagRaw, out enforceExistenceOfBrowserTag)"),
+                    CreateStatement(@"bool hasBrowser = !string.IsNullOrEmpty(this.Browser)"),
+                    CreateStatement(@"bool shouldGuard = !(hasConfigSetting && !enforceExistenceOfBrowserTag)"),
+                    new CodeConditionStatement(new CodeSnippetExpression("shouldGuard"),
+                        new CodeConditionStatement(new CodeSnippetExpression("!hasBrowser"),
                                 CreateThrowStatement(NO_BROWSER_DEFINED)
                             )
                     )

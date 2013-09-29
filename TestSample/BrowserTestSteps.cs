@@ -1,4 +1,4 @@
-﻿namespace CatBrows.Generator.Tests
+﻿namespace TestSample
 {
     using System;
     using TechTalk.SpecFlow;
@@ -33,15 +33,16 @@
         {
             throw new Exception("Should never get here");
         }
-        
-        [Then(@"the test method should have 1 testcase")]
-        public void ThenTheTestMethodShouldHaveTestcase()
-        {
 
+        [Then(@"the block should pass")]
+        [Then(@"the test method should have 1 testcase")]
+        public void ThenTheBlockShouldPass()
+        {
+            
         }
-        
+
         [Then(@"the test method should have (.*) testcases")]
-        public void ThenTheTestMethodShouldHaveTestcases(int p0)
+        public void ThenTheBlockShouldPass(string p0)
         {
 
         }

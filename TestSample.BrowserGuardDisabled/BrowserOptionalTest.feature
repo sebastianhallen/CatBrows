@@ -1,19 +1,16 @@
-﻿Feature: BrowserTest
+﻿Feature: BrowserOptionalTest
 	In order to avoid silly mistakes
 	As a math idiot
 	I want to be told the sum of two numbers
 
-Background: 
-	Given I have a browser when running the background
-
 @ignore
 Scenario: No tags at all
-	Then the test method should throw a no browser exception
+	Then the block should pass
 
 @SomeTag
 @ignore
 Scenario: Tags but no browser tag
-	Then the test method should throw a no browser exception
+	Then the block should pass
 
 @Browser:chrome
 Scenario: Single browser tag chrome
@@ -26,7 +23,7 @@ Scenario: Multiple browser tags
 
 @ignore
 Scenario Outline: No tags scenario outline
-	Then the test method should throw a no browser exception
+	Then the block should pass
 Examples:
 | header      |
 | value       |
@@ -35,7 +32,7 @@ Examples:
 @sometag
 @ignore
 Scenario Outline: Tags but no browser tag scenario outline
-	Then the test method should throw a no browser exception
+	Then the block should pass
 Examples:
 | header      |
 | value       |

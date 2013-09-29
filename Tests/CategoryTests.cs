@@ -2,15 +2,17 @@
 {
     using System.Linq;
     using NUnit.Framework;
+    using TestSample;
+    using TestSample.DefaultSettings;
 
     [TestFixture]
     public class CategoryTests
-        : GenerationTest
+        : GenerationTest<BrowserRequiredTestFeature>
     {
         [Test]
         public void Should_add_browser_as_category_to_scenario_testrows()
         {
-            var testCaseAttributes = this.GetMethodAttributes<TestCaseAttribute>(() => this.GeneratedTestCase.MultipleBrowserTags("browser"));
+            var testCaseAttributes = this.GetMethodAttributes<TestCaseAttribute>(() => this.Sample.MultipleBrowserTags("browser"));
 
             var chromeCase = testCaseAttributes.Single(attr => "chrome".Equals((string) attr.Category));
             var firefoxCase = testCaseAttributes.Single(attr => "firefox".Equals(attr.Category));
@@ -23,7 +25,7 @@
         public void Should_include_scenario_outline_example_tags_in_test_case_row_categories()
         {
             var rows = this.GetMethodAttributes<TestCaseAttribute>(() =>
-                                                                   this.GeneratedTestCase.ScenarioOutlineWithTwoBrowserTagsAndTaggedExamples("browser", "header", null)).ToArray();
+                                                                   this.Sample.ScenarioOutlineWithTwoBrowserTagsAndTaggedExamples("browser", "header", null)).ToArray();
 
             var tagCombinations = rows.Select(row => row.Categories.OfType<string>());
 
