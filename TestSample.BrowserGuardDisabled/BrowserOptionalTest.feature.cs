@@ -69,6 +69,7 @@ namespace TestSample.BrowserGuardDisabled
         
         private void GuardBrowserTagMissing()
         {
+            var browserMissingMessage = ConfigurationManager.AppSettings["CatBrows-BrowserMissingMessage"] ?? "No browser defined, please specify @Browser:someBrowser for your scenario.";
             var enforceExistenceOfBrowserTagRaw = ConfigurationManager.AppSettings["CatBrows-RequiresBrowser"];
             bool enforceExistenceOfBrowserTag;
             bool hasConfigSetting = bool.TryParse(enforceExistenceOfBrowserTagRaw, out enforceExistenceOfBrowserTag);
@@ -78,7 +79,7 @@ namespace TestSample.BrowserGuardDisabled
             {
                 if (!hasBrowser)
                 {
-                    throw new System.Exception("No browser defined, please specify @Browser:someBrowser for your scenario.");
+                    throw new System.Exception(browserMissingMessage);
                 }
             }
         }

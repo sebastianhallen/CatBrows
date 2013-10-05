@@ -22,8 +22,9 @@
         private const string IGNORE_ATTR = "NUnit.Framework.IgnoreAttribute";
         private const string DESCRIPTION_ATTR = "NUnit.Framework.DescriptionAttribute";
 
-	    private const string ENFORCE_BROWSER_SETTING_KEY = "CatBrows-RequiresBrowser";
-        private const string NO_BROWSER_DEFINED = "No browser defined, please specify @Browser:someBrowser for your scenario.";
+        private const string ENFORCE_BROWSER_SETTING_KEY = "CatBrows-RequiresBrowser";
+	    private const string NO_BROWSER_DEFINED_MESSSAGE_SETTINGS_KEY = "CatBrows-BrowserMissingMessage";
+        private const string DEFAULT_NO_BROWSER_DEFINED_MESSAGE = "No browser defined, please specify @Browser:someBrowser for your scenario.";
         private const string GUARD_BROWSER_TAG_PRESENCE_METHOD_NAME = "GuardBrowserTagMissing";
         private const string BROWSER_TAG_PREFIX = "Browser:";
 
@@ -52,6 +53,7 @@
             // is present in app.config
             var guardBrowserTagMissing = CreateMethod(GUARD_BROWSER_TAG_PRESENCE_METHOD_NAME, new[]
                 {
+                    CreateStatement(@"var browserMissingMessage = ConfigurationManager.AppSettings[""" + NO_BROWSER_DEFINED_MESSSAGE_SETTINGS_KEY + @"""] ?? """ + DEFAULT_NO_BROWSER_DEFINED_MESSAGE + @""""),
                     CreateStatement(@"var enforceExistenceOfBrowserTagRaw = ConfigurationManager.AppSettings[""" + ENFORCE_BROWSER_SETTING_KEY + @"""]"),
                     CreateStatement(@"bool enforceExistenceOfBrowserTag"),
                     CreateStatement(@"bool hasConfigSetting = bool.TryParse(enforceExistenceOfBrowserTagRaw, out enforceExistenceOfBrowserTag)"),
@@ -59,7 +61,7 @@
                     CreateStatement(@"bool shouldGuard = !(hasConfigSetting && !enforceExistenceOfBrowserTag)"),
                     new CodeConditionStatement(new CodeSnippetExpression("shouldGuard"),
                         new CodeConditionStatement(new CodeSnippetExpression("!hasBrowser"),
-                                CreateThrowStatement(NO_BROWSER_DEFINED)
+                                CreateThrowStatement(new CodeVariableReferenceExpression("browserMissingMessage"))
                             )
                     )
                 });
@@ -261,7 +263,12 @@
 
         private static CodeStatement CreateThrowStatement(string message)
         {
-            return new CodeThrowExceptionStatement(new CodeObjectCreateExpression(typeof(Exception), new CodePrimitiveExpression(message)));
+            return CreateThrowStatement(new CodePrimitiveExpression(message));
+        }
+
+        private static CodeStatement CreateThrowStatement(CodeExpression message)
+        {
+            return new CodeThrowExceptionStatement(new CodeObjectCreateExpression(typeof(Exception), message));
         }
     }
 }

@@ -36,7 +36,7 @@
         {
             var exception = Assert.Throws<Exception>(() => action());
 
-            Assert.That(exception.Message, Is.EqualTo("No browser defined, please specify @Browser:someBrowser for your scenario."));
+            Assert.That(exception.Message, Is.EqualTo("Oh noes, there is no @Browser-tag present."));
         }
     }
 }
