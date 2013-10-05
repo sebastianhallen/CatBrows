@@ -11,7 +11,7 @@
 	public class NUnitBrowserTestGenerator
         : IUnitTestGeneratorProvider
     {
-	    private const string TESTFIXTURE_ATTR = "NUnit.Framework.TestFixtureAttribute";
+        private const string TESTFIXTURE_ATTR = "NUnit.Framework.TestFixtureAttribute";
         private const string TEST_ATTR = "NUnit.Framework.TestAttribute";
         private const string ROW_ATTR = "NUnit.Framework.TestCaseAttribute";
         private const string CATEGORY_ATTR = "NUnit.Framework.CategoryAttribute";
@@ -22,9 +22,9 @@
         private const string IGNORE_ATTR = "NUnit.Framework.IgnoreAttribute";
         private const string DESCRIPTION_ATTR = "NUnit.Framework.DescriptionAttribute";
 
+	    private const string ENFORCE_BROWSER_SETTING_KEY = "CatBrows-RequiresBrowser";
         private const string NO_BROWSER_DEFINED = "No browser defined, please specify @Browser:someBrowser for your scenario.";
-	    private const string GUARD_BROWSER_TAG_PRESENCE_METHOD_NAME = "GuardBrowserTagMissing";
-
+        private const string GUARD_BROWSER_TAG_PRESENCE_METHOD_NAME = "GuardBrowserTagMissing";
         private const string BROWSER_TAG_PREFIX = "Browser:";
 
         protected CodeDomHelper CodeDomHelper { get; set; }
@@ -47,9 +47,12 @@
             //add a private string field, Browser, to the generated test class that we will use to set ScenarioContext.Current["Browser"] in each test
             generationContext.TestClass.Members.Add(new CodeMemberField(typeof (string), "Browser"));
 
+            //create the browser guard method that enforces the use of @Browser tags for scenarios unless 
+            //  <appSettings><add key="CatBrows-RequiresBrowser" value="false" /></appSettings>
+            // is present in app.config
             var guardBrowserTagMissing = CreateMethod(GUARD_BROWSER_TAG_PRESENCE_METHOD_NAME, new[]
                 {
-                    CreateStatement(@"var enforceExistenceOfBrowserTagRaw = ConfigurationManager.AppSettings[""CatBrowsEnforcesExistenceOfBrowserTag""]"),
+                    CreateStatement(@"var enforceExistenceOfBrowserTagRaw = ConfigurationManager.AppSettings[""" + ENFORCE_BROWSER_SETTING_KEY + @"""]"),
                     CreateStatement(@"bool enforceExistenceOfBrowserTag"),
                     CreateStatement(@"bool hasConfigSetting = bool.TryParse(enforceExistenceOfBrowserTagRaw, out enforceExistenceOfBrowserTag)"),
                     CreateStatement(@"bool hasBrowser = !string.IsNullOrEmpty(this.Browser)"),

@@ -69,7 +69,7 @@ namespace TestSample.BrowserGuardDisabled
         
         private void GuardBrowserTagMissing()
         {
-            var enforceExistenceOfBrowserTagRaw = ConfigurationManager.AppSettings["CatBrowsEnforcesExistenceOfBrowserTag"];
+            var enforceExistenceOfBrowserTagRaw = ConfigurationManager.AppSettings["CatBrows-RequiresBrowser"];
             bool enforceExistenceOfBrowserTag;
             bool hasConfigSetting = bool.TryParse(enforceExistenceOfBrowserTagRaw, out enforceExistenceOfBrowserTag);
             bool hasBrowser = !string.IsNullOrEmpty(this.Browser);
