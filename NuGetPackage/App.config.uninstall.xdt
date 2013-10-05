@@ -2,7 +2,11 @@
 <configuration xmlns:xdt="http://schemas.microsoft.com/XML-Document-Transform">
   <specFlow>
     <plugins>
-      <add name="CatBrows" path="..\packages\CatBrows.0.7.1\tools" type="Generator" xdt:Transform="Remove"/>
+      <add name="CatBrows" path="..\packages\CatBrows.0.7.1\tools" type="Generator" xdt:Transform="Remove " xdt:Locator="Match(key)"/>
     </plugins>
   </specFlow>
+
+  <appSettings>
+    <add key="CatBrows-RequiresBrowser" value="true" xdt:Transform="Remove" xdt:Locator="Match(key)" />
+  </appSettings>
 </configuration>

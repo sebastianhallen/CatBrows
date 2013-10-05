@@ -13,4 +13,8 @@
     </plugins>
     
   </specFlow>
+
+  <appSettings xdt:Transform="InsertIfMissing">
+    <add key="CatBrows-RequiresBrowser" value="true" xdt:Transform="InsertIfMissing" xdt:Locator="Match(key)" />
+  </appSettings>
 </configuration>
