@@ -1,5 +1,6 @@
 ﻿namespace CatBrows.Generator.Tests
 {
+    using System;
     using System.Linq;
     using NUnit.Framework;
     using TestSample;
@@ -14,7 +15,7 @@
         {
             var testCaseAttributes = this.GetMethodAttributes<TestCaseAttribute>(() => this.Sample.MultipleBrowserTags("browser"));
 
-            var chromeCase = testCaseAttributes.Single(attr => "chrome".Equals((string) attr.Category));
+            var chromeCase = testCaseAttributes.Single(attr => "chrome".Equals((string)attr.Category));
             var firefoxCase = testCaseAttributes.Single(attr => "firefox".Equals(attr.Category));
 
             Assert.That(chromeCase.Categories.Count, Is.EqualTo(1), "Chrome was not set as category");
@@ -36,6 +37,29 @@
                     new [] {"each-commit", "chrome" },
                     new [] {"each-commit", "firefox" }
                 }));
+        }
+
+        [Test]
+        public void Should_add_class_name_as_category_to_fixture()
+        {
+            var fixtureCategories = this.GetClassAttributes<BrowserRequiredTestFeature, CategoryAttribute>();
+
+            Assert.That(fixtureCategories.Any(cat => cat.Name.Equals("BrowserRequiredTestFeature")));
+        }
+
+        [Test]
+        public void Should_add_last_part_of_namespace_as_category_to_fixture()
+        {
+            var fixtureCategories = this.GetClassAttributes<BrowserRequiredTestFeature, CategoryAttribute>();
+
+            Assert.That(fixtureCategories.Any(cat => cat.Name.Equals("DefaultSettings")));
+
+        }
+
+        private TAttribute[] GetClassAttributes<T, TAttribute>()
+            where TAttribute : Attribute
+        {
+            return typeof(T).GetCustomAttributes(typeof(TAttribute), true).Cast<TAttribute>().ToArray();
         }
     }
 }

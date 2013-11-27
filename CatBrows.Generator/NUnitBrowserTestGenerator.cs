@@ -44,6 +44,9 @@
 
             CodeDomHelper.AddAttribute(generationContext.TestClass, TESTFIXTURE_ATTR);
             CodeDomHelper.AddAttribute(generationContext.TestClass, DESCRIPTION_ATTR, featureTitle);
+            CodeDomHelper.AddAttribute(generationContext.TestClass, CATEGORY_ATTR, generationContext.TestClass.Name);
+            CodeDomHelper.AddAttribute(generationContext.TestClass, CATEGORY_ATTR, generationContext.Namespace.Name.Split('.').Last());
+
 
             //add a private string field, Browser, to the generated test class that we will use to set ScenarioContext.Current["Browser"] in each test
             generationContext.TestClass.Members.Add(new CodeMemberField(typeof (string), "Browser"));
