@@ -21,10 +21,15 @@ Scenario: Single browser tag chrome
 
 @Browser:firefox
 @Browser:chrome
+@Duplicate:Property
+@Duplicate:Property
 Scenario: Multiple browser tags
 	Then the test method should have 2 testcases
 
 @ignore
+@:
+@a:
+@:a
 Scenario Outline: No tags scenario outline
 	Then the test method should throw a no browser exception
 Examples:
@@ -60,6 +65,7 @@ Examples:
 @Browser:chrome
 @Browser:firefox
 @OutlineTag
+@CustomProperty:PropertyValue
 Scenario Outline: scenario outline with two browser tags and tagged examples
 	Then the test method should have 4 testcases
 @nightly

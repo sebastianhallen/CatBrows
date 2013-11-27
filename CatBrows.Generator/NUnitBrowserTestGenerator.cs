@@ -11,6 +11,7 @@
 	public class NUnitBrowserTestGenerator
         : IUnitTestGeneratorProvider
     {
+        private const string PROPERTY_ATTR = "NUnit.Framework.Property";
         private const string TESTFIXTURE_ATTR = "NUnit.Framework.TestFixtureAttribute";
         private const string TEST_ATTR = "NUnit.Framework.TestAttribute";
         private const string ROW_ATTR = "NUnit.Framework.TestCaseAttribute";
@@ -133,14 +134,38 @@
         {
             //we don't want "@Browser:browser" as separate categories. We only want these categories on the actual test case rows.
             var categories = scenarioCategories.ToArray();
-            var categoriesForAllTests = categories.Where(category => !category.StartsWith(BROWSER_TAG_PREFIX));
+            var categoriesForAllTests = categories.Where(category => !category.StartsWith(BROWSER_TAG_PREFIX)).ToArray();
             CodeDomHelper.AddAttributeForEachValue(testMethod, CATEGORY_ATTR, categoriesForAllTests);
 
+            //add Property attributes for all tags containing a ':' separated key value pair (except for browser)
+            var properties = categoriesForAllTests
+                .Where(category => category.Contains(":"))
+                .Select(category => category.Split(':'))
+                .Where(property => property.Count() == 2)
+                .Select(property => new
+                    {
+                        Key = property[0].Trim(),
+                        Value = property[1].Trim()
+                    })
+                .Where(property => !string.IsNullOrEmpty(property.Key) && !string.IsNullOrEmpty(property.Value));
+
+            //filter out duplicate property keys
+            var uniqueProperties = properties
+                .GroupBy(property => property.Key)
+                .Where(group => group.Count() == 1)
+                .Select(group => group.First());
+
+            foreach (var property in uniqueProperties)
+            {
+                CodeDomHelper.AddAttribute(testMethod, PROPERTY_ATTR, property.Key, property.Value);
+            }
+            
+
+            //and finally determine which browsers we should inject
             var browsers = categories
                 .Where(category => category.StartsWith(BROWSER_TAG_PREFIX))
                 .Select(category => category.Replace(BROWSER_TAG_PREFIX, ""))
                 .ToArray();
-            
             
             if (browsers.Any())
             {
