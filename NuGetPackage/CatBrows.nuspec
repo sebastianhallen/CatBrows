@@ -11,7 +11,9 @@
           <dependency id="SpecFlow" />
           <dependency id="NUnit" />
         </dependencies>
-        <frameworkAssemblies>System.Configuration</frameworkAssemblies>
+        <frameworkAssemblies>
+          <frameworkAssembly assemblyName="System.Configuration" />
+        </frameworkAssemblies>
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
         <description>CatBrows is a SpecFlow generator plugin that adds the possibility to tag you scenarios with @Browser:SomeBrowser tags. Each @Browser-tag will result in a separate test run where value for the browser is stored in ScenarioContext.Current["Browser"].</description>
         <summary>Browser tagging for spec flow scenarios.</summary>
