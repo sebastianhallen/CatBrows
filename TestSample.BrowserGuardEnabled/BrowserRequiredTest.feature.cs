@@ -30,6 +30,38 @@ namespace TestSample.BrowserGuardEnabled
         
         private static TechTalk.SpecFlow.ITestRunner testRunner;
         
+        internal static object[] SingleBrowserTagChrome_chrome = new object[] {
+                new object[] {
+                        "chrome"}};
+        
+        internal static object[] MultipleBrowserTags_firefox = new object[] {
+                new object[] {
+                        "firefox"}};
+        
+        internal static object[] MultipleBrowserTags_chrome = new object[] {
+                new object[] {
+                        "chrome"}};
+        
+        internal static object[] ScenarioOutlineWithSingleBrowserTag_scenariooutlinebrowser = new object[] {
+                new object[] {
+                        "scenario-outline-browser"}};
+        
+        internal static object[] ScenarioOutlineWithTwoBrowserTags_chrome = new object[] {
+                new object[] {
+                        "chrome"}};
+        
+        internal static object[] ScenarioOutlineWithTwoBrowserTags_firefox = new object[] {
+                new object[] {
+                        "firefox"}};
+        
+        internal static object[] ScenarioOutlineWithTwoBrowserTagsAndTaggedExamples_chrome = new object[] {
+                new object[] {
+                        "chrome"}};
+        
+        internal static object[] ScenarioOutlineWithTwoBrowserTagsAndTaggedExamples_firefox = new object[] {
+                new object[] {
+                        "firefox"}};
+        
         [NUnit.Framework.TestFixtureSetUpAttribute()]
         public virtual void FeatureSetup()
         {

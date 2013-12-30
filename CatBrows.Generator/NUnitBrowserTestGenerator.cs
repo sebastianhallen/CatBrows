@@ -189,9 +189,13 @@
                             new CodeAttributeArgument("Category", new CodePrimitiveExpression(browser))
                         };
                     this.CodeDomHelper.AddAttribute(testMethod, ROW_ATTR, browserArgument);
+
+
+                    /* Test case source version */
+                    CreateTestCaseSource(generationContext, testMethod.Name, browser, new[] {new [] {browser}});
                 }
 
-                //Yay, we have a browser tag
+                //Yay, we have a browser tag, assign it to the Browser field in the method body
                 testMethod.Statements.Insert(0, CreateStatement("this.Browser = browser"));
             }
         }
@@ -272,6 +276,26 @@
         public void SetTestMethodAsRow(TestClassGenerationContext generationContext, CodeMemberMethod testMethod, string scenarioTitle, string exampleSetName, string variantName, IEnumerable<KeyValuePair<string, string>> arguments)
         {
             // doing nothing since we support RowTest
+        }
+
+        private static string CreateTestCaseSource(TestClassGenerationContext generationContext, string testMethodName,
+                                            string browser, IEnumerable<IEnumerable<string>> rows)
+        {
+            var testCaseSourceName = testMethodName + "_" + new string(browser.Where(char.IsLetterOrDigit).ToArray());
+            var type = new CodeTypeReference(typeof(object[]));
+            var member = new CodeMemberField(type, testCaseSourceName);
+            member.Type = type;
+            member.Attributes &= ~MemberAttributes.AccessMask & ~MemberAttributes.ScopeMask;
+            member.Attributes |= MemberAttributes.FamilyAndAssembly | MemberAttributes.Static;
+
+            member.InitExpression = new CodeArrayCreateExpression(typeof(object),
+                rows.Select(row => new CodeArrayCreateExpression(typeof(object)
+                    , row.Select(testCaseArgument => new CodePrimitiveExpression(testCaseArgument)).ToArray()
+                )).ToArray()
+            );
+            generationContext.TestClass.Members.Add(member);
+          
+            return testCaseSourceName;
         }
 
         private static CodeMemberMethod CreateMethod(string name, IEnumerable<CodeStatement> statements)

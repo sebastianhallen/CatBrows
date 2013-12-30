@@ -10,6 +10,19 @@
         : GenerationTest<BrowserRequiredTestFeature>
     {
         [Test]
+        public void Should_create_test_case_source_with_browser_suffix_for_each_browser()
+        {
+            var chromeArguments = (object[])BrowserRequiredTestFeature.MultipleBrowserTags_chrome.Single();
+            var firefoxArguments = (object[])BrowserRequiredTestFeature.MultipleBrowserTags_firefox.Single();
+            
+            Assert.That(chromeArguments.Single(), Is.EqualTo("chrome"));
+            Assert.That(firefoxArguments.Single(), Is.EqualTo("firefox"));
+        }
+
+
+        /* deprecated */
+         
+        [Test]
         public void Should_decorate_method_with_test_case_attribute_when_supplying_a_browser_tag_to_a_scenario()
         {
             var testCaseAttributes = this.GetMethodAttributes<TestCaseAttribute>(() => this.Sample.SingleBrowserTagChrome("browser"));
