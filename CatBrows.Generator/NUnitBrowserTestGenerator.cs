@@ -15,6 +15,7 @@
         private const string TESTFIXTURE_ATTR = "NUnit.Framework.TestFixtureAttribute";
         private const string TEST_ATTR = "NUnit.Framework.TestAttribute";
         private const string ROW_ATTR = "NUnit.Framework.TestCaseAttribute";
+        private const string ROW_ATTR2 = "NUnit.Framework.TestCaseSourceAttribute";
         private const string CATEGORY_ATTR = "NUnit.Framework.CategoryAttribute";
         private const string TESTSETUP_ATTR = "NUnit.Framework.SetUpAttribute";
         private const string TESTFIXTURESETUP_ATTR = "NUnit.Framework.TestFixtureSetUpAttribute";
@@ -173,28 +174,23 @@
                 //inject an argument, string browser, as the first argument in the test method
                 testMethod.Parameters.Insert(0, new CodeParameterDeclarationExpression("System.string", "browser"));
 
-                var description = (string)testMethod.UserData[DESCRIPTION_ATTR];
                 foreach (var browser in browsers)
                 {
                     //store browser in user data so we can use it later if this is a row test/scenario ouline
                     testMethod.UserData.Add(BROWSER_TAG_PREFIX + browser, browser);
                     
-                    //add TestCase-Attributes ...
+                    var testCaseSource = CreateTestCaseSource(generationContext, testMethod.Name, browser);
+                    AddTestCaseSourceRow(generationContext, testCaseSource, new[] { browser });
+
                     var browserArgument = new[]
                         {
-                            // first argument == the browser value
-                            new CodeAttributeArgument(new CodePrimitiveExpression(browser)),
-                            // description
-                            new CodeAttributeArgument("Description", new CodePrimitiveExpression(description + " (" + browser + ")")),
+                            // first argument == test case source data
+                            new CodeAttributeArgument(new CodePrimitiveExpression(testCaseSource)),
                             // add browser value as category
                             new CodeAttributeArgument("Category", new CodePrimitiveExpression(browser))
                         };
-                    this.CodeDomHelper.AddAttribute(testMethod, ROW_ATTR, browserArgument);
+                    this.CodeDomHelper.AddAttribute(testMethod, ROW_ATTR2, browserArgument);
 
-
-                    /* Test case source version */
-                    var testCaseSource = CreateTestCaseSource(generationContext, testMethod.Name, browser);
-                    AddTestCaseSourceRow(generationContext, testCaseSource, new[] { new[] { browser } });
                 }
 
                 //Yay, we have a browser tag, assign it to the Browser field in the method body
@@ -239,53 +235,20 @@
 
             if (browsers.Any())
             {
-                //remove TestCaseAttributes added from SetTestMethod
-                // TestCaseAttributes from SetTestMethod will only have 
-                //three arguments (browser + Description + category) when the "real" will have at least four:
-                //browser, arguments-from-example..., exampleTags
-                var superfluousAttributes = testMethod.CustomAttributes
-                                                      .Cast<CodeAttributeDeclaration>()
-                                                      .Where(attribute => attribute.Arguments.Count == 3)
-                                                      .ToArray();
-                foreach (var attribute in superfluousAttributes)
-                {
-                    testMethod.CustomAttributes.Remove(attribute);
-                }
-
-                //add a testcase row for each occurrence of @Browser-tag
-                var description = (string)testMethod.UserData[DESCRIPTION_ATTR];
-                var testCaseSourceRows = browsers.ToDictionary(browser => browser.ToString(), _ => new List<IEnumerable<string>>());
-                
                 foreach (var browser in browsers)
                 {
-                    var categories = tags.Union(new[] { browser });
-                    var rowArguments = new[] { new CodeAttributeArgument(new CodePrimitiveExpression(browser)) }
-                        .Concat(args)
-                        .Concat(new[]
-                        {
-                            new CodeAttributeArgument("Description", new CodePrimitiveExpression(description + " (" + browser + ")")),
-                            new CodeAttributeArgument("Category", new CodePrimitiveExpression(string.Join(",", categories)))
-                        })
-                        .ToArray();
-                    CodeDomHelper.AddAttribute(testMethod, ROW_ATTR, rowArguments);
+                    //var methodNameSafeTags = tags.Select(tag => new string(tag.Select(c => c).Where(char.IsLetterOrDigit).ToArray()));
+                    //var tagSuffix = string.Join("_", methodNameSafeTags);
+                    
+                    //var testCaseSourceName = testMethod.Name;
+                    
+                    //var rawTestCaseSource = string.IsNullOrEmpty(tagSuffix)
+                    //                             ? testCaseSourceName
+                    //                             : testCaseSourceName + "_" + tagSuffix;
 
-                    /* test case source version */
-                    testCaseSourceRows[browser.ToString()].Add(arguments);
-                }
-                foreach (var testCaseSourceRow in testCaseSourceRows)
-                {
-                    var methodNameSafeTags = tags.Select(tag => new string(tag.Select(c => c).Where(char.IsLetterOrDigit).ToArray()));
-                    var tagSuffix = string.Join("_", methodNameSafeTags);
-                    var testCaseSourceName = testMethod.Name;
-                    if (!string.IsNullOrWhiteSpace(tagSuffix))
-                    {
-                        testCaseSourceName += "_" + tagSuffix;
-                    }
-
-                    var browser = testCaseSourceRow.Key;
-                    var testCaseSource = CreateTestCaseSource(generationContext, testCaseSourceName, browser);
-                    var rows = testCaseSourceRow.Value.Select(row => new[] {browser}.Concat(row));
-                    AddTestCaseSourceRow(generationContext, testCaseSource, rows);
+                    var testCaseSource = CreateTestCaseSource(generationContext, testMethod.Name, browser.ToString());
+                    var row = new[] { browser.ToString() }.Concat(arguments).Concat(new string[] {null});
+                    AddTestCaseSourceRow(generationContext, testCaseSource, row);
                 }
             }
             else
@@ -295,19 +258,16 @@
             }
         }
 
-        private void AddTestCaseSourceRow(TestClassGenerationContext generationContext, string testCaseSource, IEnumerable<IEnumerable<string>> rows)
+        private void AddTestCaseSourceRow(TestClassGenerationContext generationContext, string testCaseSource, IEnumerable<string> row)
 	    {
             var testCaseSourceProperty = (CodeMemberProperty)generationContext.TestClass.Members.Cast<CodeTypeMember>().Single(member => member.Name.Equals(testCaseSource));
 
-            foreach (var row in rows)
-            {
-                //inject a line in the test case source property that adds a new TestCaseData entry into the rows list
-                var arguments = string.Join(", ", row.Select(arg => string.Format(@"""{0}""", arg)));
-                var testCaseData = new CodeSnippetExpression(string.Format("new NUnit.Framework.TestCaseData({0})", arguments));
-                testCaseSourceProperty.GetStatements.Insert(1, new CodeExpressionStatement(
-                    new CodeMethodInvokeExpression(new CodeVariableReferenceExpression("rows"), "Add", testCaseData)
-                ));
-            }
+            //inject a line in the test case source property that adds a new TestCaseData entry into the rows list
+            var arguments = string.Join(", ", row.Select(arg => arg == null ? "null" : string.Format(@"""{0}""", arg)));
+            var testCaseData = new CodeSnippetExpression(string.Format("new NUnit.Framework.TestCaseData({0})", arguments));
+            testCaseSourceProperty.GetStatements.Insert(1, new CodeExpressionStatement(
+                new CodeMethodInvokeExpression(new CodeVariableReferenceExpression("rows"), "Add", testCaseData)
+            ));
 	    }
 
 	    public void SetTestMethodAsRow(TestClassGenerationContext generationContext, CodeMemberMethod testMethod, string scenarioTitle, string exampleSetName, string variantName, IEnumerable<KeyValuePair<string, string>> arguments)

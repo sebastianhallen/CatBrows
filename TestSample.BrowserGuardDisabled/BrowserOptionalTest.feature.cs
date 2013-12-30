@@ -72,7 +72,7 @@ namespace TestSample.BrowserGuardDisabled
             get
             {
                 System.Collections.Generic.List<NUnit.Framework.TestCaseData> rows = new System.Collections.Generic.List<NUnit.Framework.TestCaseData>();
-                rows.Add(new NUnit.Framework.TestCaseData("scenario-outline-browser", "value"));
+                rows.Add(new NUnit.Framework.TestCaseData("scenario-outline-browser", "value", null));
                 rows.Add(new NUnit.Framework.TestCaseData("scenario-outline-browser"));
                 int maxArguments = rows.Max(row => row.Arguments.Count());
                 System.Collections.Generic.IEnumerable<NUnit.Framework.TestCaseData> filteredRows = rows.Where(row => row.Arguments.Count().Equals(maxArguments));
@@ -85,7 +85,7 @@ namespace TestSample.BrowserGuardDisabled
             get
             {
                 System.Collections.Generic.List<NUnit.Framework.TestCaseData> rows = new System.Collections.Generic.List<NUnit.Framework.TestCaseData>();
-                rows.Add(new NUnit.Framework.TestCaseData("chrome", "value"));
+                rows.Add(new NUnit.Framework.TestCaseData("chrome", "value", null));
                 rows.Add(new NUnit.Framework.TestCaseData("chrome"));
                 int maxArguments = rows.Max(row => row.Arguments.Count());
                 System.Collections.Generic.IEnumerable<NUnit.Framework.TestCaseData> filteredRows = rows.Where(row => row.Arguments.Count().Equals(maxArguments));
@@ -98,7 +98,7 @@ namespace TestSample.BrowserGuardDisabled
             get
             {
                 System.Collections.Generic.List<NUnit.Framework.TestCaseData> rows = new System.Collections.Generic.List<NUnit.Framework.TestCaseData>();
-                rows.Add(new NUnit.Framework.TestCaseData("firefox", "value"));
+                rows.Add(new NUnit.Framework.TestCaseData("firefox", "value", null));
                 rows.Add(new NUnit.Framework.TestCaseData("firefox"));
                 int maxArguments = rows.Max(row => row.Arguments.Count());
                 System.Collections.Generic.IEnumerable<NUnit.Framework.TestCaseData> filteredRows = rows.Where(row => row.Arguments.Count().Equals(maxArguments));
@@ -111,6 +111,8 @@ namespace TestSample.BrowserGuardDisabled
             get
             {
                 System.Collections.Generic.List<NUnit.Framework.TestCaseData> rows = new System.Collections.Generic.List<NUnit.Framework.TestCaseData>();
+                rows.Add(new NUnit.Framework.TestCaseData("chrome", "each-commit", null));
+                rows.Add(new NUnit.Framework.TestCaseData("chrome", "nightly", null));
                 rows.Add(new NUnit.Framework.TestCaseData("chrome"));
                 int maxArguments = rows.Max(row => row.Arguments.Count());
                 System.Collections.Generic.IEnumerable<NUnit.Framework.TestCaseData> filteredRows = rows.Where(row => row.Arguments.Count().Equals(maxArguments));
@@ -123,55 +125,9 @@ namespace TestSample.BrowserGuardDisabled
             get
             {
                 System.Collections.Generic.List<NUnit.Framework.TestCaseData> rows = new System.Collections.Generic.List<NUnit.Framework.TestCaseData>();
+                rows.Add(new NUnit.Framework.TestCaseData("firefox", "each-commit", null));
+                rows.Add(new NUnit.Framework.TestCaseData("firefox", "nightly", null));
                 rows.Add(new NUnit.Framework.TestCaseData("firefox"));
-                int maxArguments = rows.Max(row => row.Arguments.Count());
-                System.Collections.Generic.IEnumerable<NUnit.Framework.TestCaseData> filteredRows = rows.Where(row => row.Arguments.Count().Equals(maxArguments));
-                return filteredRows.ToArray();
-            }
-        }
-        
-        internal static object[] ScenarioOutlineWithTwoBrowserTagsAndTaggedExamples_nightly_chrome
-        {
-            get
-            {
-                System.Collections.Generic.List<NUnit.Framework.TestCaseData> rows = new System.Collections.Generic.List<NUnit.Framework.TestCaseData>();
-                rows.Add(new NUnit.Framework.TestCaseData("chrome", "nightly"));
-                int maxArguments = rows.Max(row => row.Arguments.Count());
-                System.Collections.Generic.IEnumerable<NUnit.Framework.TestCaseData> filteredRows = rows.Where(row => row.Arguments.Count().Equals(maxArguments));
-                return filteredRows.ToArray();
-            }
-        }
-        
-        internal static object[] ScenarioOutlineWithTwoBrowserTagsAndTaggedExamples_nightly_firefox
-        {
-            get
-            {
-                System.Collections.Generic.List<NUnit.Framework.TestCaseData> rows = new System.Collections.Generic.List<NUnit.Framework.TestCaseData>();
-                rows.Add(new NUnit.Framework.TestCaseData("firefox", "nightly"));
-                int maxArguments = rows.Max(row => row.Arguments.Count());
-                System.Collections.Generic.IEnumerable<NUnit.Framework.TestCaseData> filteredRows = rows.Where(row => row.Arguments.Count().Equals(maxArguments));
-                return filteredRows.ToArray();
-            }
-        }
-        
-        internal static object[] ScenarioOutlineWithTwoBrowserTagsAndTaggedExamples_eachcommit_chrome
-        {
-            get
-            {
-                System.Collections.Generic.List<NUnit.Framework.TestCaseData> rows = new System.Collections.Generic.List<NUnit.Framework.TestCaseData>();
-                rows.Add(new NUnit.Framework.TestCaseData("chrome", "each-commit"));
-                int maxArguments = rows.Max(row => row.Arguments.Count());
-                System.Collections.Generic.IEnumerable<NUnit.Framework.TestCaseData> filteredRows = rows.Where(row => row.Arguments.Count().Equals(maxArguments));
-                return filteredRows.ToArray();
-            }
-        }
-        
-        internal static object[] ScenarioOutlineWithTwoBrowserTagsAndTaggedExamples_eachcommit_firefox
-        {
-            get
-            {
-                System.Collections.Generic.List<NUnit.Framework.TestCaseData> rows = new System.Collections.Generic.List<NUnit.Framework.TestCaseData>();
-                rows.Add(new NUnit.Framework.TestCaseData("firefox", "each-commit"));
                 int maxArguments = rows.Max(row => row.Arguments.Count());
                 System.Collections.Generic.IEnumerable<NUnit.Framework.TestCaseData> filteredRows = rows.Where(row => row.Arguments.Count().Equals(maxArguments));
                 return filteredRows.ToArray();
@@ -261,7 +217,7 @@ namespace TestSample.BrowserGuardDisabled
         }
         
         [NUnit.Framework.TestAttribute()]
-        [NUnit.Framework.TestCaseAttribute("chrome", Description="Single browser tag chrome (chrome)", Category="chrome")]
+        [NUnit.Framework.TestCaseSourceAttribute("SingleBrowserTagChrome_chrome", Category="chrome")]
         public virtual void SingleBrowserTagChrome(string browser)
         {
             this.Browser = browser;
@@ -274,8 +230,8 @@ namespace TestSample.BrowserGuardDisabled
         }
         
         [NUnit.Framework.TestAttribute()]
-        [NUnit.Framework.TestCaseAttribute("firefox", Description="Multiple browser tags (firefox)", Category="firefox")]
-        [NUnit.Framework.TestCaseAttribute("chrome", Description="Multiple browser tags (chrome)", Category="chrome")]
+        [NUnit.Framework.TestCaseSourceAttribute("MultipleBrowserTags_firefox", Category="firefox")]
+        [NUnit.Framework.TestCaseSourceAttribute("MultipleBrowserTags_chrome", Category="chrome")]
         public virtual void MultipleBrowserTags(string browser)
         {
             this.Browser = browser;
@@ -329,7 +285,7 @@ namespace TestSample.BrowserGuardDisabled
         }
         
         [NUnit.Framework.TestAttribute()]
-        [NUnit.Framework.TestCaseAttribute("scenario-outline-browser", "value", null, Description="scenario outline with single browser tag (scenario-outline-browser)", Category="scenario-outline-browser")]
+        [NUnit.Framework.TestCaseSourceAttribute("ScenarioOutlineWithSingleBrowserTag_scenariooutlinebrowser", Category="scenario-outline-browser")]
         public virtual void ScenarioOutlineWithSingleBrowserTag(string browser, string header, string[] exampleTags)
         {
             this.Browser = browser;
@@ -347,8 +303,8 @@ namespace TestSample.BrowserGuardDisabled
         }
         
         [NUnit.Framework.TestAttribute()]
-        [NUnit.Framework.TestCaseAttribute("chrome", "value", null, Description="scenario outline with two browser tags (chrome)", Category="chrome")]
-        [NUnit.Framework.TestCaseAttribute("firefox", "value", null, Description="scenario outline with two browser tags (firefox)", Category="firefox")]
+        [NUnit.Framework.TestCaseSourceAttribute("ScenarioOutlineWithTwoBrowserTags_chrome", Category="chrome")]
+        [NUnit.Framework.TestCaseSourceAttribute("ScenarioOutlineWithTwoBrowserTags_firefox", Category="firefox")]
         public virtual void ScenarioOutlineWithTwoBrowserTags(string browser, string header, string[] exampleTags)
         {
             this.Browser = browser;
@@ -368,14 +324,8 @@ namespace TestSample.BrowserGuardDisabled
         
         [NUnit.Framework.TestAttribute()]
         [NUnit.Framework.CategoryAttribute("OutlineTag")]
-        [NUnit.Framework.TestCaseAttribute("chrome", "nightly", new string[] {
-                "nightly"}, Description="scenario outline with two browser tags and tagged examples (chrome)", Category="nightly,chrome")]
-        [NUnit.Framework.TestCaseAttribute("firefox", "nightly", new string[] {
-                "nightly"}, Description="scenario outline with two browser tags and tagged examples (firefox)", Category="nightly,firefox")]
-        [NUnit.Framework.TestCaseAttribute("chrome", "each-commit", new string[] {
-                "each-commit"}, Description="scenario outline with two browser tags and tagged examples (chrome)", Category="each-commit,chrome")]
-        [NUnit.Framework.TestCaseAttribute("firefox", "each-commit", new string[] {
-                "each-commit"}, Description="scenario outline with two browser tags and tagged examples (firefox)", Category="each-commit,firefox")]
+        [NUnit.Framework.TestCaseSourceAttribute("ScenarioOutlineWithTwoBrowserTagsAndTaggedExamples_chrome", Category="chrome")]
+        [NUnit.Framework.TestCaseSourceAttribute("ScenarioOutlineWithTwoBrowserTagsAndTaggedExamples_firefox", Category="firefox")]
         public virtual void ScenarioOutlineWithTwoBrowserTagsAndTaggedExamples(string browser, string header, string[] exampleTags)
         {
             this.Browser = browser;
