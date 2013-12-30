@@ -60,7 +60,7 @@ Scenario Outline: scenario outline with two browser tags
 Examples:
 | header      |
 | value       |
-
+| other value |
 
 @Browser:chrome
 @Browser:firefox

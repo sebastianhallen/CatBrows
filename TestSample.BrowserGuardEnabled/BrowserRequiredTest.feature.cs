@@ -15,6 +15,7 @@ namespace TestSample.BrowserGuardEnabled
 {
     using TechTalk.SpecFlow;
     using System.Configuration;
+    using System.Linq;
     
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("TechTalk.SpecFlow", "1.9.0.77")]
@@ -30,37 +31,152 @@ namespace TestSample.BrowserGuardEnabled
         
         private static TechTalk.SpecFlow.ITestRunner testRunner;
         
-        internal static object[] SingleBrowserTagChrome_chrome = new object[] {
-                new object[] {
-                        "chrome"}};
+        internal static object[] SingleBrowserTagChrome_chrome
+        {
+            get
+            {
+                System.Collections.Generic.List<NUnit.Framework.TestCaseData> rows = new System.Collections.Generic.List<NUnit.Framework.TestCaseData>();
+                rows.Add(new NUnit.Framework.TestCaseData("chrome"));
+                int maxArguments = rows.Max(row => row.Arguments.Count());
+                System.Collections.Generic.IEnumerable<NUnit.Framework.TestCaseData> filteredRows = rows.Where(row => row.Arguments.Count().Equals(maxArguments));
+                return filteredRows.ToArray();
+            }
+        }
         
-        internal static object[] MultipleBrowserTags_firefox = new object[] {
-                new object[] {
-                        "firefox"}};
+        internal static object[] MultipleBrowserTags_firefox
+        {
+            get
+            {
+                System.Collections.Generic.List<NUnit.Framework.TestCaseData> rows = new System.Collections.Generic.List<NUnit.Framework.TestCaseData>();
+                rows.Add(new NUnit.Framework.TestCaseData("firefox"));
+                int maxArguments = rows.Max(row => row.Arguments.Count());
+                System.Collections.Generic.IEnumerable<NUnit.Framework.TestCaseData> filteredRows = rows.Where(row => row.Arguments.Count().Equals(maxArguments));
+                return filteredRows.ToArray();
+            }
+        }
         
-        internal static object[] MultipleBrowserTags_chrome = new object[] {
-                new object[] {
-                        "chrome"}};
+        internal static object[] MultipleBrowserTags_chrome
+        {
+            get
+            {
+                System.Collections.Generic.List<NUnit.Framework.TestCaseData> rows = new System.Collections.Generic.List<NUnit.Framework.TestCaseData>();
+                rows.Add(new NUnit.Framework.TestCaseData("chrome"));
+                int maxArguments = rows.Max(row => row.Arguments.Count());
+                System.Collections.Generic.IEnumerable<NUnit.Framework.TestCaseData> filteredRows = rows.Where(row => row.Arguments.Count().Equals(maxArguments));
+                return filteredRows.ToArray();
+            }
+        }
         
-        internal static object[] ScenarioOutlineWithSingleBrowserTag_scenariooutlinebrowser = new object[] {
-                new object[] {
-                        "scenario-outline-browser"}};
+        internal static object[] ScenarioOutlineWithSingleBrowserTag_scenariooutlinebrowser
+        {
+            get
+            {
+                System.Collections.Generic.List<NUnit.Framework.TestCaseData> rows = new System.Collections.Generic.List<NUnit.Framework.TestCaseData>();
+                rows.Add(new NUnit.Framework.TestCaseData("scenario-outline-browser", "value"));
+                rows.Add(new NUnit.Framework.TestCaseData("scenario-outline-browser"));
+                int maxArguments = rows.Max(row => row.Arguments.Count());
+                System.Collections.Generic.IEnumerable<NUnit.Framework.TestCaseData> filteredRows = rows.Where(row => row.Arguments.Count().Equals(maxArguments));
+                return filteredRows.ToArray();
+            }
+        }
         
-        internal static object[] ScenarioOutlineWithTwoBrowserTags_chrome = new object[] {
-                new object[] {
-                        "chrome"}};
+        internal static object[] ScenarioOutlineWithTwoBrowserTags_chrome
+        {
+            get
+            {
+                System.Collections.Generic.List<NUnit.Framework.TestCaseData> rows = new System.Collections.Generic.List<NUnit.Framework.TestCaseData>();
+                rows.Add(new NUnit.Framework.TestCaseData("chrome", "value"));
+                rows.Add(new NUnit.Framework.TestCaseData("chrome"));
+                int maxArguments = rows.Max(row => row.Arguments.Count());
+                System.Collections.Generic.IEnumerable<NUnit.Framework.TestCaseData> filteredRows = rows.Where(row => row.Arguments.Count().Equals(maxArguments));
+                return filteredRows.ToArray();
+            }
+        }
         
-        internal static object[] ScenarioOutlineWithTwoBrowserTags_firefox = new object[] {
-                new object[] {
-                        "firefox"}};
+        internal static object[] ScenarioOutlineWithTwoBrowserTags_firefox
+        {
+            get
+            {
+                System.Collections.Generic.List<NUnit.Framework.TestCaseData> rows = new System.Collections.Generic.List<NUnit.Framework.TestCaseData>();
+                rows.Add(new NUnit.Framework.TestCaseData("firefox", "value"));
+                rows.Add(new NUnit.Framework.TestCaseData("firefox"));
+                int maxArguments = rows.Max(row => row.Arguments.Count());
+                System.Collections.Generic.IEnumerable<NUnit.Framework.TestCaseData> filteredRows = rows.Where(row => row.Arguments.Count().Equals(maxArguments));
+                return filteredRows.ToArray();
+            }
+        }
         
-        internal static object[] ScenarioOutlineWithTwoBrowserTagsAndTaggedExamples_chrome = new object[] {
-                new object[] {
-                        "chrome"}};
+        internal static object[] ScenarioOutlineWithTwoBrowserTagsAndTaggedExamples_chrome
+        {
+            get
+            {
+                System.Collections.Generic.List<NUnit.Framework.TestCaseData> rows = new System.Collections.Generic.List<NUnit.Framework.TestCaseData>();
+                rows.Add(new NUnit.Framework.TestCaseData("chrome"));
+                int maxArguments = rows.Max(row => row.Arguments.Count());
+                System.Collections.Generic.IEnumerable<NUnit.Framework.TestCaseData> filteredRows = rows.Where(row => row.Arguments.Count().Equals(maxArguments));
+                return filteredRows.ToArray();
+            }
+        }
         
-        internal static object[] ScenarioOutlineWithTwoBrowserTagsAndTaggedExamples_firefox = new object[] {
-                new object[] {
-                        "firefox"}};
+        internal static object[] ScenarioOutlineWithTwoBrowserTagsAndTaggedExamples_firefox
+        {
+            get
+            {
+                System.Collections.Generic.List<NUnit.Framework.TestCaseData> rows = new System.Collections.Generic.List<NUnit.Framework.TestCaseData>();
+                rows.Add(new NUnit.Framework.TestCaseData("firefox"));
+                int maxArguments = rows.Max(row => row.Arguments.Count());
+                System.Collections.Generic.IEnumerable<NUnit.Framework.TestCaseData> filteredRows = rows.Where(row => row.Arguments.Count().Equals(maxArguments));
+                return filteredRows.ToArray();
+            }
+        }
+        
+        internal static object[] ScenarioOutlineWithTwoBrowserTagsAndTaggedExamples_nightly_chrome
+        {
+            get
+            {
+                System.Collections.Generic.List<NUnit.Framework.TestCaseData> rows = new System.Collections.Generic.List<NUnit.Framework.TestCaseData>();
+                rows.Add(new NUnit.Framework.TestCaseData("chrome", "nightly"));
+                int maxArguments = rows.Max(row => row.Arguments.Count());
+                System.Collections.Generic.IEnumerable<NUnit.Framework.TestCaseData> filteredRows = rows.Where(row => row.Arguments.Count().Equals(maxArguments));
+                return filteredRows.ToArray();
+            }
+        }
+        
+        internal static object[] ScenarioOutlineWithTwoBrowserTagsAndTaggedExamples_nightly_firefox
+        {
+            get
+            {
+                System.Collections.Generic.List<NUnit.Framework.TestCaseData> rows = new System.Collections.Generic.List<NUnit.Framework.TestCaseData>();
+                rows.Add(new NUnit.Framework.TestCaseData("firefox", "nightly"));
+                int maxArguments = rows.Max(row => row.Arguments.Count());
+                System.Collections.Generic.IEnumerable<NUnit.Framework.TestCaseData> filteredRows = rows.Where(row => row.Arguments.Count().Equals(maxArguments));
+                return filteredRows.ToArray();
+            }
+        }
+        
+        internal static object[] ScenarioOutlineWithTwoBrowserTagsAndTaggedExamples_eachcommit_chrome
+        {
+            get
+            {
+                System.Collections.Generic.List<NUnit.Framework.TestCaseData> rows = new System.Collections.Generic.List<NUnit.Framework.TestCaseData>();
+                rows.Add(new NUnit.Framework.TestCaseData("chrome", "each-commit"));
+                int maxArguments = rows.Max(row => row.Arguments.Count());
+                System.Collections.Generic.IEnumerable<NUnit.Framework.TestCaseData> filteredRows = rows.Where(row => row.Arguments.Count().Equals(maxArguments));
+                return filteredRows.ToArray();
+            }
+        }
+        
+        internal static object[] ScenarioOutlineWithTwoBrowserTagsAndTaggedExamples_eachcommit_firefox
+        {
+            get
+            {
+                System.Collections.Generic.List<NUnit.Framework.TestCaseData> rows = new System.Collections.Generic.List<NUnit.Framework.TestCaseData>();
+                rows.Add(new NUnit.Framework.TestCaseData("firefox", "each-commit"));
+                int maxArguments = rows.Max(row => row.Arguments.Count());
+                System.Collections.Generic.IEnumerable<NUnit.Framework.TestCaseData> filteredRows = rows.Where(row => row.Arguments.Count().Equals(maxArguments));
+                return filteredRows.ToArray();
+            }
+        }
         
         [NUnit.Framework.TestFixtureSetUpAttribute()]
         public virtual void FeatureSetup()

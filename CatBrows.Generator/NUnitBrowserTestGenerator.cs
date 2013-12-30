@@ -42,6 +42,7 @@
         public void SetTestClass(TestClassGenerationContext generationContext, string featureTitle, string featureDescription)
         {
             generationContext.Namespace.Imports.Add(new CodeNamespaceImport("System.Configuration"));
+            generationContext.Namespace.Imports.Add(new CodeNamespaceImport("System.Linq"));
 
             CodeDomHelper.AddAttribute(generationContext.TestClass, TESTFIXTURE_ATTR);
             CodeDomHelper.AddAttribute(generationContext.TestClass, DESCRIPTION_ATTR, featureTitle);
@@ -192,7 +193,8 @@
 
 
                     /* Test case source version */
-                    CreateTestCaseSource(generationContext, testMethod.Name, browser, new[] {new [] {browser}});
+                    var testCaseSource = CreateTestCaseSource(generationContext, testMethod.Name, browser);
+                    AddTestCaseSourceRow(generationContext, testCaseSource, new[] { new[] { browser } });
                 }
 
                 //Yay, we have a browser tag, assign it to the Browser field in the method body
@@ -252,6 +254,8 @@
 
                 //add a testcase row for each occurrence of @Browser-tag
                 var description = (string)testMethod.UserData[DESCRIPTION_ATTR];
+                var testCaseSourceRows = browsers.ToDictionary(browser => browser.ToString(), _ => new List<IEnumerable<string>>());
+                
                 foreach (var browser in browsers)
                 {
                     var categories = tags.Union(new[] { browser });
@@ -264,6 +268,24 @@
                         })
                         .ToArray();
                     CodeDomHelper.AddAttribute(testMethod, ROW_ATTR, rowArguments);
+
+                    /* test case source version */
+                    testCaseSourceRows[browser.ToString()].Add(arguments);
+                }
+                foreach (var testCaseSourceRow in testCaseSourceRows)
+                {
+                    var methodNameSafeTags = tags.Select(tag => new string(tag.Select(c => c).Where(char.IsLetterOrDigit).ToArray()));
+                    var tagSuffix = string.Join("_", methodNameSafeTags);
+                    var testCaseSourceName = testMethod.Name;
+                    if (!string.IsNullOrWhiteSpace(tagSuffix))
+                    {
+                        testCaseSourceName += "_" + tagSuffix;
+                    }
+
+                    var browser = testCaseSourceRow.Key;
+                    var testCaseSource = CreateTestCaseSource(generationContext, testCaseSourceName, browser);
+                    var rows = testCaseSourceRow.Value.Select(row => new[] {browser}.Concat(row));
+                    AddTestCaseSourceRow(generationContext, testCaseSource, rows);
                 }
             }
             else
@@ -273,28 +295,74 @@
             }
         }
 
-        public void SetTestMethodAsRow(TestClassGenerationContext generationContext, CodeMemberMethod testMethod, string scenarioTitle, string exampleSetName, string variantName, IEnumerable<KeyValuePair<string, string>> arguments)
+        private void AddTestCaseSourceRow(TestClassGenerationContext generationContext, string testCaseSource, IEnumerable<IEnumerable<string>> rows)
+	    {
+            var testCaseSourceProperty = (CodeMemberProperty)generationContext.TestClass.Members.Cast<CodeTypeMember>().Single(member => member.Name.Equals(testCaseSource));
+
+            foreach (var row in rows)
+            {
+                //inject a line in the test case source property that adds a new TestCaseData entry into the rows list
+                var arguments = string.Join(", ", row.Select(arg => string.Format(@"""{0}""", arg)));
+                var testCaseData = new CodeSnippetExpression(string.Format("new NUnit.Framework.TestCaseData({0})", arguments));
+                testCaseSourceProperty.GetStatements.Insert(1, new CodeExpressionStatement(
+                    new CodeMethodInvokeExpression(new CodeVariableReferenceExpression("rows"), "Add", testCaseData)
+                ));
+            }
+	    }
+
+	    public void SetTestMethodAsRow(TestClassGenerationContext generationContext, CodeMemberMethod testMethod, string scenarioTitle, string exampleSetName, string variantName, IEnumerable<KeyValuePair<string, string>> arguments)
         {
             // doing nothing since we support RowTest
         }
 
-        private static string CreateTestCaseSource(TestClassGenerationContext generationContext, string testMethodName,
-                                            string browser, IEnumerable<IEnumerable<string>> rows)
+	    private static bool HasExistingMember(TestClassGenerationContext generationContext, string testMethodName)
+	    {
+	        return generationContext.TestClass.Members.Cast<CodeTypeMember>().Any(member => testMethodName.Equals(member.Name));
+	    }
+
+        /// <summary>
+        /// Creates a property with a list of NUnit.Framework.TestCaseData
+        /// </summary>
+        /// <param name="generationContext"></param>
+        /// <param name="testMethodName"></param>
+        /// <param name="browser"></param>
+        /// <returns></returns>
+	    private static string CreateTestCaseSource(TestClassGenerationContext generationContext, string testMethodName, string browser)
         {
             var testCaseSourceName = testMethodName + "_" + new string(browser.Where(char.IsLetterOrDigit).ToArray());
-            var type = new CodeTypeReference(typeof(object[]));
-            var member = new CodeMemberField(type, testCaseSourceName);
-            member.Type = type;
-            member.Attributes &= ~MemberAttributes.AccessMask & ~MemberAttributes.ScopeMask;
-            member.Attributes |= MemberAttributes.FamilyAndAssembly | MemberAttributes.Static;
+	        if (!HasExistingMember(generationContext, testCaseSourceName))
+	        {
+                var type = new CodeTypeReference(typeof(object[]));
+                var property = new CodeMemberProperty
+                    {
+                        Type = type,
+                        HasGet = true,
+                        HasSet = false,
+                        Name = testCaseSourceName
+                    };
 
-            member.InitExpression = new CodeArrayCreateExpression(typeof(object),
-                rows.Select(row => new CodeArrayCreateExpression(typeof(object)
-                    , row.Select(testCaseArgument => new CodePrimitiveExpression(testCaseArgument)).ToArray()
-                )).ToArray()
-            );
-            generationContext.TestClass.Members.Add(member);
-          
+	            property.Attributes &= ~MemberAttributes.AccessMask & ~MemberAttributes.ScopeMask;
+                property.Attributes |= MemberAttributes.FamilyAndAssembly | MemberAttributes.Static;
+
+
+                property.GetStatements.Add(new CodeVariableDeclarationStatement("System.Collections.Generic.List<NUnit.Framework.TestCaseData>", "rows", new CodeObjectCreateExpression("System.Collections.Generic.List<NUnit.Framework.TestCaseData>")));
+                
+                //since TestCaseData will be added both in SetRow and SetTest in the case of this being a scenario outline, we filter the test data to only return those added by scenario outlines if applicable.
+                property.GetStatements.Add(new CodeVariableDeclarationStatement(typeof(int), "maxArguments",
+                    new CodeMethodInvokeExpression(new CodeVariableReferenceExpression("rows"), "Max", new CodeSnippetExpression("row => row.Arguments.Count()")))
+                );
+                
+                property.GetStatements.Add(new CodeVariableDeclarationStatement("System.Collections.Generic.IEnumerable<NUnit.Framework.TestCaseData>", "filteredRows",
+                    new CodeMethodInvokeExpression(new CodeVariableReferenceExpression("rows"), "Where", new CodeSnippetExpression("row => row.Arguments.Count().Equals(maxArguments)")))
+                );
+
+                property.GetStatements.Add(new CodeMethodReturnStatement(
+                        new CodeMethodInvokeExpression(new CodeVariableReferenceExpression("filteredRows"), "ToArray")
+                    )
+                );
+                generationContext.TestClass.Members.Add(property);
+            }
+           
             return testCaseSourceName;
         }
 

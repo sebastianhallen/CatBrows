@@ -10,18 +10,30 @@
         : GenerationTest<BrowserRequiredTestFeature>
     {
         [Test]
-        public void Should_create_test_case_source_with_browser_suffix_for_each_browser()
+        public void Should_create_test_case_source_with_browser_suffix_for_each_browser_in_a_scenario()
         {
-            var chromeArguments = (object[])BrowserRequiredTestFeature.MultipleBrowserTags_chrome.Single();
-            var firefoxArguments = (object[])BrowserRequiredTestFeature.MultipleBrowserTags_firefox.Single();
-            
-            Assert.That(chromeArguments.Single(), Is.EqualTo("chrome"));
-            Assert.That(firefoxArguments.Single(), Is.EqualTo("firefox"));
+            var chromeArguments = (TestCaseData)BrowserRequiredTestFeature.MultipleBrowserTags_chrome.Single();
+            var firefoxArguments = (TestCaseData)BrowserRequiredTestFeature.MultipleBrowserTags_firefox.Single();
+
+            Assert.That(chromeArguments.Arguments.Single(), Is.EqualTo("chrome"));
+            Assert.That(firefoxArguments.Arguments.Single(), Is.EqualTo("firefox"));
+        }
+
+        [Test]
+        public void Should_create_test_case_source_with_browser_suffix_for_each_browser_in_a_scenario_outline()
+        {
+            var chromeArguments = (TestCaseData[])BrowserRequiredTestFeature.ScenarioOutlineWithTwoBrowserTags_chrome;
+            var firefoxArguments = (TestCaseData[])BrowserRequiredTestFeature.ScenarioOutlineWithTwoBrowserTags_firefox;
+
+            Assert.That(chromeArguments.First().Arguments.First(), Is.EqualTo("chrome"));
+            Assert.That(chromeArguments.First().Arguments.Skip(1).First(), Is.EqualTo("other value"));
+            Assert.That(firefoxArguments.First().Arguments.First(), Is.EqualTo("firefox"));
+            Assert.That(firefoxArguments.First().Arguments.Skip(1).First(), Is.EqualTo("other value"));
         }
 
 
         /* deprecated */
-         
+
         [Test]
         public void Should_decorate_method_with_test_case_attribute_when_supplying_a_browser_tag_to_a_scenario()
         {
@@ -49,7 +61,7 @@
         {
             var rows = this.GetMethodAttributes<TestCaseAttribute>(() => this.Sample.ScenarioOutlineWithTwoBrowserTags("browser", "", null));
 
-            Assert.That(rows.Count(), Is.EqualTo(2));
+            Assert.That(rows.Count(), Is.EqualTo(4));
         }
 
         [Test]
@@ -57,8 +69,8 @@
         {
             var categories = this.GetMethodAttributes<TestCaseAttribute>(() => this.Sample.ScenarioOutlineWithTwoBrowserTags("foo", "bar", null));
 
-            var chromeRow = categories.SingleOrDefault(a => a.Arguments.First().Equals("chrome"));
-            var firefoxRow = categories.SingleOrDefault(a => a.Arguments.First().Equals("firefox"));
+            var chromeRow = categories.First(a => a.Arguments.First().Equals("chrome"));
+            var firefoxRow = categories.First(a => a.Arguments.First().Equals("firefox"));
 
             Assert.That(chromeRow, Is.Not.Null);
             Assert.That(firefoxRow, Is.Not.Null);
