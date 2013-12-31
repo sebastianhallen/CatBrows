@@ -308,11 +308,21 @@ namespace TestSample.DefaultSettings
         
         private void GuardBrowserTagMissing()
         {
-            var browserMissingMessage = ConfigurationManager.AppSettings["CatBrows-BrowserMissingMessage"] ?? "No browser defined, please specify @Browser:someBrowser for your scenario.";
-            var enforceExistenceOfBrowserTagRaw = ConfigurationManager.AppSettings["CatBrows-RequiresBrowser"];
+            System.Collections.Specialized.NameValueCollection appSettings = System.Configuration.ConfigurationManager.AppSettings;
+            string browserMissingMessage = "No browser defined, please specify @Browser:someBrowser for your scenario.";
+            string customBrowserMissingMessage = appSettings.Get("CatBrows-BrowserMissingMessage");
+            if ((customBrowserMissingMessage != null))
+            {
+                browserMissingMessage = customBrowserMissingMessage;
+            }
+            string enforceExistenceOfBrowserTagRaw = appSettings.Get("CatBrows-RequiresBrowser");
             bool enforceExistenceOfBrowserTag;
             bool hasConfigSetting = bool.TryParse(enforceExistenceOfBrowserTagRaw, out enforceExistenceOfBrowserTag);
-            bool hasBrowser = !string.IsNullOrEmpty(this.Browser);
+            bool hasBrowser = (string.IsNullOrEmpty(this.Browser) != true);
+            if ((string.IsNullOrEmpty(this.Browser) != true))
+            {
+                hasBrowser = true;
+            }
             bool shouldGuard = !(hasConfigSetting && !enforceExistenceOfBrowserTag);
             if (shouldGuard)
             {

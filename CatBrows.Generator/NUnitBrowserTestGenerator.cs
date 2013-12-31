@@ -3,6 +3,7 @@
 	using System;
 	using System.CodeDom;
 	using System.Collections.Generic;
+	using System.Collections.Specialized;
 	using System.Linq;
 	using TechTalk.SpecFlow.Generator;
 	using TechTalk.SpecFlow.Generator.UnitTestProvider;
@@ -15,7 +16,7 @@
         private const string TESTFIXTURE_ATTR = "NUnit.Framework.TestFixtureAttribute";
         private const string TEST_ATTR = "NUnit.Framework.TestAttribute";
         private const string ROW_ATTR = "NUnit.Framework.TestCaseAttribute";
-        private const string ROW_ATTR2 = "NUnit.Framework.TestCaseSourceAttribute";
+        private const string ROW_SOURCE_ATTR = "NUnit.Framework.TestCaseSourceAttribute";
         private const string CATEGORY_ATTR = "NUnit.Framework.CategoryAttribute";
         private const string TESTSETUP_ATTR = "NUnit.Framework.SetUpAttribute";
         private const string TESTFIXTURESETUP_ATTR = "NUnit.Framework.TestFixtureSetUpAttribute";
@@ -59,11 +60,47 @@
             // is present in app.config
             var guardBrowserTagMissing = CreateMethod(GUARD_BROWSER_TAG_PRESENCE_METHOD_NAME, new[]
                 {
-                    CreateStatement(@"var browserMissingMessage = ConfigurationManager.AppSettings[""" + NO_BROWSER_DEFINED_MESSSAGE_SETTINGS_KEY + @"""] ?? """ + DEFAULT_NO_BROWSER_DEFINED_MESSAGE + @""""),
-                    CreateStatement(@"var enforceExistenceOfBrowserTagRaw = ConfigurationManager.AppSettings[""" + ENFORCE_BROWSER_SETTING_KEY + @"""]"),
-                    CreateStatement(@"bool enforceExistenceOfBrowserTag"),
-                    CreateStatement(@"bool hasConfigSetting = bool.TryParse(enforceExistenceOfBrowserTagRaw, out enforceExistenceOfBrowserTag)"),
-                    CreateStatement(@"bool hasBrowser = !string.IsNullOrEmpty(this.Browser)"),
+                    //var appSettings = ConfigurationManager.AppSettings;
+                    new CodeVariableDeclarationStatement(typeof(NameValueCollection), "appSettings", 
+                        new CodePropertyReferenceExpression(new CodeTypeReferenceExpression("System.Configuration.ConfigurationManager"), "AppSettings")
+                    ),
+                    //var browserMissingMessage = "<DEFAULT_NO_BROWSER_DEFINED_MESSAGE>";
+                    new CodeVariableDeclarationStatement(typeof(string), "browserMissingMessage", new CodePrimitiveExpression(DEFAULT_NO_BROWSER_DEFINED_MESSAGE)),
+                    //var customBrowserMissingMessage = appSettings.Get("<NO_BROWSER_DEFINED_MESSSAGE_SETTINGS_KEY>");
+                    new CodeVariableDeclarationStatement(typeof(string), "customBrowserMissingMessage", new CodeMethodInvokeExpression(new CodeVariableReferenceExpression("appSettings"), "Get", new CodePrimitiveExpression(NO_BROWSER_DEFINED_MESSSAGE_SETTINGS_KEY))),
+                    //if (customBrowserMissingMessage != null) browserMissingMessage = customBrowserMissingMessage
+                    new CodeConditionStatement(
+                        new CodeBinaryOperatorExpression(
+                            new CodeVariableReferenceExpression("customBrowserMissingMessage"),
+                            CodeBinaryOperatorType.IdentityInequality, 
+                            new CodePrimitiveExpression(null)
+                        ), 
+                        new CodeAssignStatement(new CodeVariableReferenceExpression("browserMissingMessage"), new CodeVariableReferenceExpression("customBrowserMissingMessage"))
+                    ),
+                    //var enforceExistenceOfBrowserTagRaw = appSettings.Get("<ENFORCE_BROWSER_SETTING_KEY>");
+                    new CodeVariableDeclarationStatement(typeof(string), "enforceExistenceOfBrowserTagRaw", 
+                        new CodeMethodInvokeExpression(
+                            new CodeVariableReferenceExpression("appSettings"), "Get", new CodePrimitiveExpression(ENFORCE_BROWSER_SETTING_KEY)
+                        )
+                    ),
+                    //bool enforceExistenceOfBrowserTag;
+                    new CodeVariableDeclarationStatement(typeof(bool), "enforceExistenceOfBrowserTag"), 
+                    //bool hasConfigSetting = bool.TryParse(enforceExistenceOfBrowserTagRaw, out enforceExistenceOfBrowserTag)"
+                    new CodeVariableDeclarationStatement(typeof(bool), "hasConfigSetting",
+                        new CodeMethodInvokeExpression(new CodeTypeReferenceExpression(typeof(bool)), "TryParse", 
+                            new CodeVariableReferenceExpression("enforceExistenceOfBrowserTagRaw"), 
+                            new CodeDirectionExpression(FieldDirection.Out, new CodeVariableReferenceExpression("enforceExistenceOfBrowserTag"))
+                        )
+                    ), 
+                    //bool hasBrowser = !string.IsNullOrEmpty(this.Browser)"
+                    new CodeVariableDeclarationStatement(typeof(bool), "hasBrowser", new CodeBinaryOperatorExpression(
+                            new CodeMethodInvokeExpression(new CodeTypeReferenceExpression(typeof(string)), "IsNullOrEmpty", new CodeFieldReferenceExpression(new CodeThisReferenceExpression(), "Browser")),
+                            CodeBinaryOperatorType.IdentityInequality,
+                            new CodePrimitiveExpression(true)
+                        )),
+                 
+
+
                     CreateStatement(@"bool shouldGuard = !(hasConfigSetting && !enforceExistenceOfBrowserTag)"),
                     new CodeConditionStatement(new CodeSnippetExpression("shouldGuard"),
                         new CodeConditionStatement(new CodeSnippetExpression("!hasBrowser"),
@@ -205,7 +242,7 @@
                             // add browser value as category
                             new CodeAttributeArgument("Category", new CodePrimitiveExpression(browser))
                         };
-                    this.CodeDomHelper.AddAttribute(testMethod, ROW_ATTR2, browserArgument);
+                    this.CodeDomHelper.AddAttribute(testMethod, ROW_SOURCE_ATTR, browserArgument);
 
                 }
 
