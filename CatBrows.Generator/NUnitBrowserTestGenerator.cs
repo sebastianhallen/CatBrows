@@ -58,7 +58,7 @@
             //create the browser guard method that enforces the use of @Browser tags for scenarios unless 
             //  <appSettings><add key="CatBrows-RequiresBrowser" value="false" /></appSettings>
             // is present in app.config
-            var guardBrowserTagMissing = CreateMethod(GUARD_BROWSER_TAG_PRESENCE_METHOD_NAME, new[]
+            var guardBrowserTagMissing = CreateMethod(GUARD_BROWSER_TAG_PRESENCE_METHOD_NAME, new CodeStatement[]
                 {
                     //var appSettings = ConfigurationManager.AppSettings;
                     new CodeVariableDeclarationStatement(typeof(NameValueCollection), "appSettings", 
@@ -98,14 +98,30 @@
                             CodeBinaryOperatorType.IdentityInequality,
                             new CodePrimitiveExpression(true)
                         )),
-                 
-
-
-                    CreateStatement(@"bool shouldGuard = !(hasConfigSetting && !enforceExistenceOfBrowserTag)"),
-                    new CodeConditionStatement(new CodeSnippetExpression("shouldGuard"),
-                        new CodeConditionStatement(new CodeSnippetExpression("!hasBrowser"),
-                                CreateThrowStatement(new CodeVariableReferenceExpression("browserMissingMessage"))
-                            )
+                    //bool shouldGuard = !(hasConfigSetting && !enforceExistenceOfBrowserTag)
+                    new CodeVariableDeclarationStatement(typeof(bool), "shouldGuard",
+                        new CodeBinaryOperatorExpression(
+                            new CodeBinaryOperatorExpression(
+                                new CodeVariableReferenceExpression("hasConfigSetting"), 
+                                CodeBinaryOperatorType.BitwiseAnd, 
+                                new CodeBinaryOperatorExpression(
+                                    new CodeVariableReferenceExpression("enforceExistenceOfBrowserTag"),
+                                    CodeBinaryOperatorType.IdentityInequality, 
+                                    new CodePrimitiveExpression(true)
+                                )
+                           ), 
+                           CodeBinaryOperatorType.IdentityInequality, 
+                           new CodePrimitiveExpression(true)
+                        )
+                    ),
+                    //if (shouldGuard && !hasBrowser) throw new System.Exception(browserMissingMessage);
+                    new CodeConditionStatement(
+                        new CodeBinaryOperatorExpression(
+                            new CodeVariableReferenceExpression("shouldGuard"), 
+                            CodeBinaryOperatorType.BitwiseAnd, 
+                            new CodeBinaryOperatorExpression(new CodeVariableReferenceExpression("hasBrowser"), CodeBinaryOperatorType.IdentityInequality, new CodePrimitiveExpression(true))
+                        ),
+                        new CodeThrowExceptionStatement(new CodeObjectCreateExpression(typeof(Exception), new CodeVariableReferenceExpression("browserMissingMessage")))
                     )
                 });
 
@@ -421,16 +437,6 @@
         private static CodeStatement CreateStatement(string statement)
         {
             return new CodeSnippetStatement(@"            " + statement + ";");
-        }
-
-        private static CodeStatement CreateThrowStatement(string message)
-        {
-            return CreateThrowStatement(new CodePrimitiveExpression(message));
-        }
-
-        private static CodeStatement CreateThrowStatement(CodeExpression message)
-        {
-            return new CodeThrowExceptionStatement(new CodeObjectCreateExpression(typeof(Exception), message));
         }
     }
 }

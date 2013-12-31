@@ -271,17 +271,13 @@ namespace TestSample.BrowserGuardEnabled
             bool enforceExistenceOfBrowserTag;
             bool hasConfigSetting = bool.TryParse(enforceExistenceOfBrowserTagRaw, out enforceExistenceOfBrowserTag);
             bool hasBrowser = (string.IsNullOrEmpty(this.Browser) != true);
-            if ((string.IsNullOrEmpty(this.Browser) != true))
+            bool shouldGuard = ((hasConfigSetting 
+                        & (enforceExistenceOfBrowserTag != true)) 
+                        != true);
+            if ((shouldGuard 
+                        & (hasBrowser != true)))
             {
-                hasBrowser = true;
-            }
-            bool shouldGuard = !(hasConfigSetting && !enforceExistenceOfBrowserTag);
-            if (shouldGuard)
-            {
-                if (!hasBrowser)
-                {
-                    throw new System.Exception(browserMissingMessage);
-                }
+                throw new System.Exception(browserMissingMessage);
             }
         }
         
