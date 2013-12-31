@@ -26,6 +26,21 @@ Scenario: Single browser tag chrome
 Scenario: Multiple browser tags
 	Then the test method should have 2 testcases
 
+
+@Browser:browser
+@Repeat:3
+Scenario: Repeated 3 times
+	Then the test method should have 1 testcase
+
+@Browser:browser
+@Repeat:3
+Scenario Outline: Repeated 3 times with 2 outline values 
+	Then the test method should have 1 testcase
+Examples:
+| header      |
+| value       |
+| other value |
+
 @ignore
 @:
 @a:

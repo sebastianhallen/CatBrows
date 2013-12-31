@@ -97,6 +97,52 @@ namespace TestSample.DefaultSettings
             }
         }
         
+        internal static object[] Repeated3Times_browser
+        {
+            get
+            {
+                int repeats = 3;
+                System.Collections.Generic.List<NUnit.Framework.TestCaseData> rows = new System.Collections.Generic.List<NUnit.Framework.TestCaseData>();
+                rows.Add(new NUnit.Framework.TestCaseData("browser"));
+                int maxArguments = rows.Max(row => row.Arguments.Count());
+                System.Collections.Generic.IEnumerable<NUnit.Framework.TestCaseData> filteredRows = rows.Where(row => row.Arguments.Count().Equals(maxArguments));
+                System.Collections.Generic.IEnumerable<NUnit.Framework.TestCaseData> repeatedRows = filteredRows.SelectMany(data =>
+                            {
+                                var repeatedData = new System.Collections.Generic.List<NUnit.Framework.TestCaseData>();
+                                for (int i = 0; i < repeats; ++i)
+                                {
+                                    repeatedData.Add(data);
+                                }
+                                return repeatedData;
+                            });
+                return repeatedRows.ToArray();
+            }
+        }
+        
+        internal static object[] Repeated3TimesWith2OutlineValues_browser
+        {
+            get
+            {
+                int repeats = 3;
+                System.Collections.Generic.List<NUnit.Framework.TestCaseData> rows = new System.Collections.Generic.List<NUnit.Framework.TestCaseData>();
+                rows.Add(new NUnit.Framework.TestCaseData("browser", "other value", null));
+                rows.Add(new NUnit.Framework.TestCaseData("browser", "value", null));
+                rows.Add(new NUnit.Framework.TestCaseData("browser"));
+                int maxArguments = rows.Max(row => row.Arguments.Count());
+                System.Collections.Generic.IEnumerable<NUnit.Framework.TestCaseData> filteredRows = rows.Where(row => row.Arguments.Count().Equals(maxArguments));
+                System.Collections.Generic.IEnumerable<NUnit.Framework.TestCaseData> repeatedRows = filteredRows.SelectMany(data =>
+                            {
+                                var repeatedData = new System.Collections.Generic.List<NUnit.Framework.TestCaseData>();
+                                for (int i = 0; i < repeats; ++i)
+                                {
+                                    repeatedData.Add(data);
+                                }
+                                return repeatedData;
+                            });
+                return repeatedRows.ToArray();
+            }
+        }
+        
         internal static object[] ScenarioOutlineWithSingleBrowserTag_scenariooutlinebrowser
         {
             get
@@ -336,6 +382,45 @@ namespace TestSample.DefaultSettings
             this.ScenarioSetup(scenarioInfo);
             this.FeatureBackground();
             testRunner.Then("the test method should have 2 testcases", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+            this.ScenarioCleanup();
+        }
+        
+        [NUnit.Framework.TestAttribute()]
+        [NUnit.Framework.CategoryAttribute("Repeat:3")]
+        [NUnit.Framework.Property("Repeat", "3")]
+        [NUnit.Framework.TestCaseSourceAttribute("Repeated3Times_browser", Category="browser")]
+        public virtual void Repeated3Times(string browser)
+        {
+            this.Browser = browser;
+            GuardBrowserTagMissing();
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Repeated 3 times", new string[] {
+                        "Browser:browser",
+                        "Repeat:3"});
+            this.ScenarioSetup(scenarioInfo);
+            this.FeatureBackground();
+            testRunner.Then("the test method should have 1 testcase", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+            this.ScenarioCleanup();
+        }
+        
+        [NUnit.Framework.TestAttribute()]
+        [NUnit.Framework.CategoryAttribute("Repeat:3")]
+        [NUnit.Framework.Property("Repeat", "3")]
+        [NUnit.Framework.TestCaseSourceAttribute("Repeated3TimesWith2OutlineValues_browser", Category="browser")]
+        public virtual void Repeated3TimesWith2OutlineValues(string browser, string header, string[] exampleTags)
+        {
+            this.Browser = browser;
+            GuardBrowserTagMissing();
+            string[] @__tags = new string[] {
+                    "Browser:browser",
+                    "Repeat:3"};
+            if ((exampleTags != null))
+            {
+                @__tags = System.Linq.Enumerable.ToArray(System.Linq.Enumerable.Concat(@__tags, exampleTags));
+            }
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Repeated 3 times with 2 outline values", @__tags);
+            this.ScenarioSetup(scenarioInfo);
+            this.FeatureBackground();
+            testRunner.Then("the test method should have 1 testcase", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
             this.ScenarioCleanup();
         }
         

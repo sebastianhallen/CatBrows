@@ -54,9 +54,10 @@
   <ItemGroup>
     <Compile Include="CategoryTests.cs" />
     <Compile Include="PropertiesTests.cs" />
+    <Compile Include="RepeatTests.cs" />
     <Compile Include="TestClassStructureTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TestCaseAttributeTests.cs" />
+    <Compile Include="TestDataSourceTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">

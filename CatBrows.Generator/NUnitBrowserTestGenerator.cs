@@ -155,7 +155,8 @@
             var uniqueProperties = properties
                 .GroupBy(property => property.Key)
                 .Where(group => group.Count() == 1)
-                .Select(group => group.First());
+                .Select(group => group.First())
+                .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
 
             foreach (var property in uniqueProperties)
             {
@@ -179,8 +180,23 @@
                     //store browser in user data so we can use it later if this is a row test/scenario ouline
                     testMethod.UserData.Add(BROWSER_TAG_PREFIX + browser, browser);
                     
+                    //create a property that contains the test data
                     var testCaseSource = CreateTestCaseSource(generationContext, testMethod.Name, browser);
                     AddTestCaseSourceRow(generationContext, testCaseSource, new[] { browser });
+                    
+                    //if present - update the repeat var in the test data
+                    var repeat = "";
+                    if (uniqueProperties.TryGetValue("repeat", out repeat) || uniqueProperties.TryGetValue("Repeat", out repeat))
+                    {
+                        int repeats;
+                        if (int.TryParse(repeat, out repeats))
+                        {
+                            var tcs = generationContext.TestClass.Members.OfType<CodeMemberProperty>().First(member => member.Name.Equals(testCaseSource));
+                            var repeatDeclarationStatement = (CodeVariableDeclarationStatement)tcs.GetStatements.Cast<CodeStatement>().First();
+                            repeatDeclarationStatement.InitExpression = new CodePrimitiveExpression(repeats);
+                        }
+                    }
+
 
                     var browserArgument = new[]
                         {

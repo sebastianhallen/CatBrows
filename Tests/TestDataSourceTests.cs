@@ -6,7 +6,7 @@
     using TestSample.DefaultSettings;
 
     [TestFixture]
-    public class TestCaseAttributeTests
+    public class TestDataSourceTests
         : GenerationTest<BrowserRequiredTestFeature>
     {
         [Test]
