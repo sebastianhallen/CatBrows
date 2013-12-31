@@ -160,7 +160,9 @@
         public void SetTestInitializeMethod(TestClassGenerationContext generationContext)
         {
             CodeDomHelper.AddAttribute(generationContext.TestInitializeMethod, TESTSETUP_ATTR);
-            generationContext.TestInitializeMethod.Statements.Insert(0, CreateStatement("this.Browser = null"));
+            //this.Browser = null
+            var setBrowserToNull = new CodeAssignStatement(new CodeFieldReferenceExpression(new CodeThisReferenceExpression(), "Browser"), new CodePrimitiveExpression(null));
+            generationContext.TestInitializeMethod.Statements.Insert(0, setBrowserToNull);
            
             //add browser to the scenario context
             //browser is set at the top of each test method for features with @Browser tags
@@ -279,7 +281,11 @@
                 }
 
                 //Yay, we have a browser tag, assign it to the Browser field in the method body
-                testMethod.Statements.Insert(0, CreateStatement("this.Browser = browser"));
+                var assignBrowserStatement = new CodeAssignStatement(
+                    new CodeFieldReferenceExpression(new CodeThisReferenceExpression(), "Browser"), 
+                    new CodeArgumentReferenceExpression("browser")
+                );
+                testMethod.Statements.Insert(0, assignBrowserStatement);
             }
         }
 
@@ -448,11 +454,6 @@
                 method.Statements.Add(statement);
             }
             return method;
-        }
-
-        private static CodeStatement CreateStatement(string statement)
-        {
-            return new CodeSnippetStatement(@"            " + statement + ";");
         }
     }
 }
