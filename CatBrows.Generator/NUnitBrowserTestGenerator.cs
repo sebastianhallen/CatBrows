@@ -437,12 +437,15 @@
         {
             var testCaseSourceProperty = (CodeMemberProperty)generationContext.TestClass.Members.Cast<CodeTypeMember>().Single(member => member.Name.Equals(testCaseSource));
 
-            var arguments = string.Join(", ", row.Select(arg => arg == null ? "null" : string.Format(@"""{0}""", arg)));
-            var testCaseData = new CodeSnippetExpression(string.Format("new NUnit.Framework.TestCaseData({0})", arguments));
+            var newTestCaseDataExpression =
+                    new CodeObjectCreateExpression(
+                        new CodeTypeReference("NUnit.Framework.TestCaseData"),
+                        row.Select(arg => new CodePrimitiveExpression(arg)).Cast<CodeExpression>().ToArray()
+                    );
 
             //inject the new testdata entry after the declaration of repeats and rows.
             testCaseSourceProperty.GetStatements.Insert(2, new CodeExpressionStatement(
-                new CodeMethodInvokeExpression(new CodeVariableReferenceExpression("rows"), "Add", testCaseData)
+                new CodeMethodInvokeExpression(new CodeVariableReferenceExpression("rows"), "Add", newTestCaseDataExpression)
             ));
         }
 
