@@ -258,23 +258,17 @@
             }
         }
 
-        private void AddTestCaseSourceRow(TestClassGenerationContext generationContext, string testCaseSource, IEnumerable<string> row)
-	    {
-            var testCaseSourceProperty = (CodeMemberProperty)generationContext.TestClass.Members.Cast<CodeTypeMember>().Single(member => member.Name.Equals(testCaseSource));
-
-            //inject a line in the test case source property that adds a new TestCaseData entry into the rows list
-            var arguments = string.Join(", ", row.Select(arg => arg == null ? "null" : string.Format(@"""{0}""", arg)));
-            var testCaseData = new CodeSnippetExpression(string.Format("new NUnit.Framework.TestCaseData({0})", arguments));
-            testCaseSourceProperty.GetStatements.Insert(1, new CodeExpressionStatement(
-                new CodeMethodInvokeExpression(new CodeVariableReferenceExpression("rows"), "Add", testCaseData)
-            ));
-	    }
-
 	    public void SetTestMethodAsRow(TestClassGenerationContext generationContext, CodeMemberMethod testMethod, string scenarioTitle, string exampleSetName, string variantName, IEnumerable<KeyValuePair<string, string>> arguments)
         {
             // doing nothing since we support RowTest
         }
 
+        /// <summary>
+        /// checks if the generated test class has a method or property with the given name
+        /// </summary>
+        /// <param name="generationContext"></param>
+        /// <param name="testMethodName"></param>
+        /// <returns></returns>
 	    private static bool HasExistingMember(TestClassGenerationContext generationContext, string testMethodName)
 	    {
 	        return generationContext.TestClass.Members.Cast<CodeTypeMember>().Any(member => testMethodName.Equals(member.Name));
@@ -305,6 +299,7 @@
                 property.Attributes |= MemberAttributes.FamilyAndAssembly | MemberAttributes.Static;
 
 
+                property.GetStatements.Add(new CodeVariableDeclarationStatement("System.int32", "repeats", new CodePrimitiveExpression(1)));
                 property.GetStatements.Add(new CodeVariableDeclarationStatement("System.Collections.Generic.List<NUnit.Framework.TestCaseData>", "rows", new CodeObjectCreateExpression("System.Collections.Generic.List<NUnit.Framework.TestCaseData>")));
                 
                 //since TestCaseData will be added both in SetRow and SetTest in the case of this being a scenario outline, we filter the test data to only return those added by scenario outlines if applicable.
@@ -313,17 +308,51 @@
                 );
                 
                 property.GetStatements.Add(new CodeVariableDeclarationStatement("System.Collections.Generic.IEnumerable<NUnit.Framework.TestCaseData>", "filteredRows",
-                    new CodeMethodInvokeExpression(new CodeVariableReferenceExpression("rows"), "Where", new CodeSnippetExpression("row => row.Arguments.Count().Equals(maxArguments)")))
+                        new CodeMethodInvokeExpression(new CodeVariableReferenceExpression("rows"), "Where", new CodeSnippetExpression("row => row.Arguments.Count().Equals(maxArguments)"))
+                    )
                 );
 
+                property.GetStatements.Add(new CodeVariableDeclarationStatement("System.Collections.Generic.IEnumerable<NUnit.Framework.TestCaseData>", "repeatedRows",
+                        new CodeMethodInvokeExpression(new CodeVariableReferenceExpression("filteredRows"), "SelectMany", new CodeSnippetExpression(@"data =>
+                            {
+                                var repeatedData = new System.Collections.Generic.List<NUnit.Framework.TestCaseData>();
+                                for (int i = 0; i < repeats; ++i)
+                                {
+                                    repeatedData.Add(data);
+                                }
+                                return repeatedData;
+                            }"))
+                    )
+                );
+
+
                 property.GetStatements.Add(new CodeMethodReturnStatement(
-                        new CodeMethodInvokeExpression(new CodeVariableReferenceExpression("filteredRows"), "ToArray")
+                        new CodeMethodInvokeExpression(new CodeVariableReferenceExpression("repeatedRows"), "ToArray")
                     )
                 );
                 generationContext.TestClass.Members.Add(property);
             }
            
             return testCaseSourceName;
+        }
+
+        /// <summary>
+        /// injects a line in the test case source property that adds a new TestCaseData entry into the rows list
+        /// </summary>
+        /// <param name="generationContext"></param>
+        /// <param name="testCaseSource"></param>
+        /// <param name="row"></param>
+        private void AddTestCaseSourceRow(TestClassGenerationContext generationContext, string testCaseSource, IEnumerable<string> row)
+        {
+            var testCaseSourceProperty = (CodeMemberProperty)generationContext.TestClass.Members.Cast<CodeTypeMember>().Single(member => member.Name.Equals(testCaseSource));
+
+            var arguments = string.Join(", ", row.Select(arg => arg == null ? "null" : string.Format(@"""{0}""", arg)));
+            var testCaseData = new CodeSnippetExpression(string.Format("new NUnit.Framework.TestCaseData({0})", arguments));
+
+            //inject the new testdata entry after the declaration of repeats and rows.
+            testCaseSourceProperty.GetStatements.Insert(2, new CodeExpressionStatement(
+                new CodeMethodInvokeExpression(new CodeVariableReferenceExpression("rows"), "Add", testCaseData)
+            ));
         }
 
         private static CodeMemberMethod CreateMethod(string name, IEnumerable<CodeStatement> statements)

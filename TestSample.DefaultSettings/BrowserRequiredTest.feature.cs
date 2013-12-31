@@ -35,11 +35,21 @@ namespace TestSample.DefaultSettings
         {
             get
             {
+                int repeats = 1;
                 System.Collections.Generic.List<NUnit.Framework.TestCaseData> rows = new System.Collections.Generic.List<NUnit.Framework.TestCaseData>();
                 rows.Add(new NUnit.Framework.TestCaseData("chrome"));
                 int maxArguments = rows.Max(row => row.Arguments.Count());
                 System.Collections.Generic.IEnumerable<NUnit.Framework.TestCaseData> filteredRows = rows.Where(row => row.Arguments.Count().Equals(maxArguments));
-                return filteredRows.ToArray();
+                System.Collections.Generic.IEnumerable<NUnit.Framework.TestCaseData> repeatedRows = filteredRows.SelectMany(data =>
+                            {
+                                var repeatedData = new System.Collections.Generic.List<NUnit.Framework.TestCaseData>();
+                                for (int i = 0; i < repeats; ++i)
+                                {
+                                    repeatedData.Add(data);
+                                }
+                                return repeatedData;
+                            });
+                return repeatedRows.ToArray();
             }
         }
         
@@ -47,11 +57,21 @@ namespace TestSample.DefaultSettings
         {
             get
             {
+                int repeats = 1;
                 System.Collections.Generic.List<NUnit.Framework.TestCaseData> rows = new System.Collections.Generic.List<NUnit.Framework.TestCaseData>();
                 rows.Add(new NUnit.Framework.TestCaseData("firefox"));
                 int maxArguments = rows.Max(row => row.Arguments.Count());
                 System.Collections.Generic.IEnumerable<NUnit.Framework.TestCaseData> filteredRows = rows.Where(row => row.Arguments.Count().Equals(maxArguments));
-                return filteredRows.ToArray();
+                System.Collections.Generic.IEnumerable<NUnit.Framework.TestCaseData> repeatedRows = filteredRows.SelectMany(data =>
+                            {
+                                var repeatedData = new System.Collections.Generic.List<NUnit.Framework.TestCaseData>();
+                                for (int i = 0; i < repeats; ++i)
+                                {
+                                    repeatedData.Add(data);
+                                }
+                                return repeatedData;
+                            });
+                return repeatedRows.ToArray();
             }
         }
         
@@ -59,11 +79,21 @@ namespace TestSample.DefaultSettings
         {
             get
             {
+                int repeats = 1;
                 System.Collections.Generic.List<NUnit.Framework.TestCaseData> rows = new System.Collections.Generic.List<NUnit.Framework.TestCaseData>();
                 rows.Add(new NUnit.Framework.TestCaseData("chrome"));
                 int maxArguments = rows.Max(row => row.Arguments.Count());
                 System.Collections.Generic.IEnumerable<NUnit.Framework.TestCaseData> filteredRows = rows.Where(row => row.Arguments.Count().Equals(maxArguments));
-                return filteredRows.ToArray();
+                System.Collections.Generic.IEnumerable<NUnit.Framework.TestCaseData> repeatedRows = filteredRows.SelectMany(data =>
+                            {
+                                var repeatedData = new System.Collections.Generic.List<NUnit.Framework.TestCaseData>();
+                                for (int i = 0; i < repeats; ++i)
+                                {
+                                    repeatedData.Add(data);
+                                }
+                                return repeatedData;
+                            });
+                return repeatedRows.ToArray();
             }
         }
         
@@ -71,12 +101,22 @@ namespace TestSample.DefaultSettings
         {
             get
             {
+                int repeats = 1;
                 System.Collections.Generic.List<NUnit.Framework.TestCaseData> rows = new System.Collections.Generic.List<NUnit.Framework.TestCaseData>();
                 rows.Add(new NUnit.Framework.TestCaseData("scenario-outline-browser", "value", null));
                 rows.Add(new NUnit.Framework.TestCaseData("scenario-outline-browser"));
                 int maxArguments = rows.Max(row => row.Arguments.Count());
                 System.Collections.Generic.IEnumerable<NUnit.Framework.TestCaseData> filteredRows = rows.Where(row => row.Arguments.Count().Equals(maxArguments));
-                return filteredRows.ToArray();
+                System.Collections.Generic.IEnumerable<NUnit.Framework.TestCaseData> repeatedRows = filteredRows.SelectMany(data =>
+                            {
+                                var repeatedData = new System.Collections.Generic.List<NUnit.Framework.TestCaseData>();
+                                for (int i = 0; i < repeats; ++i)
+                                {
+                                    repeatedData.Add(data);
+                                }
+                                return repeatedData;
+                            });
+                return repeatedRows.ToArray();
             }
         }
         
@@ -84,13 +124,23 @@ namespace TestSample.DefaultSettings
         {
             get
             {
+                int repeats = 1;
                 System.Collections.Generic.List<NUnit.Framework.TestCaseData> rows = new System.Collections.Generic.List<NUnit.Framework.TestCaseData>();
                 rows.Add(new NUnit.Framework.TestCaseData("chrome", "other value", null));
                 rows.Add(new NUnit.Framework.TestCaseData("chrome", "value", null));
                 rows.Add(new NUnit.Framework.TestCaseData("chrome"));
                 int maxArguments = rows.Max(row => row.Arguments.Count());
                 System.Collections.Generic.IEnumerable<NUnit.Framework.TestCaseData> filteredRows = rows.Where(row => row.Arguments.Count().Equals(maxArguments));
-                return filteredRows.ToArray();
+                System.Collections.Generic.IEnumerable<NUnit.Framework.TestCaseData> repeatedRows = filteredRows.SelectMany(data =>
+                            {
+                                var repeatedData = new System.Collections.Generic.List<NUnit.Framework.TestCaseData>();
+                                for (int i = 0; i < repeats; ++i)
+                                {
+                                    repeatedData.Add(data);
+                                }
+                                return repeatedData;
+                            });
+                return repeatedRows.ToArray();
             }
         }
         
@@ -98,13 +148,23 @@ namespace TestSample.DefaultSettings
         {
             get
             {
+                int repeats = 1;
                 System.Collections.Generic.List<NUnit.Framework.TestCaseData> rows = new System.Collections.Generic.List<NUnit.Framework.TestCaseData>();
                 rows.Add(new NUnit.Framework.TestCaseData("firefox", "other value", null));
                 rows.Add(new NUnit.Framework.TestCaseData("firefox", "value", null));
                 rows.Add(new NUnit.Framework.TestCaseData("firefox"));
                 int maxArguments = rows.Max(row => row.Arguments.Count());
                 System.Collections.Generic.IEnumerable<NUnit.Framework.TestCaseData> filteredRows = rows.Where(row => row.Arguments.Count().Equals(maxArguments));
-                return filteredRows.ToArray();
+                System.Collections.Generic.IEnumerable<NUnit.Framework.TestCaseData> repeatedRows = filteredRows.SelectMany(data =>
+                            {
+                                var repeatedData = new System.Collections.Generic.List<NUnit.Framework.TestCaseData>();
+                                for (int i = 0; i < repeats; ++i)
+                                {
+                                    repeatedData.Add(data);
+                                }
+                                return repeatedData;
+                            });
+                return repeatedRows.ToArray();
             }
         }
         
@@ -112,13 +172,23 @@ namespace TestSample.DefaultSettings
         {
             get
             {
+                int repeats = 1;
                 System.Collections.Generic.List<NUnit.Framework.TestCaseData> rows = new System.Collections.Generic.List<NUnit.Framework.TestCaseData>();
                 rows.Add(new NUnit.Framework.TestCaseData("chrome", "each-commit", null));
                 rows.Add(new NUnit.Framework.TestCaseData("chrome", "nightly", null));
                 rows.Add(new NUnit.Framework.TestCaseData("chrome"));
                 int maxArguments = rows.Max(row => row.Arguments.Count());
                 System.Collections.Generic.IEnumerable<NUnit.Framework.TestCaseData> filteredRows = rows.Where(row => row.Arguments.Count().Equals(maxArguments));
-                return filteredRows.ToArray();
+                System.Collections.Generic.IEnumerable<NUnit.Framework.TestCaseData> repeatedRows = filteredRows.SelectMany(data =>
+                            {
+                                var repeatedData = new System.Collections.Generic.List<NUnit.Framework.TestCaseData>();
+                                for (int i = 0; i < repeats; ++i)
+                                {
+                                    repeatedData.Add(data);
+                                }
+                                return repeatedData;
+                            });
+                return repeatedRows.ToArray();
             }
         }
         
@@ -126,13 +196,23 @@ namespace TestSample.DefaultSettings
         {
             get
             {
+                int repeats = 1;
                 System.Collections.Generic.List<NUnit.Framework.TestCaseData> rows = new System.Collections.Generic.List<NUnit.Framework.TestCaseData>();
                 rows.Add(new NUnit.Framework.TestCaseData("firefox", "each-commit", null));
                 rows.Add(new NUnit.Framework.TestCaseData("firefox", "nightly", null));
                 rows.Add(new NUnit.Framework.TestCaseData("firefox"));
                 int maxArguments = rows.Max(row => row.Arguments.Count());
                 System.Collections.Generic.IEnumerable<NUnit.Framework.TestCaseData> filteredRows = rows.Where(row => row.Arguments.Count().Equals(maxArguments));
-                return filteredRows.ToArray();
+                System.Collections.Generic.IEnumerable<NUnit.Framework.TestCaseData> repeatedRows = filteredRows.SelectMany(data =>
+                            {
+                                var repeatedData = new System.Collections.Generic.List<NUnit.Framework.TestCaseData>();
+                                for (int i = 0; i < repeats; ++i)
+                                {
+                                    repeatedData.Add(data);
+                                }
+                                return repeatedData;
+                            });
+                return repeatedRows.ToArray();
             }
         }
         
