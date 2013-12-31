@@ -164,7 +164,16 @@
            
             //add browser to the scenario context
             //browser is set at the top of each test method for features with @Browser tags
-            var setBrowserOnContext = CreateStatement(@"ScenarioContext.Current.Add(""Browser"", this.Browser)");
+            //CreateStatement(@"ScenarioContext.Current.Add(""Browser"", this.Browser)");
+            var setBrowserOnContext = new CodeMethodInvokeExpression(
+                                        new CodePropertyReferenceExpression(
+                                            new CodeTypeReferenceExpression("TechTalk.SpecFlow.ScenarioContext"),
+                                            "Current"
+                                        ),
+                                        "Add",
+                                        new CodePrimitiveExpression("Browser"),
+                                        new CodeFieldReferenceExpression(new CodeThisReferenceExpression(), "Browser")
+                                     );
             generationContext.ScenarioInitializeMethod.Statements.Add(setBrowserOnContext);
         }
 
@@ -182,7 +191,14 @@
             testMethod.UserData.Add(DESCRIPTION_ATTR, scenarioTitle);
 
             //inject the guard statement
-            testMethod.Statements.Insert(0, CreateStatement(GUARD_BROWSER_TAG_PRESENCE_METHOD_NAME + "()"));
+            testMethod.Statements.Insert(0, new CodeExpressionStatement(
+                                                new CodeMethodInvokeExpression(
+                                                    new CodeMethodReferenceExpression(
+                                                        new CodeThisReferenceExpression(), 
+                                                        GUARD_BROWSER_TAG_PRESENCE_METHOD_NAME
+                                                    )
+                                                )
+                                            ));
         }
 
         public void SetTestMethodCategories(TestClassGenerationContext generationContext, CodeMemberMethod testMethod, IEnumerable<string> scenarioCategories)
