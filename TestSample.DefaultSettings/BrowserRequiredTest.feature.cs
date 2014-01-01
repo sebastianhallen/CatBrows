@@ -38,8 +38,20 @@ namespace TestSample.DefaultSettings
                 int repeats = 1;
                 System.Collections.Generic.List<NUnit.Framework.TestCaseData> rows = new System.Collections.Generic.List<NUnit.Framework.TestCaseData>();
                 rows.Add(new NUnit.Framework.TestCaseData("chrome"));
-                int maxArguments = rows.Max(row => row.Arguments.Count());
-                System.Collections.Generic.IEnumerable<NUnit.Framework.TestCaseData> filteredRows = rows.Where(row => row.Arguments.Count().Equals(maxArguments));
+                int maxArguments = rows.Max(new System.Func<NUnit.Framework.TestCaseData, int>(BrowserRequiredTestFeature.CountTestCaseDataArgs));
+                System.Collections.Generic.List<NUnit.Framework.TestCaseData> filteredRows = new System.Collections.Generic.List<NUnit.Framework.TestCaseData>();
+                System.Collections.Generic.List<NUnit.Framework.TestCaseData>.Enumerator filterEnumerator = rows.GetEnumerator();
+                for (
+                ; filterEnumerator.MoveNext(); 
+                )
+                {
+                    NUnit.Framework.TestCaseData current = filterEnumerator.Current;
+                    int argCount = current.Arguments.Count();
+                    if (argCount.Equals(maxArguments))
+                    {
+                        filteredRows.Add(current);
+                    }
+                }
                 System.Collections.Generic.IEnumerable<NUnit.Framework.TestCaseData> repeatedRows = filteredRows.SelectMany(data =>
                             {
                                 var repeatedData = new System.Collections.Generic.List<NUnit.Framework.TestCaseData>();
@@ -60,8 +72,20 @@ namespace TestSample.DefaultSettings
                 int repeats = 1;
                 System.Collections.Generic.List<NUnit.Framework.TestCaseData> rows = new System.Collections.Generic.List<NUnit.Framework.TestCaseData>();
                 rows.Add(new NUnit.Framework.TestCaseData("firefox"));
-                int maxArguments = rows.Max(row => row.Arguments.Count());
-                System.Collections.Generic.IEnumerable<NUnit.Framework.TestCaseData> filteredRows = rows.Where(row => row.Arguments.Count().Equals(maxArguments));
+                int maxArguments = rows.Max(new System.Func<NUnit.Framework.TestCaseData, int>(BrowserRequiredTestFeature.CountTestCaseDataArgs));
+                System.Collections.Generic.List<NUnit.Framework.TestCaseData> filteredRows = new System.Collections.Generic.List<NUnit.Framework.TestCaseData>();
+                System.Collections.Generic.List<NUnit.Framework.TestCaseData>.Enumerator filterEnumerator = rows.GetEnumerator();
+                for (
+                ; filterEnumerator.MoveNext(); 
+                )
+                {
+                    NUnit.Framework.TestCaseData current = filterEnumerator.Current;
+                    int argCount = current.Arguments.Count();
+                    if (argCount.Equals(maxArguments))
+                    {
+                        filteredRows.Add(current);
+                    }
+                }
                 System.Collections.Generic.IEnumerable<NUnit.Framework.TestCaseData> repeatedRows = filteredRows.SelectMany(data =>
                             {
                                 var repeatedData = new System.Collections.Generic.List<NUnit.Framework.TestCaseData>();
@@ -82,8 +106,20 @@ namespace TestSample.DefaultSettings
                 int repeats = 1;
                 System.Collections.Generic.List<NUnit.Framework.TestCaseData> rows = new System.Collections.Generic.List<NUnit.Framework.TestCaseData>();
                 rows.Add(new NUnit.Framework.TestCaseData("chrome"));
-                int maxArguments = rows.Max(row => row.Arguments.Count());
-                System.Collections.Generic.IEnumerable<NUnit.Framework.TestCaseData> filteredRows = rows.Where(row => row.Arguments.Count().Equals(maxArguments));
+                int maxArguments = rows.Max(new System.Func<NUnit.Framework.TestCaseData, int>(BrowserRequiredTestFeature.CountTestCaseDataArgs));
+                System.Collections.Generic.List<NUnit.Framework.TestCaseData> filteredRows = new System.Collections.Generic.List<NUnit.Framework.TestCaseData>();
+                System.Collections.Generic.List<NUnit.Framework.TestCaseData>.Enumerator filterEnumerator = rows.GetEnumerator();
+                for (
+                ; filterEnumerator.MoveNext(); 
+                )
+                {
+                    NUnit.Framework.TestCaseData current = filterEnumerator.Current;
+                    int argCount = current.Arguments.Count();
+                    if (argCount.Equals(maxArguments))
+                    {
+                        filteredRows.Add(current);
+                    }
+                }
                 System.Collections.Generic.IEnumerable<NUnit.Framework.TestCaseData> repeatedRows = filteredRows.SelectMany(data =>
                             {
                                 var repeatedData = new System.Collections.Generic.List<NUnit.Framework.TestCaseData>();
@@ -104,8 +140,20 @@ namespace TestSample.DefaultSettings
                 int repeats = 3;
                 System.Collections.Generic.List<NUnit.Framework.TestCaseData> rows = new System.Collections.Generic.List<NUnit.Framework.TestCaseData>();
                 rows.Add(new NUnit.Framework.TestCaseData("browser"));
-                int maxArguments = rows.Max(row => row.Arguments.Count());
-                System.Collections.Generic.IEnumerable<NUnit.Framework.TestCaseData> filteredRows = rows.Where(row => row.Arguments.Count().Equals(maxArguments));
+                int maxArguments = rows.Max(new System.Func<NUnit.Framework.TestCaseData, int>(BrowserRequiredTestFeature.CountTestCaseDataArgs));
+                System.Collections.Generic.List<NUnit.Framework.TestCaseData> filteredRows = new System.Collections.Generic.List<NUnit.Framework.TestCaseData>();
+                System.Collections.Generic.List<NUnit.Framework.TestCaseData>.Enumerator filterEnumerator = rows.GetEnumerator();
+                for (
+                ; filterEnumerator.MoveNext(); 
+                )
+                {
+                    NUnit.Framework.TestCaseData current = filterEnumerator.Current;
+                    int argCount = current.Arguments.Count();
+                    if (argCount.Equals(maxArguments))
+                    {
+                        filteredRows.Add(current);
+                    }
+                }
                 System.Collections.Generic.IEnumerable<NUnit.Framework.TestCaseData> repeatedRows = filteredRows.SelectMany(data =>
                             {
                                 var repeatedData = new System.Collections.Generic.List<NUnit.Framework.TestCaseData>();
@@ -128,8 +176,20 @@ namespace TestSample.DefaultSettings
                 rows.Add(new NUnit.Framework.TestCaseData("browser", "other value", null));
                 rows.Add(new NUnit.Framework.TestCaseData("browser", "value", null));
                 rows.Add(new NUnit.Framework.TestCaseData("browser"));
-                int maxArguments = rows.Max(row => row.Arguments.Count());
-                System.Collections.Generic.IEnumerable<NUnit.Framework.TestCaseData> filteredRows = rows.Where(row => row.Arguments.Count().Equals(maxArguments));
+                int maxArguments = rows.Max(new System.Func<NUnit.Framework.TestCaseData, int>(BrowserRequiredTestFeature.CountTestCaseDataArgs));
+                System.Collections.Generic.List<NUnit.Framework.TestCaseData> filteredRows = new System.Collections.Generic.List<NUnit.Framework.TestCaseData>();
+                System.Collections.Generic.List<NUnit.Framework.TestCaseData>.Enumerator filterEnumerator = rows.GetEnumerator();
+                for (
+                ; filterEnumerator.MoveNext(); 
+                )
+                {
+                    NUnit.Framework.TestCaseData current = filterEnumerator.Current;
+                    int argCount = current.Arguments.Count();
+                    if (argCount.Equals(maxArguments))
+                    {
+                        filteredRows.Add(current);
+                    }
+                }
                 System.Collections.Generic.IEnumerable<NUnit.Framework.TestCaseData> repeatedRows = filteredRows.SelectMany(data =>
                             {
                                 var repeatedData = new System.Collections.Generic.List<NUnit.Framework.TestCaseData>();
@@ -151,8 +211,20 @@ namespace TestSample.DefaultSettings
                 System.Collections.Generic.List<NUnit.Framework.TestCaseData> rows = new System.Collections.Generic.List<NUnit.Framework.TestCaseData>();
                 rows.Add(new NUnit.Framework.TestCaseData("scenario-outline-browser", "value", null));
                 rows.Add(new NUnit.Framework.TestCaseData("scenario-outline-browser"));
-                int maxArguments = rows.Max(row => row.Arguments.Count());
-                System.Collections.Generic.IEnumerable<NUnit.Framework.TestCaseData> filteredRows = rows.Where(row => row.Arguments.Count().Equals(maxArguments));
+                int maxArguments = rows.Max(new System.Func<NUnit.Framework.TestCaseData, int>(BrowserRequiredTestFeature.CountTestCaseDataArgs));
+                System.Collections.Generic.List<NUnit.Framework.TestCaseData> filteredRows = new System.Collections.Generic.List<NUnit.Framework.TestCaseData>();
+                System.Collections.Generic.List<NUnit.Framework.TestCaseData>.Enumerator filterEnumerator = rows.GetEnumerator();
+                for (
+                ; filterEnumerator.MoveNext(); 
+                )
+                {
+                    NUnit.Framework.TestCaseData current = filterEnumerator.Current;
+                    int argCount = current.Arguments.Count();
+                    if (argCount.Equals(maxArguments))
+                    {
+                        filteredRows.Add(current);
+                    }
+                }
                 System.Collections.Generic.IEnumerable<NUnit.Framework.TestCaseData> repeatedRows = filteredRows.SelectMany(data =>
                             {
                                 var repeatedData = new System.Collections.Generic.List<NUnit.Framework.TestCaseData>();
@@ -175,8 +247,20 @@ namespace TestSample.DefaultSettings
                 rows.Add(new NUnit.Framework.TestCaseData("chrome", "other value", null));
                 rows.Add(new NUnit.Framework.TestCaseData("chrome", "value", null));
                 rows.Add(new NUnit.Framework.TestCaseData("chrome"));
-                int maxArguments = rows.Max(row => row.Arguments.Count());
-                System.Collections.Generic.IEnumerable<NUnit.Framework.TestCaseData> filteredRows = rows.Where(row => row.Arguments.Count().Equals(maxArguments));
+                int maxArguments = rows.Max(new System.Func<NUnit.Framework.TestCaseData, int>(BrowserRequiredTestFeature.CountTestCaseDataArgs));
+                System.Collections.Generic.List<NUnit.Framework.TestCaseData> filteredRows = new System.Collections.Generic.List<NUnit.Framework.TestCaseData>();
+                System.Collections.Generic.List<NUnit.Framework.TestCaseData>.Enumerator filterEnumerator = rows.GetEnumerator();
+                for (
+                ; filterEnumerator.MoveNext(); 
+                )
+                {
+                    NUnit.Framework.TestCaseData current = filterEnumerator.Current;
+                    int argCount = current.Arguments.Count();
+                    if (argCount.Equals(maxArguments))
+                    {
+                        filteredRows.Add(current);
+                    }
+                }
                 System.Collections.Generic.IEnumerable<NUnit.Framework.TestCaseData> repeatedRows = filteredRows.SelectMany(data =>
                             {
                                 var repeatedData = new System.Collections.Generic.List<NUnit.Framework.TestCaseData>();
@@ -199,8 +283,20 @@ namespace TestSample.DefaultSettings
                 rows.Add(new NUnit.Framework.TestCaseData("firefox", "other value", null));
                 rows.Add(new NUnit.Framework.TestCaseData("firefox", "value", null));
                 rows.Add(new NUnit.Framework.TestCaseData("firefox"));
-                int maxArguments = rows.Max(row => row.Arguments.Count());
-                System.Collections.Generic.IEnumerable<NUnit.Framework.TestCaseData> filteredRows = rows.Where(row => row.Arguments.Count().Equals(maxArguments));
+                int maxArguments = rows.Max(new System.Func<NUnit.Framework.TestCaseData, int>(BrowserRequiredTestFeature.CountTestCaseDataArgs));
+                System.Collections.Generic.List<NUnit.Framework.TestCaseData> filteredRows = new System.Collections.Generic.List<NUnit.Framework.TestCaseData>();
+                System.Collections.Generic.List<NUnit.Framework.TestCaseData>.Enumerator filterEnumerator = rows.GetEnumerator();
+                for (
+                ; filterEnumerator.MoveNext(); 
+                )
+                {
+                    NUnit.Framework.TestCaseData current = filterEnumerator.Current;
+                    int argCount = current.Arguments.Count();
+                    if (argCount.Equals(maxArguments))
+                    {
+                        filteredRows.Add(current);
+                    }
+                }
                 System.Collections.Generic.IEnumerable<NUnit.Framework.TestCaseData> repeatedRows = filteredRows.SelectMany(data =>
                             {
                                 var repeatedData = new System.Collections.Generic.List<NUnit.Framework.TestCaseData>();
@@ -223,8 +319,20 @@ namespace TestSample.DefaultSettings
                 rows.Add(new NUnit.Framework.TestCaseData("chrome", "each-commit", null));
                 rows.Add(new NUnit.Framework.TestCaseData("chrome", "nightly", null));
                 rows.Add(new NUnit.Framework.TestCaseData("chrome"));
-                int maxArguments = rows.Max(row => row.Arguments.Count());
-                System.Collections.Generic.IEnumerable<NUnit.Framework.TestCaseData> filteredRows = rows.Where(row => row.Arguments.Count().Equals(maxArguments));
+                int maxArguments = rows.Max(new System.Func<NUnit.Framework.TestCaseData, int>(BrowserRequiredTestFeature.CountTestCaseDataArgs));
+                System.Collections.Generic.List<NUnit.Framework.TestCaseData> filteredRows = new System.Collections.Generic.List<NUnit.Framework.TestCaseData>();
+                System.Collections.Generic.List<NUnit.Framework.TestCaseData>.Enumerator filterEnumerator = rows.GetEnumerator();
+                for (
+                ; filterEnumerator.MoveNext(); 
+                )
+                {
+                    NUnit.Framework.TestCaseData current = filterEnumerator.Current;
+                    int argCount = current.Arguments.Count();
+                    if (argCount.Equals(maxArguments))
+                    {
+                        filteredRows.Add(current);
+                    }
+                }
                 System.Collections.Generic.IEnumerable<NUnit.Framework.TestCaseData> repeatedRows = filteredRows.SelectMany(data =>
                             {
                                 var repeatedData = new System.Collections.Generic.List<NUnit.Framework.TestCaseData>();
@@ -247,8 +355,20 @@ namespace TestSample.DefaultSettings
                 rows.Add(new NUnit.Framework.TestCaseData("firefox", "each-commit", null));
                 rows.Add(new NUnit.Framework.TestCaseData("firefox", "nightly", null));
                 rows.Add(new NUnit.Framework.TestCaseData("firefox"));
-                int maxArguments = rows.Max(row => row.Arguments.Count());
-                System.Collections.Generic.IEnumerable<NUnit.Framework.TestCaseData> filteredRows = rows.Where(row => row.Arguments.Count().Equals(maxArguments));
+                int maxArguments = rows.Max(new System.Func<NUnit.Framework.TestCaseData, int>(BrowserRequiredTestFeature.CountTestCaseDataArgs));
+                System.Collections.Generic.List<NUnit.Framework.TestCaseData> filteredRows = new System.Collections.Generic.List<NUnit.Framework.TestCaseData>();
+                System.Collections.Generic.List<NUnit.Framework.TestCaseData>.Enumerator filterEnumerator = rows.GetEnumerator();
+                for (
+                ; filterEnumerator.MoveNext(); 
+                )
+                {
+                    NUnit.Framework.TestCaseData current = filterEnumerator.Current;
+                    int argCount = current.Arguments.Count();
+                    if (argCount.Equals(maxArguments))
+                    {
+                        filteredRows.Add(current);
+                    }
+                }
                 System.Collections.Generic.IEnumerable<NUnit.Framework.TestCaseData> repeatedRows = filteredRows.SelectMany(data =>
                             {
                                 var repeatedData = new System.Collections.Generic.List<NUnit.Framework.TestCaseData>();
@@ -369,6 +489,11 @@ namespace TestSample.DefaultSettings
             this.FeatureBackground();
             testRunner.Then("the test method should have 1 testcase", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
             this.ScenarioCleanup();
+        }
+        
+        static int CountTestCaseDataArgs(NUnit.Framework.TestCaseData data)
+        {
+            return data.Arguments.Count();
         }
         
         [NUnit.Framework.TestAttribute()]

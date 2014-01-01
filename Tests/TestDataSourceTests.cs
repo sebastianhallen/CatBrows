@@ -25,20 +25,21 @@
             var chromeArguments = (TestCaseData[])BrowserRequiredTestFeature.ScenarioOutlineWithTwoBrowserTags_chrome;
             var firefoxArguments = (TestCaseData[])BrowserRequiredTestFeature.ScenarioOutlineWithTwoBrowserTags_firefox;
 
+            Assert.That(chromeArguments.Count(), Is.EqualTo(2));
+            Assert.That(firefoxArguments.Count(), Is.EqualTo(2));
             Assert.That(chromeArguments.First().Arguments.First(), Is.EqualTo("chrome"));
             Assert.That(chromeArguments.First().Arguments.Skip(1).First(), Is.EqualTo("other value"));
             Assert.That(firefoxArguments.First().Arguments.First(), Is.EqualTo("firefox"));
             Assert.That(firefoxArguments.First().Arguments.Skip(1).First(), Is.EqualTo("other value"));
         }
 
-
         [Test]
         public void Should_decorate_method_with_test_case_source_attribute_when_supplying_a_browser_tag_to_a_scenario()
         {
             var testCaseAttributes = this.GetMethodAttributes<TestCaseSourceAttribute>(() => this.Sample.MultipleBrowserTags("browser"));
 
-            var firefox = testCaseAttributes.First();
-            var chrome = testCaseAttributes.Last();
+            var firefox = testCaseAttributes.Last();
+            var chrome = testCaseAttributes.First();
 
             Assert.That(chrome.SourceName, Is.EqualTo("MultipleBrowserTags_chrome"));
             Assert.That(chrome.Category, Is.EqualTo("chrome"));
