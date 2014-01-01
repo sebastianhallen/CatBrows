@@ -327,19 +327,47 @@
             {
                 foreach (var browser in browsers)
                 {
-                    //var methodNameSafeTags = tags.Select(tag => new string(tag.Select(c => c).Where(char.IsLetterOrDigit).ToArray()));
-                    //var tagSuffix = string.Join("_", methodNameSafeTags);
-                    
-                    //var testCaseSourceName = testMethod.Name;
-                    
-                    //var rawTestCaseSource = string.IsNullOrEmpty(tagSuffix)
-                    //                             ? testCaseSourceName
-                    //                             : testCaseSourceName + "_" + tagSuffix;
-
-                    var testCaseSource = CreateTestCaseSource(generationContext, testMethod.Name, browser.ToString());
+                    var testCaseSource = CreateTestCaseSource(generationContext, testMethod.Name + "_outline_", browser.ToString(), tags);
                     var row = new[] { browser.ToString() }.Concat(arguments).Concat(new string[] {null});
                     AddTestCaseSourceRow(generationContext, testCaseSource, row);
+
+                    var testCaseRowAttributeArgs = new[]
+                        {
+                            // first argument == test case source data
+                            new CodeAttributeArgument(new CodePrimitiveExpression(testCaseSource)),
+                            // add browser value as category
+                            new CodeAttributeArgument("Category", new CodePrimitiveExpression(string.Join(",", tags.Concat(new [] {browser.ToString()}))))
+                        };
+                        CodeDomHelper.AddAttribute(testMethod, ROW_SOURCE_ATTR, testCaseRowAttributeArgs);
                 }
+
+                //since test case sources for non-row tests are added in a previous step we need to remove those
+                //remove all test case source attributes that don't start with testMethod.Name + "_outline_"
+                var superfluousAttributes = testMethod.CustomAttributes
+                                                           .Cast<CodeAttributeDeclaration>()
+                                                           .Where(attribute => attribute.Name.Equals("NUnit.Framework.TestCaseSourceAttribute"))
+                                                           .Where(attribute =>
+                                                               {
+                                                                   var sourceNameArg = (CodePrimitiveExpression)attribute.Arguments.Cast<CodeAttributeArgument>().First().Value;
+                                                                   return !sourceNameArg.Value.ToString().StartsWith(testMethod.Name + "_outline_");
+                                                               })
+                                                           .ToArray();
+                foreach (var attribute in superfluousAttributes)
+                {
+                    testMethod.CustomAttributes.Remove(attribute);
+                }
+
+                //remove the properties with unused test case source data
+                var superfluousProperties = generationContext.TestClass.Members.Cast<CodeTypeMember>()
+                                                .Where(member => member is CodeMemberProperty).Cast<CodeMemberProperty>()
+                                                .Where(property => property.Name.StartsWith(testMethod.Name))
+                                                .Where(property => !property.Name.StartsWith(testMethod.Name + "_outline_"))
+                                                .ToArray();
+                foreach (var property in superfluousProperties)
+                {
+                    generationContext.TestClass.Members.Remove(property);
+                }
+
             }
             else
             {
@@ -398,7 +426,7 @@
         /// <param name="testMethodName"></param>
         /// <param name="browser"></param>
         /// <returns></returns>
-	    private static string CreateTestCaseSource(TestClassGenerationContext generationContext, string testMethodName, string browser, string[] tags = null)
+        private static string CreateTestCaseSource(TestClassGenerationContext generationContext, string testMethodName, string browser, IEnumerable<string> tags = null)
         {
 
             var testCaseSourceName = ToMethodSafeString(new [] {testMethodName, browser}.Concat(tags ?? new string[] {}));
@@ -605,12 +633,12 @@
 
         private static string ToMethodSafeString(IEnumerable<string> parts)
         {
-            return string.Join("_", parts.Select(ToMethodSafeString));
+            return string.Join("__", parts.Select(ToMethodSafeString));
         }
 
         private static string ToMethodSafeString(string raw)
         {
-            return new string(raw.Where(char.IsLetterOrDigit).ToArray());
+            return new string(raw.Where(c => char.IsLetterOrDigit(c) || '_'.Equals(c)).ToArray());
         }
     }
 }
