@@ -12,8 +12,8 @@
         [Test]
         public void Should_create_test_case_source_with_browser_suffix_for_each_browser_in_a_scenario()
         {
-            var chromeArguments = (TestCaseData)BrowserRequiredTestFeature.MultipleBrowserTags_chrome.Single();
-            var firefoxArguments = (TestCaseData)BrowserRequiredTestFeature.MultipleBrowserTags_firefox.Single();
+            var chromeArguments = (TestCaseData)BrowserRequiredTestFeature.MultipleBrowserTags__chrome.Single();
+            var firefoxArguments = (TestCaseData)BrowserRequiredTestFeature.MultipleBrowserTags__firefox.Single();
 
             Assert.That(chromeArguments.Arguments.Single(), Is.EqualTo("chrome"));
             Assert.That(firefoxArguments.Arguments.Single(), Is.EqualTo("firefox"));
@@ -22,8 +22,8 @@
         [Test]
         public void Should_create_test_case_source_with_browser_suffix_for_each_browser_in_a_scenario_outline()
         {
-            var chromeArguments = (TestCaseData[])BrowserRequiredTestFeature.ScenarioOutlineWithTwoBrowserTags_chrome;
-            var firefoxArguments = (TestCaseData[])BrowserRequiredTestFeature.ScenarioOutlineWithTwoBrowserTags_firefox;
+            var chromeArguments = (TestCaseData[])BrowserRequiredTestFeature.ScenarioOutlineWithTwoBrowserTags_outline___chrome;
+            var firefoxArguments = (TestCaseData[])BrowserRequiredTestFeature.ScenarioOutlineWithTwoBrowserTags_outline___firefox;
 
             Assert.That(chromeArguments.Count(), Is.EqualTo(2));
             Assert.That(firefoxArguments.Count(), Is.EqualTo(2));
@@ -41,19 +41,19 @@
             var firefox = testCaseAttributes.Last();
             var chrome = testCaseAttributes.First();
 
-            Assert.That(chrome.SourceName, Is.EqualTo("MultipleBrowserTags_chrome"));
+            Assert.That(chrome.SourceName, Is.EqualTo("MultipleBrowserTags__chrome"));
             Assert.That(chrome.Category, Is.EqualTo("chrome"));
 
-            Assert.That(firefox.SourceName, Is.EqualTo("MultipleBrowserTags_firefox"));
+            Assert.That(firefox.SourceName, Is.EqualTo("MultipleBrowserTags__firefox"));
             Assert.That(firefox.Category, Is.EqualTo("firefox"));
         }
 
         [Test]
         public void Should_add_one_test_case_per_browser_for_each_row_in_a_scenario_ouline_example()
         {
-            Assert.That(BrowserRequiredTestFeature.ScenarioOutlineWithTwoBrowserTags_chrome.Count(), Is.EqualTo(2));
+            Assert.That(BrowserRequiredTestFeature.ScenarioOutlineWithTwoBrowserTags_outline___chrome.Count(), Is.EqualTo(2));
 
-            Assert.That(BrowserRequiredTestFeature.ScenarioOutlineWithTwoBrowserTags_firefox.Count(), Is.EqualTo(2));
+            Assert.That(BrowserRequiredTestFeature.ScenarioOutlineWithTwoBrowserTags_outline___firefox.Count(), Is.EqualTo(2));
         }
 
         [Test, Ignore]

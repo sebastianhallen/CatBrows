@@ -22,7 +22,7 @@
             Assert.That(firefoxCase.Category, Is.EqualTo("firefox"), "Firefox was not set as category");
         }
 
-        [Test, Ignore("Skipping this feature for now")]
+        [Test]
         public void Should_include_scenario_outline_example_tags_in_test_case_row_categories()
         {
             var rows = this.GetMethodAttributes<TestCaseSourceAttribute>(() =>
@@ -32,6 +32,8 @@
 
             Assert.That(tagCombinations, Is.EquivalentTo(new[]
                 {
+                    new [] {"chrome" },
+                    new [] {"firefox" },
                     new [] {"nightly", "chrome" },
                     new [] {"nightly", "firefox" },
                     new [] {"each-commit", "chrome" },

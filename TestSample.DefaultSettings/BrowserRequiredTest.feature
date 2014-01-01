@@ -83,6 +83,9 @@ Examples:
 @CustomProperty:PropertyValue
 Scenario Outline: scenario outline with two browser tags and tagged examples
 	Then the test method should have 4 testcases
+Examples:
+| header   |
+| untagged |
 @nightly
 Examples:
 | header  |

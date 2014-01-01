@@ -31,29 +31,15 @@ namespace TestSample.BrowserGuardDisabled
         
         private static TechTalk.SpecFlow.ITestRunner testRunner;
         
-        internal static object[] SingleBrowserTagChrome_chrome
+        internal static object[] SingleBrowserTagChrome__chrome
         {
             get
             {
                 int repeats = 1;
                 System.Collections.Generic.List<NUnit.Framework.TestCaseData> rows = new System.Collections.Generic.List<NUnit.Framework.TestCaseData>();
                 rows.Add(new NUnit.Framework.TestCaseData("chrome"));
-                int maxArguments = rows.Max(new System.Func<NUnit.Framework.TestCaseData, int>(BrowserOptionalTestFeature.CountTestCaseDataArgs));
-                System.Collections.Generic.List<NUnit.Framework.TestCaseData> filteredRows = new System.Collections.Generic.List<NUnit.Framework.TestCaseData>();
-                System.Collections.Generic.List<NUnit.Framework.TestCaseData>.Enumerator filterEnumerator = rows.GetEnumerator();
-                for (
-                ; filterEnumerator.MoveNext(); 
-                )
-                {
-                    NUnit.Framework.TestCaseData current = filterEnumerator.Current;
-                    int argCount = current.Arguments.Count();
-                    if (argCount.Equals(maxArguments))
-                    {
-                        filteredRows.Add(current);
-                    }
-                }
                 System.Collections.Generic.List<NUnit.Framework.TestCaseData> repeatedRows = new System.Collections.Generic.List<NUnit.Framework.TestCaseData>();
-                System.Collections.Generic.List<NUnit.Framework.TestCaseData>.Enumerator repeatedEnumerator = filteredRows.GetEnumerator();
+                System.Collections.Generic.List<NUnit.Framework.TestCaseData>.Enumerator repeatedEnumerator = rows.GetEnumerator();
                 for (
                 ; repeatedEnumerator.MoveNext(); 
                 )
@@ -68,29 +54,15 @@ namespace TestSample.BrowserGuardDisabled
             }
         }
         
-        internal static object[] MultipleBrowserTags_firefox
+        internal static object[] MultipleBrowserTags__firefox
         {
             get
             {
                 int repeats = 1;
                 System.Collections.Generic.List<NUnit.Framework.TestCaseData> rows = new System.Collections.Generic.List<NUnit.Framework.TestCaseData>();
                 rows.Add(new NUnit.Framework.TestCaseData("firefox"));
-                int maxArguments = rows.Max(new System.Func<NUnit.Framework.TestCaseData, int>(BrowserOptionalTestFeature.CountTestCaseDataArgs));
-                System.Collections.Generic.List<NUnit.Framework.TestCaseData> filteredRows = new System.Collections.Generic.List<NUnit.Framework.TestCaseData>();
-                System.Collections.Generic.List<NUnit.Framework.TestCaseData>.Enumerator filterEnumerator = rows.GetEnumerator();
-                for (
-                ; filterEnumerator.MoveNext(); 
-                )
-                {
-                    NUnit.Framework.TestCaseData current = filterEnumerator.Current;
-                    int argCount = current.Arguments.Count();
-                    if (argCount.Equals(maxArguments))
-                    {
-                        filteredRows.Add(current);
-                    }
-                }
                 System.Collections.Generic.List<NUnit.Framework.TestCaseData> repeatedRows = new System.Collections.Generic.List<NUnit.Framework.TestCaseData>();
-                System.Collections.Generic.List<NUnit.Framework.TestCaseData>.Enumerator repeatedEnumerator = filteredRows.GetEnumerator();
+                System.Collections.Generic.List<NUnit.Framework.TestCaseData>.Enumerator repeatedEnumerator = rows.GetEnumerator();
                 for (
                 ; repeatedEnumerator.MoveNext(); 
                 )
@@ -105,29 +77,15 @@ namespace TestSample.BrowserGuardDisabled
             }
         }
         
-        internal static object[] MultipleBrowserTags_chrome
+        internal static object[] MultipleBrowserTags__chrome
         {
             get
             {
                 int repeats = 1;
                 System.Collections.Generic.List<NUnit.Framework.TestCaseData> rows = new System.Collections.Generic.List<NUnit.Framework.TestCaseData>();
                 rows.Add(new NUnit.Framework.TestCaseData("chrome"));
-                int maxArguments = rows.Max(new System.Func<NUnit.Framework.TestCaseData, int>(BrowserOptionalTestFeature.CountTestCaseDataArgs));
-                System.Collections.Generic.List<NUnit.Framework.TestCaseData> filteredRows = new System.Collections.Generic.List<NUnit.Framework.TestCaseData>();
-                System.Collections.Generic.List<NUnit.Framework.TestCaseData>.Enumerator filterEnumerator = rows.GetEnumerator();
-                for (
-                ; filterEnumerator.MoveNext(); 
-                )
-                {
-                    NUnit.Framework.TestCaseData current = filterEnumerator.Current;
-                    int argCount = current.Arguments.Count();
-                    if (argCount.Equals(maxArguments))
-                    {
-                        filteredRows.Add(current);
-                    }
-                }
                 System.Collections.Generic.List<NUnit.Framework.TestCaseData> repeatedRows = new System.Collections.Generic.List<NUnit.Framework.TestCaseData>();
-                System.Collections.Generic.List<NUnit.Framework.TestCaseData>.Enumerator repeatedEnumerator = filteredRows.GetEnumerator();
+                System.Collections.Generic.List<NUnit.Framework.TestCaseData>.Enumerator repeatedEnumerator = rows.GetEnumerator();
                 for (
                 ; repeatedEnumerator.MoveNext(); 
                 )
@@ -142,30 +100,15 @@ namespace TestSample.BrowserGuardDisabled
             }
         }
         
-        internal static object[] ScenarioOutlineWithSingleBrowserTag_scenariooutlinebrowser
+        internal static object[] ScenarioOutlineWithSingleBrowserTag_outline___scenariooutlinebrowser
         {
             get
             {
                 int repeats = 1;
                 System.Collections.Generic.List<NUnit.Framework.TestCaseData> rows = new System.Collections.Generic.List<NUnit.Framework.TestCaseData>();
                 rows.Add(new NUnit.Framework.TestCaseData("scenario-outline-browser", "value", null));
-                rows.Add(new NUnit.Framework.TestCaseData("scenario-outline-browser"));
-                int maxArguments = rows.Max(new System.Func<NUnit.Framework.TestCaseData, int>(BrowserOptionalTestFeature.CountTestCaseDataArgs));
-                System.Collections.Generic.List<NUnit.Framework.TestCaseData> filteredRows = new System.Collections.Generic.List<NUnit.Framework.TestCaseData>();
-                System.Collections.Generic.List<NUnit.Framework.TestCaseData>.Enumerator filterEnumerator = rows.GetEnumerator();
-                for (
-                ; filterEnumerator.MoveNext(); 
-                )
-                {
-                    NUnit.Framework.TestCaseData current = filterEnumerator.Current;
-                    int argCount = current.Arguments.Count();
-                    if (argCount.Equals(maxArguments))
-                    {
-                        filteredRows.Add(current);
-                    }
-                }
                 System.Collections.Generic.List<NUnit.Framework.TestCaseData> repeatedRows = new System.Collections.Generic.List<NUnit.Framework.TestCaseData>();
-                System.Collections.Generic.List<NUnit.Framework.TestCaseData>.Enumerator repeatedEnumerator = filteredRows.GetEnumerator();
+                System.Collections.Generic.List<NUnit.Framework.TestCaseData>.Enumerator repeatedEnumerator = rows.GetEnumerator();
                 for (
                 ; repeatedEnumerator.MoveNext(); 
                 )
@@ -180,30 +123,15 @@ namespace TestSample.BrowserGuardDisabled
             }
         }
         
-        internal static object[] ScenarioOutlineWithTwoBrowserTags_chrome
+        internal static object[] ScenarioOutlineWithTwoBrowserTags_outline___chrome
         {
             get
             {
                 int repeats = 1;
                 System.Collections.Generic.List<NUnit.Framework.TestCaseData> rows = new System.Collections.Generic.List<NUnit.Framework.TestCaseData>();
                 rows.Add(new NUnit.Framework.TestCaseData("chrome", "value", null));
-                rows.Add(new NUnit.Framework.TestCaseData("chrome"));
-                int maxArguments = rows.Max(new System.Func<NUnit.Framework.TestCaseData, int>(BrowserOptionalTestFeature.CountTestCaseDataArgs));
-                System.Collections.Generic.List<NUnit.Framework.TestCaseData> filteredRows = new System.Collections.Generic.List<NUnit.Framework.TestCaseData>();
-                System.Collections.Generic.List<NUnit.Framework.TestCaseData>.Enumerator filterEnumerator = rows.GetEnumerator();
-                for (
-                ; filterEnumerator.MoveNext(); 
-                )
-                {
-                    NUnit.Framework.TestCaseData current = filterEnumerator.Current;
-                    int argCount = current.Arguments.Count();
-                    if (argCount.Equals(maxArguments))
-                    {
-                        filteredRows.Add(current);
-                    }
-                }
                 System.Collections.Generic.List<NUnit.Framework.TestCaseData> repeatedRows = new System.Collections.Generic.List<NUnit.Framework.TestCaseData>();
-                System.Collections.Generic.List<NUnit.Framework.TestCaseData>.Enumerator repeatedEnumerator = filteredRows.GetEnumerator();
+                System.Collections.Generic.List<NUnit.Framework.TestCaseData>.Enumerator repeatedEnumerator = rows.GetEnumerator();
                 for (
                 ; repeatedEnumerator.MoveNext(); 
                 )
@@ -218,30 +146,15 @@ namespace TestSample.BrowserGuardDisabled
             }
         }
         
-        internal static object[] ScenarioOutlineWithTwoBrowserTags_firefox
+        internal static object[] ScenarioOutlineWithTwoBrowserTags_outline___firefox
         {
             get
             {
                 int repeats = 1;
                 System.Collections.Generic.List<NUnit.Framework.TestCaseData> rows = new System.Collections.Generic.List<NUnit.Framework.TestCaseData>();
                 rows.Add(new NUnit.Framework.TestCaseData("firefox", "value", null));
-                rows.Add(new NUnit.Framework.TestCaseData("firefox"));
-                int maxArguments = rows.Max(new System.Func<NUnit.Framework.TestCaseData, int>(BrowserOptionalTestFeature.CountTestCaseDataArgs));
-                System.Collections.Generic.List<NUnit.Framework.TestCaseData> filteredRows = new System.Collections.Generic.List<NUnit.Framework.TestCaseData>();
-                System.Collections.Generic.List<NUnit.Framework.TestCaseData>.Enumerator filterEnumerator = rows.GetEnumerator();
-                for (
-                ; filterEnumerator.MoveNext(); 
-                )
-                {
-                    NUnit.Framework.TestCaseData current = filterEnumerator.Current;
-                    int argCount = current.Arguments.Count();
-                    if (argCount.Equals(maxArguments))
-                    {
-                        filteredRows.Add(current);
-                    }
-                }
                 System.Collections.Generic.List<NUnit.Framework.TestCaseData> repeatedRows = new System.Collections.Generic.List<NUnit.Framework.TestCaseData>();
-                System.Collections.Generic.List<NUnit.Framework.TestCaseData>.Enumerator repeatedEnumerator = filteredRows.GetEnumerator();
+                System.Collections.Generic.List<NUnit.Framework.TestCaseData>.Enumerator repeatedEnumerator = rows.GetEnumerator();
                 for (
                 ; repeatedEnumerator.MoveNext(); 
                 )
@@ -256,31 +169,61 @@ namespace TestSample.BrowserGuardDisabled
             }
         }
         
-        internal static object[] ScenarioOutlineWithTwoBrowserTagsAndTaggedExamples_chrome
+        internal static object[] ScenarioOutlineWithTwoBrowserTagsAndTaggedExamples_outline___chrome__nightly
+        {
+            get
+            {
+                int repeats = 1;
+                System.Collections.Generic.List<NUnit.Framework.TestCaseData> rows = new System.Collections.Generic.List<NUnit.Framework.TestCaseData>();
+                rows.Add(new NUnit.Framework.TestCaseData("chrome", "nightly", null));
+                System.Collections.Generic.List<NUnit.Framework.TestCaseData> repeatedRows = new System.Collections.Generic.List<NUnit.Framework.TestCaseData>();
+                System.Collections.Generic.List<NUnit.Framework.TestCaseData>.Enumerator repeatedEnumerator = rows.GetEnumerator();
+                for (
+                ; repeatedEnumerator.MoveNext(); 
+                )
+                {
+                    NUnit.Framework.TestCaseData current = repeatedEnumerator.Current;
+                    for (int i = 0; (i < repeats); i = (i + 1))
+                    {
+                        repeatedRows.Add(current);
+                    }
+                }
+                return repeatedRows.ToArray();
+            }
+        }
+        
+        internal static object[] ScenarioOutlineWithTwoBrowserTagsAndTaggedExamples_outline___firefox__nightly
+        {
+            get
+            {
+                int repeats = 1;
+                System.Collections.Generic.List<NUnit.Framework.TestCaseData> rows = new System.Collections.Generic.List<NUnit.Framework.TestCaseData>();
+                rows.Add(new NUnit.Framework.TestCaseData("firefox", "nightly", null));
+                System.Collections.Generic.List<NUnit.Framework.TestCaseData> repeatedRows = new System.Collections.Generic.List<NUnit.Framework.TestCaseData>();
+                System.Collections.Generic.List<NUnit.Framework.TestCaseData>.Enumerator repeatedEnumerator = rows.GetEnumerator();
+                for (
+                ; repeatedEnumerator.MoveNext(); 
+                )
+                {
+                    NUnit.Framework.TestCaseData current = repeatedEnumerator.Current;
+                    for (int i = 0; (i < repeats); i = (i + 1))
+                    {
+                        repeatedRows.Add(current);
+                    }
+                }
+                return repeatedRows.ToArray();
+            }
+        }
+        
+        internal static object[] ScenarioOutlineWithTwoBrowserTagsAndTaggedExamples_outline___chrome__eachcommit
         {
             get
             {
                 int repeats = 1;
                 System.Collections.Generic.List<NUnit.Framework.TestCaseData> rows = new System.Collections.Generic.List<NUnit.Framework.TestCaseData>();
                 rows.Add(new NUnit.Framework.TestCaseData("chrome", "each-commit", null));
-                rows.Add(new NUnit.Framework.TestCaseData("chrome", "nightly", null));
-                rows.Add(new NUnit.Framework.TestCaseData("chrome"));
-                int maxArguments = rows.Max(new System.Func<NUnit.Framework.TestCaseData, int>(BrowserOptionalTestFeature.CountTestCaseDataArgs));
-                System.Collections.Generic.List<NUnit.Framework.TestCaseData> filteredRows = new System.Collections.Generic.List<NUnit.Framework.TestCaseData>();
-                System.Collections.Generic.List<NUnit.Framework.TestCaseData>.Enumerator filterEnumerator = rows.GetEnumerator();
-                for (
-                ; filterEnumerator.MoveNext(); 
-                )
-                {
-                    NUnit.Framework.TestCaseData current = filterEnumerator.Current;
-                    int argCount = current.Arguments.Count();
-                    if (argCount.Equals(maxArguments))
-                    {
-                        filteredRows.Add(current);
-                    }
-                }
                 System.Collections.Generic.List<NUnit.Framework.TestCaseData> repeatedRows = new System.Collections.Generic.List<NUnit.Framework.TestCaseData>();
-                System.Collections.Generic.List<NUnit.Framework.TestCaseData>.Enumerator repeatedEnumerator = filteredRows.GetEnumerator();
+                System.Collections.Generic.List<NUnit.Framework.TestCaseData>.Enumerator repeatedEnumerator = rows.GetEnumerator();
                 for (
                 ; repeatedEnumerator.MoveNext(); 
                 )
@@ -295,31 +238,15 @@ namespace TestSample.BrowserGuardDisabled
             }
         }
         
-        internal static object[] ScenarioOutlineWithTwoBrowserTagsAndTaggedExamples_firefox
+        internal static object[] ScenarioOutlineWithTwoBrowserTagsAndTaggedExamples_outline___firefox__eachcommit
         {
             get
             {
                 int repeats = 1;
                 System.Collections.Generic.List<NUnit.Framework.TestCaseData> rows = new System.Collections.Generic.List<NUnit.Framework.TestCaseData>();
                 rows.Add(new NUnit.Framework.TestCaseData("firefox", "each-commit", null));
-                rows.Add(new NUnit.Framework.TestCaseData("firefox", "nightly", null));
-                rows.Add(new NUnit.Framework.TestCaseData("firefox"));
-                int maxArguments = rows.Max(new System.Func<NUnit.Framework.TestCaseData, int>(BrowserOptionalTestFeature.CountTestCaseDataArgs));
-                System.Collections.Generic.List<NUnit.Framework.TestCaseData> filteredRows = new System.Collections.Generic.List<NUnit.Framework.TestCaseData>();
-                System.Collections.Generic.List<NUnit.Framework.TestCaseData>.Enumerator filterEnumerator = rows.GetEnumerator();
-                for (
-                ; filterEnumerator.MoveNext(); 
-                )
-                {
-                    NUnit.Framework.TestCaseData current = filterEnumerator.Current;
-                    int argCount = current.Arguments.Count();
-                    if (argCount.Equals(maxArguments))
-                    {
-                        filteredRows.Add(current);
-                    }
-                }
                 System.Collections.Generic.List<NUnit.Framework.TestCaseData> repeatedRows = new System.Collections.Generic.List<NUnit.Framework.TestCaseData>();
-                System.Collections.Generic.List<NUnit.Framework.TestCaseData>.Enumerator repeatedEnumerator = filteredRows.GetEnumerator();
+                System.Collections.Generic.List<NUnit.Framework.TestCaseData>.Enumerator repeatedEnumerator = rows.GetEnumerator();
                 for (
                 ; repeatedEnumerator.MoveNext(); 
                 )
@@ -423,7 +350,7 @@ namespace TestSample.BrowserGuardDisabled
         }
         
         [NUnit.Framework.TestAttribute()]
-        [NUnit.Framework.TestCaseSourceAttribute("SingleBrowserTagChrome_chrome", Category="chrome")]
+        [NUnit.Framework.TestCaseSourceAttribute("SingleBrowserTagChrome__chrome", Category="chrome")]
         public virtual void SingleBrowserTagChrome(string browser)
         {
             this.Browser = browser;
@@ -435,14 +362,9 @@ namespace TestSample.BrowserGuardDisabled
             this.ScenarioCleanup();
         }
         
-        static int CountTestCaseDataArgs(NUnit.Framework.TestCaseData data)
-        {
-            return data.Arguments.Count();
-        }
-        
         [NUnit.Framework.TestAttribute()]
-        [NUnit.Framework.TestCaseSourceAttribute("MultipleBrowserTags_firefox", Category="firefox")]
-        [NUnit.Framework.TestCaseSourceAttribute("MultipleBrowserTags_chrome", Category="chrome")]
+        [NUnit.Framework.TestCaseSourceAttribute("MultipleBrowserTags__firefox", Category="firefox")]
+        [NUnit.Framework.TestCaseSourceAttribute("MultipleBrowserTags__chrome", Category="chrome")]
         public virtual void MultipleBrowserTags(string browser)
         {
             this.Browser = browser;
@@ -496,7 +418,7 @@ namespace TestSample.BrowserGuardDisabled
         }
         
         [NUnit.Framework.TestAttribute()]
-        [NUnit.Framework.TestCaseSourceAttribute("ScenarioOutlineWithSingleBrowserTag_scenariooutlinebrowser", Category="scenario-outline-browser")]
+        [NUnit.Framework.TestCaseSourceAttribute("ScenarioOutlineWithSingleBrowserTag_outline___scenariooutlinebrowser", Category="scenario-outline-browser")]
         public virtual void ScenarioOutlineWithSingleBrowserTag(string browser, string header, string[] exampleTags)
         {
             this.Browser = browser;
@@ -514,8 +436,8 @@ namespace TestSample.BrowserGuardDisabled
         }
         
         [NUnit.Framework.TestAttribute()]
-        [NUnit.Framework.TestCaseSourceAttribute("ScenarioOutlineWithTwoBrowserTags_chrome", Category="chrome")]
-        [NUnit.Framework.TestCaseSourceAttribute("ScenarioOutlineWithTwoBrowserTags_firefox", Category="firefox")]
+        [NUnit.Framework.TestCaseSourceAttribute("ScenarioOutlineWithTwoBrowserTags_outline___chrome", Category="chrome")]
+        [NUnit.Framework.TestCaseSourceAttribute("ScenarioOutlineWithTwoBrowserTags_outline___firefox", Category="firefox")]
         public virtual void ScenarioOutlineWithTwoBrowserTags(string browser, string header, string[] exampleTags)
         {
             this.Browser = browser;
@@ -535,8 +457,10 @@ namespace TestSample.BrowserGuardDisabled
         
         [NUnit.Framework.TestAttribute()]
         [NUnit.Framework.CategoryAttribute("OutlineTag")]
-        [NUnit.Framework.TestCaseSourceAttribute("ScenarioOutlineWithTwoBrowserTagsAndTaggedExamples_chrome", Category="chrome")]
-        [NUnit.Framework.TestCaseSourceAttribute("ScenarioOutlineWithTwoBrowserTagsAndTaggedExamples_firefox", Category="firefox")]
+        [NUnit.Framework.TestCaseSourceAttribute("ScenarioOutlineWithTwoBrowserTagsAndTaggedExamples_outline___chrome__nightly", Category="nightly,chrome")]
+        [NUnit.Framework.TestCaseSourceAttribute("ScenarioOutlineWithTwoBrowserTagsAndTaggedExamples_outline___firefox__nightly", Category="nightly,firefox")]
+        [NUnit.Framework.TestCaseSourceAttribute("ScenarioOutlineWithTwoBrowserTagsAndTaggedExamples_outline___chrome__eachcommit", Category="each-commit,chrome")]
+        [NUnit.Framework.TestCaseSourceAttribute("ScenarioOutlineWithTwoBrowserTagsAndTaggedExamples_outline___firefox__eachcommit", Category="each-commit,firefox")]
         public virtual void ScenarioOutlineWithTwoBrowserTagsAndTaggedExamples(string browser, string header, string[] exampleTags)
         {
             this.Browser = browser;

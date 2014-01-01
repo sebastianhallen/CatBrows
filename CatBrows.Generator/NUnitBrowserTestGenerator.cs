@@ -30,6 +30,7 @@
         private const string DEFAULT_NO_BROWSER_DEFINED_MESSAGE = "No browser defined, please specify @Browser:someBrowser for your scenario.";
         private const string GUARD_BROWSER_TAG_PRESENCE_METHOD_NAME = "GuardBrowserTagMissing";
         private const string BROWSER_TAG_PREFIX = "Browser:";
+	    private const string REPEATS_KEY = "TestCaseRepeats";
 
         protected CodeDomHelper CodeDomHelper { get; set; }
 
@@ -245,29 +246,19 @@
                 //inject an argument, string browser, as the first argument in the test method
                 testMethod.Parameters.Insert(0, new CodeParameterDeclarationExpression("System.string", "browser"));
 
+                //if present, get the @Repeat:<number of repeats> value and store it in UserData so we can use it in the scenario outline case later
+                var repeats = GetRepeats(uniqueProperties);
+                testMethod.UserData.Add(REPEATS_KEY, repeats + "");
+                    
                 foreach (var browser in browsers)
                 {
                     //store browser in user data so we can use it later if this is a row test/scenario ouline
                     testMethod.UserData.Add(BROWSER_TAG_PREFIX + browser, browser);
-                    
+
                     //create a property that contains the test data
-                    var testCaseSource = CreateTestCaseSource(generationContext, testMethod.Name, browser);
+                    var testCaseSource = CreateTestCaseSource(generationContext, testMethod.Name, browser, repeats);
                     AddTestCaseSourceRow(generationContext, testCaseSource, new[] { browser });
                     
-                    //if present - update the repeat var in the test data
-                    var repeat = "";
-                    if (uniqueProperties.TryGetValue("repeat", out repeat) || uniqueProperties.TryGetValue("Repeat", out repeat))
-                    {
-                        int repeats;
-                        if (int.TryParse(repeat, out repeats))
-                        {
-                            var tcs = generationContext.TestClass.Members.OfType<CodeMemberProperty>().First(member => member.Name.Equals(testCaseSource));
-                            var repeatDeclarationStatement = (CodeVariableDeclarationStatement)tcs.GetStatements.Cast<CodeStatement>().First();
-                            repeatDeclarationStatement.InitExpression = new CodePrimitiveExpression(repeats);
-                        }
-                    }
-
-
                     var browserArgument = new[]
                         {
                             // first argument == test case source data
@@ -288,7 +279,7 @@
             }
         }
 
-        public void SetTestMethodIgnore(TestClassGenerationContext generationContext, CodeMemberMethod testMethod)
+	    public void SetTestMethodIgnore(TestClassGenerationContext generationContext, CodeMemberMethod testMethod)
         {
             CodeDomHelper.AddAttribute(testMethod, IGNORE_ATTR);
         }
@@ -307,7 +298,8 @@
                                      .Where(key => key.StartsWith(BROWSER_TAG_PREFIX))
                                      .Select(key => testMethod.UserData[key])
                                      .ToArray();
-
+            var repeats = testMethod.UserData[REPEATS_KEY] as string;
+            
             #region specflows NUnitTestGeneratorProvider.cs
             var args = arguments.Select(
               arg => new CodeAttributeArgument(new CodePrimitiveExpression(arg))).ToList();
@@ -327,7 +319,7 @@
             {
                 foreach (var browser in browsers)
                 {
-                    var testCaseSource = CreateTestCaseSource(generationContext, testMethod.Name + "_outline_", browser.ToString(), tags);
+                    var testCaseSource = CreateTestCaseSource(generationContext, testMethod.Name + "_outline_", browser.ToString(), int.Parse(repeats), tags);
                     var row = new[] { browser.ToString() }.Concat(arguments).Concat(new string[] {null});
                     AddTestCaseSourceRow(generationContext, testCaseSource, row);
 
@@ -381,6 +373,20 @@
             // doing nothing since we support RowTest
         }
 
+        private static int GetRepeats(Dictionary<string, string> uniqueProperties)
+        {
+            var repeatTag = "";
+            int repeats = 1;
+            if (uniqueProperties.TryGetValue("repeat", out repeatTag) || uniqueProperties.TryGetValue("Repeat", out repeatTag))
+            {
+                if (!int.TryParse(repeatTag, out repeats))
+                {
+                    repeats = 1;
+                }
+            }
+            return repeats;
+        }
+
         /// <summary>
         /// checks if the generated test class has a method or property with the given name
         /// </summary>
@@ -392,33 +398,6 @@
 	        return generationContext.TestClass.Members.Cast<CodeTypeMember>().Any(member => testMethodName.Equals(member.Name));
 	    }
 
-	    private static void AddCountTestCaseDataArgsMethod(TestClassGenerationContext generationContext)
-	    {
-            //private static int CountTestCaseDataArgs(TestCaseData data)
-	        //{
-            //  return data.Arguments.Count();
-	        //}
-	        if (!HasExistingMember(generationContext, "CountTestCaseDataArgs"))
-	        {
-                var method = new CodeMemberMethod { Name = "CountTestCaseDataArgs" };
-                method.Parameters.Add(new CodeParameterDeclarationExpression("NUnit.Framework.TestCaseData", "data"));
-                method.ReturnType = new CodeTypeReference(typeof(int));
-                method.Statements.Add(new CodeMethodReturnStatement(
-                                        new CodeMethodInvokeExpression(
-                                            new CodePropertyReferenceExpression(
-                                               new CodeArgumentReferenceExpression("data"),
-                                               "Arguments"
-                                            ),
-                                            "Count"
-                                        )
-                                      )
-                );
-                method.Attributes &= ~MemberAttributes.AccessMask & ~MemberAttributes.ScopeMask;
-                method.Attributes |= MemberAttributes.Static;
-	            generationContext.TestClass.Members.Add(method);
-	        }
-	    }
-
         /// <summary>
         /// Creates a property with a list of NUnit.Framework.TestCaseData
         /// </summary>
@@ -426,7 +405,7 @@
         /// <param name="testMethodName"></param>
         /// <param name="browser"></param>
         /// <returns></returns>
-        private static string CreateTestCaseSource(TestClassGenerationContext generationContext, string testMethodName, string browser, IEnumerable<string> tags = null)
+        private static string CreateTestCaseSource(TestClassGenerationContext generationContext, string testMethodName, string browser, int repeats, IEnumerable<string> tags = null)
         {
 
             var testCaseSourceName = ToMethodSafeString(new [] {testMethodName, browser}.Concat(tags ?? new string[] {}));
@@ -447,95 +426,14 @@
 
 
                 //var repeats = 1
-                property.GetStatements.Add(new CodeVariableDeclarationStatement("System.int32", "repeats", new CodePrimitiveExpression(1)));
+                property.GetStatements.Add(new CodeVariableDeclarationStatement("System.int32", "repeats", new CodePrimitiveExpression(repeats)));
                 //var rows = new List<TestCaseData>();
                 property.GetStatements.Add(new CodeVariableDeclarationStatement("System.Collections.Generic.List<NUnit.Framework.TestCaseData>", "rows", new CodeObjectCreateExpression("System.Collections.Generic.List<NUnit.Framework.TestCaseData>")));
                 
-                //since TestCaseData will be added both in SetRow and SetTest in the case of this being a scenario outline, we filter the test data to only return those added by scenario outlines if applicable.
-                //var maxArguments = rows.Max(CurrentTestClass.CountTestCaseDataArgs)
-	            AddCountTestCaseDataArgsMethod(generationContext);
-                property.GetStatements.Add(new CodeVariableDeclarationStatement(typeof(int), "maxArguments",
-                                                new CodeMethodInvokeExpression(
-                                                    new CodeVariableReferenceExpression("rows"), 
-                                                    "Max",
-                                                    new CodeObjectCreateExpression(
-                                                        new CodeTypeReference("System.Func<NUnit.Framework.TestCaseData, int>"),
-                                                        new CodeMethodReferenceExpression(
-                                                            new CodeTypeReferenceExpression(
-                                                                new CodeTypeReference(generationContext.TestClass.Name)
-                                                            ),
-                                                            "CountTestCaseDataArgs"
-                                                        )
-                                                    )
-                                                )
-                                           )
-                );
-                //var filteredRows = rows.Where(row => row.Arguments.Count().Equals(maxArguments)
-
-                //rewritten as
-                /*
-                var filteredRows = new List<TestCaseData>();
-                var filterEnumerator = rows.GetEnumerator()
-                while (filterEnumerator.MoveNext()) 
-                {
-                    var current = filterEnumerator.Current;
-                    var argCount = current.Arguments.Count();
-                    if (argCount.Equals(maxArguments)) filteredRows.Add(current);
-                }
-                */
-
-                //var filteredRows = new List<TestCaseData>();
-                property.GetStatements.Add(new CodeVariableDeclarationStatement(
-                                                "System.Collections.Generic.List<NUnit.Framework.TestCaseData>", 
-                                                "filteredRows", 
-                                                new CodeObjectCreateExpression("System.Collections.Generic.List<NUnit.Framework.TestCaseData>")
-                                          )
-                );
-
-                //var filterEnumerator = rows.GetEnumerator()
-                property.GetStatements.Add(new CodeVariableDeclarationStatement(
-                                                "System.Collections.Generic.List<NUnit.Framework.TestCaseData>.Enumerator", 
-                                                "filterEnumerator",
-                                                new CodeMethodInvokeExpression(new CodeVariableReferenceExpression("rows"), "GetEnumerator")
-                                          )
-                );
-                //while (filterEnumerator.MoveNext()) 
-                property.GetStatements.Add(new CodeIterationStatement(
-                                                new CodeSnippetStatement(), 
-                                                new CodeMethodInvokeExpression(
-                                                    new CodeVariableReferenceExpression("filterEnumerator"), "MoveNext"
-                                                ),
-                                                new CodeSnippetStatement(),
-                                                    //while loop body
-                                                    //var current = filterEnumerator.Current;
-                                                    new CodeVariableDeclarationStatement(
-                                                        "NUnit.Framework.TestCaseData",
-                                                        "current",
-                                                        new CodePropertyReferenceExpression(new CodeVariableReferenceExpression("filterEnumerator"), "Current")
-                                                    ),
-                                                    //var argCount = current.Arguments.Count();
-                                                    new CodeVariableDeclarationStatement(
-                                                        typeof(int),
-                                                        "argCount",
-                                                        new CodeMethodInvokeExpression(new CodePropertyReferenceExpression(new CodeVariableReferenceExpression("current"), "Arguments"), "Count")
-                                                    ),
-                                                    //if (argCount.Equals(maxArguments)) filteredRows.Add(current);
-                                                    new CodeConditionStatement(
-                                                        new CodeMethodInvokeExpression(new CodeVariableReferenceExpression("argCount"), "Equals", new CodeVariableReferenceExpression("maxArguments")),
-                                                        new CodeExpressionStatement(
-                                                            new CodeMethodInvokeExpression(new CodeVariableReferenceExpression("filteredRows"), "Add", new CodeVariableReferenceExpression("current"))
-                                                        )
-                                                    )
-                                           )
-                );
-
-
-
-
-                //handle repeats by duplicating each filtered row <repeats> number of times
+                //handle repeats by duplicating each row <repeats> number of times
                 /*
                 var repeatedRows = new List<TestCaseData>();
-                var repeatedEnumerator = filteredRows.GetEnumerator()
+                var repeatedEnumerator = rows.GetEnumerator()
                 while (repeatedEnumerator.MoveNext()) 
                 {
                     var current = repeatedEnumerator.Current;
@@ -555,7 +453,7 @@
                 property.GetStatements.Add(new CodeVariableDeclarationStatement(
                                                 "System.Collections.Generic.List<NUnit.Framework.TestCaseData>.Enumerator",
                                                 "repeatedEnumerator",
-                                                new CodeMethodInvokeExpression(new CodeVariableReferenceExpression("filteredRows"), "GetEnumerator")
+                                                new CodeMethodInvokeExpression(new CodeVariableReferenceExpression("rows"), "GetEnumerator")
                                           )
                 );
 
