@@ -58,7 +58,8 @@
             //create the browser guard method that enforces the use of @Browser tags for scenarios unless 
             //  <appSettings><add key="CatBrows-RequiresBrowser" value="false" /></appSettings>
             // is present in app.config
-            var guardBrowserTagMissing = CreateMethod(GUARD_BROWSER_TAG_PRESENCE_METHOD_NAME, new CodeStatement[]
+            var guardBrowserTagMissing = new CodeMemberMethod {Name = GUARD_BROWSER_TAG_PRESENCE_METHOD_NAME};
+            guardBrowserTagMissing.Statements.AddRange(new CodeStatement[]
                 {
                     //var appSettings = ConfigurationManager.AppSettings;
                     new CodeVariableDeclarationStatement(typeof(NameValueCollection), "appSettings", 
@@ -127,8 +128,6 @@
 
             generationContext.TestClass.Members.Add(guardBrowserTagMissing);
         }
-
-
 
         public void SetTestClassCategories(TestClassGenerationContext generationContext, IEnumerable<string> featureCategories)
         {
@@ -392,16 +391,18 @@
 	        }
 	    }
 
-	    /// <summary>
+        /// <summary>
         /// Creates a property with a list of NUnit.Framework.TestCaseData
         /// </summary>
         /// <param name="generationContext"></param>
         /// <param name="testMethodName"></param>
         /// <param name="browser"></param>
         /// <returns></returns>
-	    private static string CreateTestCaseSource(TestClassGenerationContext generationContext, string testMethodName, string browser)
+	    private static string CreateTestCaseSource(TestClassGenerationContext generationContext, string testMethodName, string browser, string[] tags = null)
         {
-            var testCaseSourceName = testMethodName + "_" + new string(browser.Where(char.IsLetterOrDigit).ToArray());
+
+            var testCaseSourceName = ToMethodSafeString(new [] {testMethodName, browser}.Concat(tags ?? new string[] {}));
+                
 	        if (!HasExistingMember(generationContext, testCaseSourceName))
 	        {
                 var type = new CodeTypeReference(typeof(object[]));
@@ -602,14 +603,14 @@
             ));
         }
 
-        private static CodeMemberMethod CreateMethod(string name, IEnumerable<CodeStatement> statements)
+        private static string ToMethodSafeString(IEnumerable<string> parts)
         {
-            var method = new CodeMemberMethod { Name = name };
-            foreach (var statement in statements)
-            {
-                method.Statements.Add(statement);
-            }
-            return method;
+            return string.Join("_", parts.Select(ToMethodSafeString));
+        }
+
+        private static string ToMethodSafeString(string raw)
+        {
+            return new string(raw.Where(char.IsLetterOrDigit).ToArray());
         }
     }
 }
