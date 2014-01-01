@@ -52,15 +52,18 @@ namespace TestSample.BrowserGuardDisabled
                         filteredRows.Add(current);
                     }
                 }
-                System.Collections.Generic.IEnumerable<NUnit.Framework.TestCaseData> repeatedRows = filteredRows.SelectMany(data =>
-                            {
-                                var repeatedData = new System.Collections.Generic.List<NUnit.Framework.TestCaseData>();
-                                for (int i = 0; i < repeats; ++i)
-                                {
-                                    repeatedData.Add(data);
-                                }
-                                return repeatedData;
-                            });
+                System.Collections.Generic.List<NUnit.Framework.TestCaseData> repeatedRows = new System.Collections.Generic.List<NUnit.Framework.TestCaseData>();
+                System.Collections.Generic.List<NUnit.Framework.TestCaseData>.Enumerator repeatedEnumerator = filteredRows.GetEnumerator();
+                for (
+                ; repeatedEnumerator.MoveNext(); 
+                )
+                {
+                    NUnit.Framework.TestCaseData current = repeatedEnumerator.Current;
+                    for (int i = 0; (i < repeats); i = (i + 1))
+                    {
+                        repeatedRows.Add(current);
+                    }
+                }
                 return repeatedRows.ToArray();
             }
         }
@@ -86,15 +89,18 @@ namespace TestSample.BrowserGuardDisabled
                         filteredRows.Add(current);
                     }
                 }
-                System.Collections.Generic.IEnumerable<NUnit.Framework.TestCaseData> repeatedRows = filteredRows.SelectMany(data =>
-                            {
-                                var repeatedData = new System.Collections.Generic.List<NUnit.Framework.TestCaseData>();
-                                for (int i = 0; i < repeats; ++i)
-                                {
-                                    repeatedData.Add(data);
-                                }
-                                return repeatedData;
-                            });
+                System.Collections.Generic.List<NUnit.Framework.TestCaseData> repeatedRows = new System.Collections.Generic.List<NUnit.Framework.TestCaseData>();
+                System.Collections.Generic.List<NUnit.Framework.TestCaseData>.Enumerator repeatedEnumerator = filteredRows.GetEnumerator();
+                for (
+                ; repeatedEnumerator.MoveNext(); 
+                )
+                {
+                    NUnit.Framework.TestCaseData current = repeatedEnumerator.Current;
+                    for (int i = 0; (i < repeats); i = (i + 1))
+                    {
+                        repeatedRows.Add(current);
+                    }
+                }
                 return repeatedRows.ToArray();
             }
         }
@@ -120,15 +126,18 @@ namespace TestSample.BrowserGuardDisabled
                         filteredRows.Add(current);
                     }
                 }
-                System.Collections.Generic.IEnumerable<NUnit.Framework.TestCaseData> repeatedRows = filteredRows.SelectMany(data =>
-                            {
-                                var repeatedData = new System.Collections.Generic.List<NUnit.Framework.TestCaseData>();
-                                for (int i = 0; i < repeats; ++i)
-                                {
-                                    repeatedData.Add(data);
-                                }
-                                return repeatedData;
-                            });
+                System.Collections.Generic.List<NUnit.Framework.TestCaseData> repeatedRows = new System.Collections.Generic.List<NUnit.Framework.TestCaseData>();
+                System.Collections.Generic.List<NUnit.Framework.TestCaseData>.Enumerator repeatedEnumerator = filteredRows.GetEnumerator();
+                for (
+                ; repeatedEnumerator.MoveNext(); 
+                )
+                {
+                    NUnit.Framework.TestCaseData current = repeatedEnumerator.Current;
+                    for (int i = 0; (i < repeats); i = (i + 1))
+                    {
+                        repeatedRows.Add(current);
+                    }
+                }
                 return repeatedRows.ToArray();
             }
         }
@@ -155,15 +164,18 @@ namespace TestSample.BrowserGuardDisabled
                         filteredRows.Add(current);
                     }
                 }
-                System.Collections.Generic.IEnumerable<NUnit.Framework.TestCaseData> repeatedRows = filteredRows.SelectMany(data =>
-                            {
-                                var repeatedData = new System.Collections.Generic.List<NUnit.Framework.TestCaseData>();
-                                for (int i = 0; i < repeats; ++i)
-                                {
-                                    repeatedData.Add(data);
-                                }
-                                return repeatedData;
-                            });
+                System.Collections.Generic.List<NUnit.Framework.TestCaseData> repeatedRows = new System.Collections.Generic.List<NUnit.Framework.TestCaseData>();
+                System.Collections.Generic.List<NUnit.Framework.TestCaseData>.Enumerator repeatedEnumerator = filteredRows.GetEnumerator();
+                for (
+                ; repeatedEnumerator.MoveNext(); 
+                )
+                {
+                    NUnit.Framework.TestCaseData current = repeatedEnumerator.Current;
+                    for (int i = 0; (i < repeats); i = (i + 1))
+                    {
+                        repeatedRows.Add(current);
+                    }
+                }
                 return repeatedRows.ToArray();
             }
         }
@@ -190,15 +202,18 @@ namespace TestSample.BrowserGuardDisabled
                         filteredRows.Add(current);
                     }
                 }
-                System.Collections.Generic.IEnumerable<NUnit.Framework.TestCaseData> repeatedRows = filteredRows.SelectMany(data =>
-                            {
-                                var repeatedData = new System.Collections.Generic.List<NUnit.Framework.TestCaseData>();
-                                for (int i = 0; i < repeats; ++i)
-                                {
-                                    repeatedData.Add(data);
-                                }
-                                return repeatedData;
-                            });
+                System.Collections.Generic.List<NUnit.Framework.TestCaseData> repeatedRows = new System.Collections.Generic.List<NUnit.Framework.TestCaseData>();
+                System.Collections.Generic.List<NUnit.Framework.TestCaseData>.Enumerator repeatedEnumerator = filteredRows.GetEnumerator();
+                for (
+                ; repeatedEnumerator.MoveNext(); 
+                )
+                {
+                    NUnit.Framework.TestCaseData current = repeatedEnumerator.Current;
+                    for (int i = 0; (i < repeats); i = (i + 1))
+                    {
+                        repeatedRows.Add(current);
+                    }
+                }
                 return repeatedRows.ToArray();
             }
         }
@@ -225,15 +240,18 @@ namespace TestSample.BrowserGuardDisabled
                         filteredRows.Add(current);
                     }
                 }
-                System.Collections.Generic.IEnumerable<NUnit.Framework.TestCaseData> repeatedRows = filteredRows.SelectMany(data =>
-                            {
-                                var repeatedData = new System.Collections.Generic.List<NUnit.Framework.TestCaseData>();
-                                for (int i = 0; i < repeats; ++i)
-                                {
-                                    repeatedData.Add(data);
-                                }
-                                return repeatedData;
-                            });
+                System.Collections.Generic.List<NUnit.Framework.TestCaseData> repeatedRows = new System.Collections.Generic.List<NUnit.Framework.TestCaseData>();
+                System.Collections.Generic.List<NUnit.Framework.TestCaseData>.Enumerator repeatedEnumerator = filteredRows.GetEnumerator();
+                for (
+                ; repeatedEnumerator.MoveNext(); 
+                )
+                {
+                    NUnit.Framework.TestCaseData current = repeatedEnumerator.Current;
+                    for (int i = 0; (i < repeats); i = (i + 1))
+                    {
+                        repeatedRows.Add(current);
+                    }
+                }
                 return repeatedRows.ToArray();
             }
         }
@@ -261,15 +279,18 @@ namespace TestSample.BrowserGuardDisabled
                         filteredRows.Add(current);
                     }
                 }
-                System.Collections.Generic.IEnumerable<NUnit.Framework.TestCaseData> repeatedRows = filteredRows.SelectMany(data =>
-                            {
-                                var repeatedData = new System.Collections.Generic.List<NUnit.Framework.TestCaseData>();
-                                for (int i = 0; i < repeats; ++i)
-                                {
-                                    repeatedData.Add(data);
-                                }
-                                return repeatedData;
-                            });
+                System.Collections.Generic.List<NUnit.Framework.TestCaseData> repeatedRows = new System.Collections.Generic.List<NUnit.Framework.TestCaseData>();
+                System.Collections.Generic.List<NUnit.Framework.TestCaseData>.Enumerator repeatedEnumerator = filteredRows.GetEnumerator();
+                for (
+                ; repeatedEnumerator.MoveNext(); 
+                )
+                {
+                    NUnit.Framework.TestCaseData current = repeatedEnumerator.Current;
+                    for (int i = 0; (i < repeats); i = (i + 1))
+                    {
+                        repeatedRows.Add(current);
+                    }
+                }
                 return repeatedRows.ToArray();
             }
         }
@@ -297,15 +318,18 @@ namespace TestSample.BrowserGuardDisabled
                         filteredRows.Add(current);
                     }
                 }
-                System.Collections.Generic.IEnumerable<NUnit.Framework.TestCaseData> repeatedRows = filteredRows.SelectMany(data =>
-                            {
-                                var repeatedData = new System.Collections.Generic.List<NUnit.Framework.TestCaseData>();
-                                for (int i = 0; i < repeats; ++i)
-                                {
-                                    repeatedData.Add(data);
-                                }
-                                return repeatedData;
-                            });
+                System.Collections.Generic.List<NUnit.Framework.TestCaseData> repeatedRows = new System.Collections.Generic.List<NUnit.Framework.TestCaseData>();
+                System.Collections.Generic.List<NUnit.Framework.TestCaseData>.Enumerator repeatedEnumerator = filteredRows.GetEnumerator();
+                for (
+                ; repeatedEnumerator.MoveNext(); 
+                )
+                {
+                    NUnit.Framework.TestCaseData current = repeatedEnumerator.Current;
+                    for (int i = 0; (i < repeats); i = (i + 1))
+                    {
+                        repeatedRows.Add(current);
+                    }
+                }
                 return repeatedRows.ToArray();
             }
         }

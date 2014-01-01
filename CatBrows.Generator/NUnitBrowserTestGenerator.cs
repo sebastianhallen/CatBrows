@@ -444,29 +444,33 @@
                 //var filteredRows = rows.Where(row => row.Arguments.Count().Equals(maxArguments)
 
                 //rewritten as
-                
-                //var filteredRows = new List<TestCaseData>();
-                //var filterEnumerator = rows.GetEnumerator()
-                //while (filterEnumerator.MoveNext()) 
-                //{
-                //    var current = filterEnumerator.Current;
-                //    var argCount = current.Arguments.Count();
-                //    if (argCount.Equals(maxArguments)) filteredRows.Add(current);
-                //}
-                 
+                /*
+                var filteredRows = new List<TestCaseData>();
+                var filterEnumerator = rows.GetEnumerator()
+                while (filterEnumerator.MoveNext()) 
+                {
+                    var current = filterEnumerator.Current;
+                    var argCount = current.Arguments.Count();
+                    if (argCount.Equals(maxArguments)) filteredRows.Add(current);
+                }
+                */
 
+                //var filteredRows = new List<TestCaseData>();
                 property.GetStatements.Add(new CodeVariableDeclarationStatement(
                                                 "System.Collections.Generic.List<NUnit.Framework.TestCaseData>", 
                                                 "filteredRows", 
                                                 new CodeObjectCreateExpression("System.Collections.Generic.List<NUnit.Framework.TestCaseData>")
                                           )
                 );
+
+                //var filterEnumerator = rows.GetEnumerator()
                 property.GetStatements.Add(new CodeVariableDeclarationStatement(
                                                 "System.Collections.Generic.List<NUnit.Framework.TestCaseData>.Enumerator", 
                                                 "filterEnumerator",
                                                 new CodeMethodInvokeExpression(new CodeVariableReferenceExpression("rows"), "GetEnumerator")
                                           )
                 );
+                //while (filterEnumerator.MoveNext()) 
                 property.GetStatements.Add(new CodeIterationStatement(
                                                 new CodeSnippetStatement(), 
                                                 new CodeMethodInvokeExpression(
@@ -474,16 +478,19 @@
                                                 ),
                                                 new CodeSnippetStatement(),
                                                     //while loop body
+                                                    //var current = filterEnumerator.Current;
                                                     new CodeVariableDeclarationStatement(
                                                         "NUnit.Framework.TestCaseData",
                                                         "current",
                                                         new CodePropertyReferenceExpression(new CodeVariableReferenceExpression("filterEnumerator"), "Current")
                                                     ),
+                                                    //var argCount = current.Arguments.Count();
                                                     new CodeVariableDeclarationStatement(
                                                         typeof(int),
                                                         "argCount",
                                                         new CodeMethodInvokeExpression(new CodePropertyReferenceExpression(new CodeVariableReferenceExpression("current"), "Arguments"), "Count")
                                                     ),
+                                                    //if (argCount.Equals(maxArguments)) filteredRows.Add(current);
                                                     new CodeConditionStatement(
                                                         new CodeMethodInvokeExpression(new CodeVariableReferenceExpression("argCount"), "Equals", new CodeVariableReferenceExpression("maxArguments")),
                                                         new CodeExpressionStatement(
@@ -497,25 +504,72 @@
 
 
                 //handle repeats by duplicating each filtered row <repeats> number of times
-                //var repeatedRows = filteredRows.SelectMany(data => {
-                //  var repeatedData = new List<TestCaseData>();
-                //  for (int i = 0; i < repeats; ++i) repeatedData.Add(data);
-                //  return repeatedData;
-                //}
-                property.GetStatements.Add(new CodeVariableDeclarationStatement("System.Collections.Generic.IEnumerable<NUnit.Framework.TestCaseData>", "repeatedRows",
-                        new CodeMethodInvokeExpression(new CodeVariableReferenceExpression("filteredRows"), "SelectMany", new CodeSnippetExpression(@"data =>
-                            {
-                                var repeatedData = new System.Collections.Generic.List<NUnit.Framework.TestCaseData>();
-                                for (int i = 0; i < repeats; ++i)
-                                {
-                                    repeatedData.Add(data);
-                                }
-                                return repeatedData;
-                            }"))
-                    )
+                /*
+                var repeatedRows = new List<TestCaseData>();
+                var repeatedEnumerator = filteredRows.GetEnumerator()
+                while (repeatedEnumerator.MoveNext()) 
+                {
+                    var current = repeatedEnumerator.Current;
+                    for (int i = 0; i < repeats; ++i) repeatedData.Add(data);
+                    return repeatedData;
+                }
+                */
+
+                //var repeatedRows = new List<TestCaseData>()
+                property.GetStatements.Add(new CodeVariableDeclarationStatement(
+                                                "System.Collections.Generic.List<NUnit.Framework.TestCaseData>",
+                                                "repeatedRows",
+                                                new CodeObjectCreateExpression("System.Collections.Generic.List<NUnit.Framework.TestCaseData>")
+                                          )
+                );
+                //var repeatedEnumerator = filteredRows.GetEnumerator()
+                property.GetStatements.Add(new CodeVariableDeclarationStatement(
+                                                "System.Collections.Generic.List<NUnit.Framework.TestCaseData>.Enumerator",
+                                                "repeatedEnumerator",
+                                                new CodeMethodInvokeExpression(new CodeVariableReferenceExpression("filteredRows"), "GetEnumerator")
+                                          )
                 );
 
+                //while (repeatedEnumerator.MoveNext()) 
+                property.GetStatements.Add(new CodeIterationStatement(
+                                                new CodeSnippetStatement(),
+                                                new CodeMethodInvokeExpression(
+                                                    new CodeVariableReferenceExpression("repeatedEnumerator"), "MoveNext"
+                                                ),
+                                                new CodeSnippetStatement(),
+                                                    //while loop body
+                                                    //var current = repeatedEnumerator.Current;
+                                                    new CodeVariableDeclarationStatement(
+                                                        "NUnit.Framework.TestCaseData",
+                                                        "current",
+                                                        new CodePropertyReferenceExpression(new CodeVariableReferenceExpression("repeatedEnumerator"), "Current")
+                                                    ),
+                                                    //for (int i = 0; i < repeats; ++i)
+                                                    new CodeIterationStatement(
+                                                        new CodeVariableDeclarationStatement(typeof(int), "i", new CodePrimitiveExpression(0)),
+                                                        new CodeBinaryOperatorExpression(
+                                                            new CodeVariableReferenceExpression("i"), 
+                                                            CodeBinaryOperatorType.LessThan, 
+                                                            new CodeVariableReferenceExpression("repeats")
+                                                        ),
+                                                        new CodeAssignStatement(
+                                                            new CodeVariableReferenceExpression("i"), 
+                                                            new CodeBinaryOperatorExpression(
+                                                                new CodeVariableReferenceExpression("i"),
+                                                                CodeBinaryOperatorType.Add, 
+                                                                new CodePrimitiveExpression(1)
+                                                            )
+                                                        ),
+                                                        //inner for-loop body
+                                                        //repeatedData.Add(data);
+                                                        new CodeExpressionStatement(
+                                                            new CodeMethodInvokeExpression(new CodeVariableReferenceExpression("repeatedRows"), "Add", new CodeVariableReferenceExpression("current"))
+                                                        )
+                                                    )
+                                           )
+                );
 
+                //return repeatedRows.ToArray()
                 property.GetStatements.Add(new CodeMethodReturnStatement(
                         new CodeMethodInvokeExpression(new CodeVariableReferenceExpression("repeatedRows"), "ToArray")
                     )
@@ -526,7 +580,7 @@
             return testCaseSourceName;
         }
 
-        /// <summary>
+	    /// <summary>
         /// injects a line in the test case source property that adds a new TestCaseData entry into the rows list
         /// </summary>
         /// <param name="generationContext"></param>
