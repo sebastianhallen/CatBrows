@@ -317,21 +317,45 @@
 
             if (browsers.Any())
             {
-                foreach (var browser in browsers)
-                {
-                    var testCaseSource = CreateTestCaseSource(generationContext, testMethod.Name + "_outline_", browser.ToString(), int.Parse(repeats), tags);
-                    var row = new[] { browser.ToString() }.Concat(arguments).Concat(new string[] {null});
-                    AddTestCaseSourceRow(generationContext, testCaseSource, row);
+				var testCaseSourceRows = new Dictionary<string, IEnumerable<string>>();
 
-                    var testCaseRowAttributeArgs = new[]
-                        {
-                            // first argument == test case source data
-                            new CodeAttributeArgument(new CodePrimitiveExpression(testCaseSource)),
-                            // add browser value as category
-                            new CodeAttributeArgument("Category", new CodePrimitiveExpression(string.Join(",", tags.Concat(new [] {browser.ToString()}))))
-                        };
-                        CodeDomHelper.AddAttribute(testMethod, ROW_SOURCE_ATTR, testCaseRowAttributeArgs);
-                }
+				//extract data for all test case source attributes that should be added
+				foreach (var browser in browsers)
+				{
+					var testCaseSource = CreateTestCaseSource(generationContext, testMethod.Name + "_outline_", browser.ToString(), int.Parse(repeats), tags);
+					var row = new[] { browser.ToString() }.Concat(arguments).Concat(new string[] { null });
+					AddTestCaseSourceRow(generationContext, testCaseSource, row);
+
+					var categories = tags.Concat(new[] { browser.ToString() });
+					testCaseSourceRows[testCaseSource] = categories;
+				}
+
+				//... and add test case source attributes
+				foreach (var testCaseSourceRow in testCaseSourceRows)
+				{
+					//check first that we haven't already added a matching test case source attribute in a previous call to SetRow(...)
+					var hasExistingTestCaseAttribute = testMethod.CustomAttributes
+														   .Cast<CodeAttributeDeclaration>()
+														   .Where(attribute => attribute.Name.Equals("NUnit.Framework.TestCaseSourceAttribute"))
+														   .Any(attribute =>
+															   {
+																   var sourceNameArg = (CodePrimitiveExpression)attribute.Arguments.Cast<CodeAttributeArgument>().First().Value;
+																   return sourceNameArg.Value.ToString().Equals(testCaseSourceRow.Key);
+															   });
+					if (hasExistingTestCaseAttribute) continue;
+
+					//ok, we don't hve this test case source attribute already, add it!
+
+					var testCaseRowAttributeArgs = new[]
+						{
+							// first argument == test case source data
+							new CodeAttributeArgument(new CodePrimitiveExpression(testCaseSourceRow.Key)),
+							// add browser value as category
+							new CodeAttributeArgument("Category", new CodePrimitiveExpression(string.Join(",", testCaseSourceRow.Value)))
+						};
+					
+					CodeDomHelper.AddAttribute(testMethod, ROW_SOURCE_ATTR, testCaseRowAttributeArgs);
+				}
 
                 //since test case sources for non-row tests are added in a previous step we need to remove those
                 //remove all test case source attributes that don't start with testMethod.Name + "_outline_"

@@ -56,6 +56,22 @@
             Assert.That(BrowserRequiredTestFeature.ScenarioOutlineWithTwoBrowserTags_outline___firefox.Count(), Is.EqualTo(2));
         }
 
+        [Test]
+        public void Should_add_one_test_case_source_per_browser_in_a_scenario_outline_without_tagged_examples()
+        {
+            var testCaseAttributes = this.GetMethodAttributes<TestCaseSourceAttribute>(() => this.Sample.ScenarioOutlineWithTwoBrowserTags("browser", "header", null));
+
+            Assert.That(testCaseAttributes.Count(), Is.EqualTo(2));
+        }
+
+		[Test]
+		public void Should_add_one_test_case_source_per_tagged_example_test_data_set_in_a_scenario_outline()
+		{
+			var testCaseAttributes = this.GetMethodAttributes<TestCaseSourceAttribute>(() => this.Sample.ScenarioOutlineWithTwoBrowserTagsAndTaggedExamples("browser", "header", null));
+
+			Assert.That(testCaseAttributes.Count(), Is.EqualTo(6));
+		}
+
         [Test, Ignore]
         public void Should_set_browser_tagged_description_to_scenario()
         {

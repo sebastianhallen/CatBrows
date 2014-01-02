@@ -84,13 +84,16 @@ Examples:
 Scenario Outline: scenario outline with two browser tags and tagged examples
 	Then the test method should have 4 testcases
 Examples:
-| header   |
-| untagged |
+| header         |
+| untagged       |
+| other untagged |
 @nightly
 Examples:
-| header  |
-| nightly |
+| header        |
+| nightly       |
+| other nightly |
 @each-commit
 Examples:
-| header      |
-| each-commit |
+| header            |
+| each-commit       |
+| each-commit other |
