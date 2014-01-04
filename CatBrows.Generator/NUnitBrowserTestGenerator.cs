@@ -1,15 +1,15 @@
 ﻿namespace CatBrows.Generator
 {
-	using System;
-	using System.CodeDom;
-	using System.Collections.Generic;
-	using System.Collections.Specialized;
-	using System.Linq;
-	using TechTalk.SpecFlow.Generator;
-	using TechTalk.SpecFlow.Generator.UnitTestProvider;
-	using TechTalk.SpecFlow.Utils;
+    using System;
+    using System.CodeDom;
+    using System.Collections.Generic;
+    using System.Collections.Specialized;
+    using System.Linq;
+    using TechTalk.SpecFlow.Generator;
+    using TechTalk.SpecFlow.Generator.UnitTestProvider;
+    using TechTalk.SpecFlow.Utils;
 
-	public class NUnitBrowserTestGenerator
+    public class NUnitBrowserTestGenerator
         : IUnitTestGeneratorProvider
     {
         private const string PROPERTY_ATTR = "NUnit.Framework.Property";
@@ -26,11 +26,11 @@
         private const string DESCRIPTION_ATTR = "NUnit.Framework.DescriptionAttribute";
 
         private const string ENFORCE_BROWSER_SETTING_KEY = "CatBrows-RequiresBrowser";
-	    private const string NO_BROWSER_DEFINED_MESSSAGE_SETTINGS_KEY = "CatBrows-BrowserMissingMessage";
+        private const string NO_BROWSER_DEFINED_MESSSAGE_SETTINGS_KEY = "CatBrows-BrowserMissingMessage";
         private const string DEFAULT_NO_BROWSER_DEFINED_MESSAGE = "No browser defined, please specify @Browser:someBrowser for your scenario.";
         private const string GUARD_BROWSER_TAG_PRESENCE_METHOD_NAME = "GuardBrowserTagMissing";
         private const string BROWSER_TAG_PREFIX = "Browser:";
-	    private const string REPEATS_KEY = "TestCaseRepeats";
+        private const string REPEATS_KEY = "TestCaseRepeats";
 
         protected CodeDomHelper CodeDomHelper { get; set; }
 
@@ -292,32 +292,35 @@
         public void SetRow(TestClassGenerationContext generationContext, CodeMemberMethod testMethod, IEnumerable<string> arguments, IEnumerable<string> tags, bool isIgnored)
         {
             //we extracted the browser and added it to testMethod.UserData so we could have access to it here.
-            var browsers = testMethod.UserData
-                                     .Keys.OfType<string>()
-                                     .Where(key => key.StartsWith(BROWSER_TAG_PREFIX))
-                                     .Select(key => testMethod.UserData[key])
-                                     .ToArray();
+            var browsers = testMethod.UserData.Keys.OfType<string>()
+                                        .Where(key => key.StartsWith(BROWSER_TAG_PREFIX))
+                                        .Select(key => testMethod.UserData[key].ToString()).ToArray();
+
             var repeats = int.Parse(testMethod.UserData[REPEATS_KEY] as string ?? "1");
             var testCaseSourceRows = new Dictionary<string, IEnumerable<string>>();
+            var testCaseSourceRowBase = arguments.ToArray();
+            var testCaseSourceRowTags = tags.ToArray();
 
+            //handle the case when no @browser tag is specified
             if (!browsers.Any())
             {
-                var testCaseSource = CreateTestCaseSource(generationContext, testMethod.Name + "_outline_", "no_browser", repeats, tags);
-                var row = arguments.Concat(new string[] { null });
+                var testCaseSource = CreateTestCaseSource(generationContext, testMethod.Name + "_outline_", "no_browser", repeats, testCaseSourceRowTags);
+                var row = testCaseSourceRowBase.Concat(new string[] { null });
                 AddTestCaseSourceRow(generationContext, testCaseSource, row);
 
-                testCaseSourceRows[testCaseSource] = tags;
+                testCaseSourceRows[testCaseSource] = testCaseSourceRowTags;
             }
 
+            //.. and of course handle the case when a @browser tag exists
             foreach (var browser in browsers)
-			{
-				var testCaseSource = CreateTestCaseSource(generationContext, testMethod.Name + "_outline_", browser.ToString(), repeats, tags);
-				var row = new[] { browser.ToString() }.Concat(arguments).Concat(new string[] { null });
-				AddTestCaseSourceRow(generationContext, testCaseSource, row);
+            {
+                var testCaseSource = CreateTestCaseSource(generationContext, testMethod.Name + "_outline_", browser, repeats, testCaseSourceRowTags);
+                var row = new[] { browser }.Concat(testCaseSourceRowBase).Concat(new string[] { null });
+                AddTestCaseSourceRow(generationContext, testCaseSource, row);
 
-				var categories = tags.Concat(new[] { browser.ToString() });
-				testCaseSourceRows[testCaseSource] = categories;
-			}
+                var categories = testCaseSourceRowTags.Concat(new[] { browser });
+                testCaseSourceRows[testCaseSource] = categories;
+            }
 
 			//... and add test case source attributes
 			foreach (var testCaseSourceRow in testCaseSourceRows)
@@ -334,7 +337,6 @@
 				if (hasExistingTestCaseAttribute) continue;
 
 				//ok, we don't hve this test case source attribute already, add it!
-
 				var testCaseRowAttributeArgs = new[]
 					{
 						// first argument == test case source data
