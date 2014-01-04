@@ -48,16 +48,14 @@
             Assert.That(firefox.Category, Is.EqualTo("firefox"));
         }
 
-        [Test, Ignore("pending")]
+        [Test]
         public void Should_add_test_case_source_attribute_when_not_supplying_a_browser_to_a_scenario_outline()
         {
             var testCaseAttributes = this.GetMethodAttributes<TestCaseSourceAttribute>(() => this.Sample.TagsButNoBrowserTagScenarioOutline("header", null));
 
             var source = testCaseAttributes.Single();
 
-            Assert.That(source.SourceName, Is.EqualTo("MultipleBrowserTags__chrome"));
-            Assert.That(source.Category, Is.EqualTo("chrome"));
-
+            Assert.That(source.SourceName, Is.EqualTo("TagsButNoBrowserTagScenarioOutline_outline___no_browser"));
         }
 
         [Test]

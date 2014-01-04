@@ -239,16 +239,16 @@
                 .Where(category => category.StartsWith(BROWSER_TAG_PREFIX))
                 .Select(category => category.Replace(BROWSER_TAG_PREFIX, ""))
                 .ToArray();
-            
+
             if (browsers.Any())
             {
-                //inject an argument, string browser, as the first argument in the test method
-                testMethod.Parameters.Insert(0, new CodeParameterDeclarationExpression("System.string", "browser"));
-
                 //if present, get the @Repeat:<number of repeats> value and store it in UserData so we can use it in the scenario outline case later
                 var repeats = GetRepeats(uniqueProperties);
                 testMethod.UserData.Add(REPEATS_KEY, repeats + "");
-                    
+
+                //inject an argument, string browser, as the first argument in the test method
+                testMethod.Parameters.Insert(0, new CodeParameterDeclarationExpression("System.string", "browser"));
+
                 foreach (var browser in browsers)
                 {
                     //store browser in user data so we can use it later if this is a row test/scenario ouline
@@ -302,11 +302,11 @@
 
             if (!browsers.Any())
             {
-              //  var testCaseSource = CreateTestCaseSource(generationContext, testMethod.Name + "_outline_", "browser", int.Parse(repeats), tags);
-             //   var row = arguments.Concat(new string[] { null });
-            //    AddTestCaseSourceRow(generationContext, testCaseSource, row);
+                var testCaseSource = CreateTestCaseSource(generationContext, testMethod.Name + "_outline_", "no_browser", repeats, tags);
+                var row = arguments.Concat(new string[] { null });
+                AddTestCaseSourceRow(generationContext, testCaseSource, row);
 
-            //    testCaseSourceRows[testCaseSource] = tags;
+                testCaseSourceRows[testCaseSource] = tags;
             }
 
             foreach (var browser in browsers)
@@ -319,66 +319,59 @@
 				testCaseSourceRows[testCaseSource] = categories;
 			}
 
-				//... and add test case source attributes
-				foreach (var testCaseSourceRow in testCaseSourceRows)
-				{
-					//check first that we haven't already added a matching test case source attribute in a previous call to SetRow(...)
-					var hasExistingTestCaseAttribute = testMethod.CustomAttributes
-														   .Cast<CodeAttributeDeclaration>()
-														   .Where(attribute => attribute.Name.Equals("NUnit.Framework.TestCaseSourceAttribute"))
-														   .Any(attribute =>
-															   {
-																   var sourceNameArg = (CodePrimitiveExpression)attribute.Arguments.Cast<CodeAttributeArgument>().First().Value;
-																   return sourceNameArg.Value.ToString().Equals(testCaseSourceRow.Key);
-															   });
-					if (hasExistingTestCaseAttribute) continue;
+			//... and add test case source attributes
+			foreach (var testCaseSourceRow in testCaseSourceRows)
+			{
+				//check first that we haven't already added a matching test case source attribute in a previous call to SetRow(...)
+				var hasExistingTestCaseAttribute = testMethod.CustomAttributes
+														.Cast<CodeAttributeDeclaration>()
+														.Where(attribute => attribute.Name.Equals("NUnit.Framework.TestCaseSourceAttribute"))
+														.Any(attribute =>
+															{
+																var sourceNameArg = (CodePrimitiveExpression)attribute.Arguments.Cast<CodeAttributeArgument>().First().Value;
+																return sourceNameArg.Value.ToString().Equals(testCaseSourceRow.Key);
+															});
+				if (hasExistingTestCaseAttribute) continue;
 
-					//ok, we don't hve this test case source attribute already, add it!
+				//ok, we don't hve this test case source attribute already, add it!
 
-					var testCaseRowAttributeArgs = new[]
-						{
-							// first argument == test case source data
-							new CodeAttributeArgument(new CodePrimitiveExpression(testCaseSourceRow.Key)),
-							// add browser value as category
-							new CodeAttributeArgument("Category", new CodePrimitiveExpression(string.Join(",", testCaseSourceRow.Value)))
-						};
+				var testCaseRowAttributeArgs = new[]
+					{
+						// first argument == test case source data
+						new CodeAttributeArgument(new CodePrimitiveExpression(testCaseSourceRow.Key)),
+						// add browser value as category
+						new CodeAttributeArgument("Category", new CodePrimitiveExpression(string.Join(",", testCaseSourceRow.Value)))
+					};
 					
-					CodeDomHelper.AddAttribute(testMethod, ROW_SOURCE_ATTR, testCaseRowAttributeArgs);
-				}
+				CodeDomHelper.AddAttribute(testMethod, ROW_SOURCE_ATTR, testCaseRowAttributeArgs);
+			}
 
-                //since test case sources for non-row tests are added in a previous step we need to remove those
-                //remove all test case source attributes that don't start with testMethod.Name + "_outline_"
-                var superfluousAttributes = testMethod.CustomAttributes
-                                                           .Cast<CodeAttributeDeclaration>()
-                                                           .Where(attribute => attribute.Name.Equals("NUnit.Framework.TestCaseSourceAttribute"))
-                                                           .Where(attribute =>
-                                                               {
-                                                                   var sourceNameArg = (CodePrimitiveExpression)attribute.Arguments.Cast<CodeAttributeArgument>().First().Value;
-                                                                   return !sourceNameArg.Value.ToString().StartsWith(testMethod.Name + "_outline_");
-                                                               })
-                                                           .ToArray();
-                foreach (var attribute in superfluousAttributes)
-                {
-                    testMethod.CustomAttributes.Remove(attribute);
-                }
+            //since test case sources for non-row tests are added in a previous step we need to remove those
+            //remove all test case source attributes that don't start with testMethod.Name + "_outline_"
+            var superfluousAttributes = testMethod.CustomAttributes
+                                                        .Cast<CodeAttributeDeclaration>()
+                                                        .Where(attribute => attribute.Name.Equals("NUnit.Framework.TestCaseSourceAttribute"))
+                                                        .Where(attribute =>
+                                                            {
+                                                                var sourceNameArg = (CodePrimitiveExpression)attribute.Arguments.Cast<CodeAttributeArgument>().First().Value;
+                                                                return !sourceNameArg.Value.ToString().StartsWith(testMethod.Name + "_outline_");
+                                                            })
+                                                        .ToArray();
+            foreach (var attribute in superfluousAttributes)
+            {
+                testMethod.CustomAttributes.Remove(attribute);
+            }
 
-                //remove the properties with unused test case source data
-                var superfluousProperties = generationContext.TestClass.Members.Cast<CodeTypeMember>()
-                                                .Where(member => member is CodeMemberProperty).Cast<CodeMemberProperty>()
-                                                .Where(property => property.Name.StartsWith(testMethod.Name))
-                                                .Where(property => !property.Name.StartsWith(testMethod.Name + "_outline_"))
-                                                .ToArray();
-                foreach (var property in superfluousProperties)
-                {
-                    generationContext.TestClass.Members.Remove(property);
-                }
-
-            //}
-            //else
-            //{
-            //    //no browser tag present, add the default test case attribute and let the browser tag guard handle this at run time
-            //    CodeDomHelper.AddAttribute(testMethod, ROW_ATTR, args.ToArray());
-            //}
+            //remove the properties with unused test case source data
+            var superfluousProperties = generationContext.TestClass.Members.Cast<CodeTypeMember>()
+                                            .Where(member => member is CodeMemberProperty).Cast<CodeMemberProperty>()
+                                            .Where(property => property.Name.StartsWith(testMethod.Name))
+                                            .Where(property => !property.Name.StartsWith(testMethod.Name + "_outline_"))
+                                            .ToArray();
+            foreach (var property in superfluousProperties)
+            {
+                generationContext.TestClass.Members.Remove(property);
+            }
         }
 
 	    public void SetTestMethodAsRow(TestClassGenerationContext generationContext, CodeMemberMethod testMethod, string scenarioTitle, string exampleSetName, string variantName, IEnumerable<KeyValuePair<string, string>> arguments)

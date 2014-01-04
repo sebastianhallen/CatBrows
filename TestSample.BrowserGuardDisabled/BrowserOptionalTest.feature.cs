@@ -100,6 +100,54 @@ namespace TestSample.BrowserGuardDisabled
             }
         }
         
+        internal static object[] NoTagsScenarioOutline_outline___no_browser
+        {
+            get
+            {
+                int repeats = 1;
+                System.Collections.Generic.List<NUnit.Framework.TestCaseData> rows = new System.Collections.Generic.List<NUnit.Framework.TestCaseData>();
+                rows.Add(new NUnit.Framework.TestCaseData("other value", null));
+                rows.Add(new NUnit.Framework.TestCaseData("value", null));
+                System.Collections.Generic.List<NUnit.Framework.TestCaseData> repeatedRows = new System.Collections.Generic.List<NUnit.Framework.TestCaseData>();
+                System.Collections.Generic.List<NUnit.Framework.TestCaseData>.Enumerator repeatedEnumerator = rows.GetEnumerator();
+                for (
+                ; repeatedEnumerator.MoveNext(); 
+                )
+                {
+                    NUnit.Framework.TestCaseData current = repeatedEnumerator.Current;
+                    for (int i = 0; (i < repeats); i = (i + 1))
+                    {
+                        repeatedRows.Add(current);
+                    }
+                }
+                return repeatedRows.ToArray();
+            }
+        }
+        
+        internal static object[] TagsButNoBrowserTagScenarioOutline_outline___no_browser
+        {
+            get
+            {
+                int repeats = 1;
+                System.Collections.Generic.List<NUnit.Framework.TestCaseData> rows = new System.Collections.Generic.List<NUnit.Framework.TestCaseData>();
+                rows.Add(new NUnit.Framework.TestCaseData("other value", null));
+                rows.Add(new NUnit.Framework.TestCaseData("value", null));
+                System.Collections.Generic.List<NUnit.Framework.TestCaseData> repeatedRows = new System.Collections.Generic.List<NUnit.Framework.TestCaseData>();
+                System.Collections.Generic.List<NUnit.Framework.TestCaseData>.Enumerator repeatedEnumerator = rows.GetEnumerator();
+                for (
+                ; repeatedEnumerator.MoveNext(); 
+                )
+                {
+                    NUnit.Framework.TestCaseData current = repeatedEnumerator.Current;
+                    for (int i = 0; (i < repeats); i = (i + 1))
+                    {
+                        repeatedRows.Add(current);
+                    }
+                }
+                return repeatedRows.ToArray();
+            }
+        }
+        
         internal static object[] ScenarioOutlineWithSingleBrowserTag_outline___scenariooutlinebrowser
         {
             get
@@ -379,6 +427,7 @@ namespace TestSample.BrowserGuardDisabled
         
         [NUnit.Framework.TestAttribute()]
         [NUnit.Framework.IgnoreAttribute()]
+        [NUnit.Framework.TestCaseSourceAttribute("NoTagsScenarioOutline_outline___no_browser", Category="")]
         public virtual void NoTagsScenarioOutline(string header, string[] exampleTags)
         {
             this.GuardBrowserTagMissing();
@@ -397,6 +446,7 @@ namespace TestSample.BrowserGuardDisabled
         [NUnit.Framework.TestAttribute()]
         [NUnit.Framework.IgnoreAttribute()]
         [NUnit.Framework.CategoryAttribute("sometag")]
+        [NUnit.Framework.TestCaseSourceAttribute("TagsButNoBrowserTagScenarioOutline_outline___no_browser", Category="")]
         public virtual void TagsButNoBrowserTagScenarioOutline(string header, string[] exampleTags)
         {
             this.GuardBrowserTagMissing();
