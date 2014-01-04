@@ -38,8 +38,8 @@
         {
             var testCaseAttributes = this.GetMethodAttributes<TestCaseSourceAttribute>(() => this.Sample.MultipleBrowserTags("browser"));
 
-            var firefox = testCaseAttributes.Last();
-            var chrome = testCaseAttributes.First();
+            var firefox = testCaseAttributes.First();
+            var chrome = testCaseAttributes.Last();
 
             Assert.That(chrome.SourceName, Is.EqualTo("MultipleBrowserTags__chrome"));
             Assert.That(chrome.Category, Is.EqualTo("chrome"));

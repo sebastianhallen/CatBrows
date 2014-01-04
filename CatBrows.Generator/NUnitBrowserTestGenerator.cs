@@ -132,7 +132,14 @@
 
         public void SetTestClassCategories(TestClassGenerationContext generationContext, IEnumerable<string> featureCategories)
         {
-            CodeDomHelper.AddAttributeForEachValue(generationContext.TestClass, CATEGORY_ATTR, featureCategories);
+            var categories = featureCategories.ToArray();
+
+            var properties = this.ExtractProperties(categories);
+            foreach (var property in properties)
+            {
+                CodeDomHelper.AddAttribute(generationContext.TestClass, PROPERTY_ATTR, property.Key, property.Value);
+            }
+            CodeDomHelper.AddAttributeForEachValue(generationContext.TestClass, CATEGORY_ATTR, categories);
         }
 
         public void SetTestClassIgnore(TestClassGenerationContext generationContext)
@@ -155,7 +162,6 @@
         {
             CodeDomHelper.AddAttribute(generationContext.TestClassCleanupMethod, TESTFIXTURETEARDOWN_ATTR);
         }
-
 
         public void SetTestInitializeMethod(TestClassGenerationContext generationContext)
         {
@@ -211,24 +217,9 @@
             CodeDomHelper.AddAttributeForEachValue(testMethod, CATEGORY_ATTR, categoriesForAllTests);
 
             //add Property attributes for all tags containing a ':' separated key value pair (except for browser)
-            var properties = categoriesForAllTests
-                .Select(category => category.Split(':'))
-                .Where(property => property.Count() == 2)
-                .Select(property => new
-                    {
-                        Key = property[0].Trim(),
-                        Value = property[1].Trim()
-                    })
-                .Where(property => !string.IsNullOrEmpty(property.Key) && !string.IsNullOrEmpty(property.Value));
+            var properties = this.ExtractProperties(categoriesForAllTests);
 
-            //filter out duplicate property keys
-            var uniqueProperties = properties
-                .GroupBy(property => property.Key)
-                .Where(group => group.Count() == 1)
-                .Select(group => group.First())
-                .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
-
-            foreach (var property in uniqueProperties)
+            foreach (var property in properties)
             {
                 CodeDomHelper.AddAttribute(testMethod, PROPERTY_ATTR, property.Key, property.Value);
             }
@@ -243,7 +234,7 @@
             if (browsers.Any())
             {
                 //if present, get the @Repeat:<number of repeats> value and store it in UserData so we can use it in the scenario outline case later
-                var repeats = GetRepeats(uniqueProperties);
+                var repeats = GetRepeats(properties);
                 testMethod.UserData.Add(REPEATS_KEY, repeats + "");
 
                 //inject an argument, string browser, as the first argument in the test method
@@ -381,7 +372,27 @@
             // doing nothing since we support RowTest
         }
 
-        private static int GetRepeats(Dictionary<string, string> uniqueProperties)
+        private IDictionary<string, string> ExtractProperties(IEnumerable<string> categories)
+        {
+            var properties = categories
+                .Select(category => category.Split(':'))
+                .Where(property => property.Count() == 2)
+                .Select(property => new
+                {
+                    Key = property[0].Trim(),
+                    Value = property[1].Trim()
+                })
+                .Where(property => !string.IsNullOrEmpty(property.Key) && !string.IsNullOrEmpty(property.Value));
+
+            //filter out duplicate property keys
+            return properties
+                .GroupBy(property => property.Key)
+                .Where(group => group.Count() == 1)
+                .Select(group => group.First())
+                .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+        }
+
+        private static int GetRepeats(IDictionary<string, string> uniqueProperties)
         {
             var repeatTag = "";
             int repeats = 1;

@@ -24,6 +24,9 @@ namespace TestSample.DefaultSettings
     [NUnit.Framework.DescriptionAttribute("BrowserRequiredTest")]
     [NUnit.Framework.CategoryAttribute("BrowserRequiredTestFeature")]
     [NUnit.Framework.CategoryAttribute("DefaultSettings")]
+    [NUnit.Framework.Property("Config", "Default")]
+    [NUnit.Framework.CategoryAttribute("FeatureTag")]
+    [NUnit.Framework.CategoryAttribute("Config:Default")]
     public partial class BrowserRequiredTestFeature
     {
         
@@ -415,7 +418,9 @@ namespace TestSample.DefaultSettings
         {
             testRunner = TechTalk.SpecFlow.TestRunnerManager.GetTestRunner();
             TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "BrowserRequiredTest", "In order to avoid silly mistakes\r\nAs a math idiot\r\nI want to be told the sum of t" +
-                    "wo numbers", ProgrammingLanguage.CSharp, ((string[])(null)));
+                    "wo numbers", ProgrammingLanguage.CSharp, new string[] {
+                        "FeatureTag",
+                        "Config:Default"});
             testRunner.OnFeatureStart(featureInfo);
         }
         

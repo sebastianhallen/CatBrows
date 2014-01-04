@@ -14,13 +14,23 @@
         : GenerationTest<BrowserRequiredTestFeature>
     {
         [Test]
-        public void Should_add_colon_separated_tags_as_properties()
+        public void Should_add_colon_separated_tags_as_properties_to_test_method()
         {
             var properties = this.GetMethodAttributes<PropertyAttribute>(() => this.Sample.ScenarioOutlineWithTwoBrowserTagsAndTaggedExamples(null, null, null));
 
             var property = properties.Single();
 
             Assert.That(property.Properties["CustomProperty"], Is.EqualTo("PropertyValue"));
+        }
+
+        [Test]
+        public void Should_add_colon_separated_tags_as_properties_to_class()
+        {
+            var properties = this.GetClassAttributes<BrowserRequiredTestFeature, PropertyAttribute>();
+
+            var property = properties.Single();
+
+            Assert.That(property.Properties["Config"], Is.EqualTo("Default"));
         }
 
         [Test]
