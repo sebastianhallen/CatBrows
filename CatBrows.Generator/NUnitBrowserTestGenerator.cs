@@ -212,7 +212,6 @@
 
             //add Property attributes for all tags containing a ':' separated key value pair (except for browser)
             var properties = categoriesForAllTests
-                .Where(category => category.Contains(":"))
                 .Select(category => category.Split(':'))
                 .Where(property => property.Count() == 2)
                 .Select(property => new
@@ -298,37 +297,27 @@
                                      .Where(key => key.StartsWith(BROWSER_TAG_PREFIX))
                                      .Select(key => testMethod.UserData[key])
                                      .ToArray();
-            var repeats = testMethod.UserData[REPEATS_KEY] as string;
-            
-            #region specflows NUnitTestGeneratorProvider.cs
-            var args = arguments.Select(
-              arg => new CodeAttributeArgument(new CodePrimitiveExpression(arg))).ToList();
+            var repeats = int.Parse(testMethod.UserData[REPEATS_KEY] as string ?? "1");
+            var testCaseSourceRows = new Dictionary<string, IEnumerable<string>>();
 
-            // addressing ReSharper bug: TestCase attribute with empty string[] param causes inconclusive result - https://github.com/techtalk/SpecFlow/issues/116
-            var exampleTagExpressionList = tags.Select(t => new CodePrimitiveExpression(t)).ToArray();
-            CodeExpression exampleTagsExpression = exampleTagExpressionList.Length == 0 ?
-                (CodeExpression)new CodePrimitiveExpression(null) :
-                new CodeArrayCreateExpression(typeof(string[]), exampleTagExpressionList);
-            args.Add(new CodeAttributeArgument(exampleTagsExpression));
-
-            if (isIgnored)
-                args.Add(new CodeAttributeArgument("Ignored", new CodePrimitiveExpression(true)));
- #endregion
-
-            if (browsers.Any())
+            if (!browsers.Any())
             {
-				var testCaseSourceRows = new Dictionary<string, IEnumerable<string>>();
+              //  var testCaseSource = CreateTestCaseSource(generationContext, testMethod.Name + "_outline_", "browser", int.Parse(repeats), tags);
+             //   var row = arguments.Concat(new string[] { null });
+            //    AddTestCaseSourceRow(generationContext, testCaseSource, row);
 
-				//extract data for all test case source attributes that should be added
-				foreach (var browser in browsers)
-				{
-					var testCaseSource = CreateTestCaseSource(generationContext, testMethod.Name + "_outline_", browser.ToString(), int.Parse(repeats), tags);
-					var row = new[] { browser.ToString() }.Concat(arguments).Concat(new string[] { null });
-					AddTestCaseSourceRow(generationContext, testCaseSource, row);
+            //    testCaseSourceRows[testCaseSource] = tags;
+            }
 
-					var categories = tags.Concat(new[] { browser.ToString() });
-					testCaseSourceRows[testCaseSource] = categories;
-				}
+            foreach (var browser in browsers)
+			{
+				var testCaseSource = CreateTestCaseSource(generationContext, testMethod.Name + "_outline_", browser.ToString(), repeats, tags);
+				var row = new[] { browser.ToString() }.Concat(arguments).Concat(new string[] { null });
+				AddTestCaseSourceRow(generationContext, testCaseSource, row);
+
+				var categories = tags.Concat(new[] { browser.ToString() });
+				testCaseSourceRows[testCaseSource] = categories;
+			}
 
 				//... and add test case source attributes
 				foreach (var testCaseSourceRow in testCaseSourceRows)
@@ -384,12 +373,12 @@
                     generationContext.TestClass.Members.Remove(property);
                 }
 
-            }
-            else
-            {
-                //no browser tag present, add the default test case attribute and let the browser tag guard handle this at run time
-                CodeDomHelper.AddAttribute(testMethod, ROW_ATTR, args.ToArray());
-            }
+            //}
+            //else
+            //{
+            //    //no browser tag present, add the default test case attribute and let the browser tag guard handle this at run time
+            //    CodeDomHelper.AddAttribute(testMethod, ROW_ATTR, args.ToArray());
+            //}
         }
 
 	    public void SetTestMethodAsRow(TestClassGenerationContext generationContext, CodeMemberMethod testMethod, string scenarioTitle, string exampleSetName, string variantName, IEnumerable<KeyValuePair<string, string>> arguments)

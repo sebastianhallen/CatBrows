@@ -48,6 +48,18 @@
             Assert.That(firefox.Category, Is.EqualTo("firefox"));
         }
 
+        [Test, Ignore("pending")]
+        public void Should_add_test_case_source_attribute_when_not_supplying_a_browser_to_a_scenario_outline()
+        {
+            var testCaseAttributes = this.GetMethodAttributes<TestCaseSourceAttribute>(() => this.Sample.TagsButNoBrowserTagScenarioOutline("header", null));
+
+            var source = testCaseAttributes.Single();
+
+            Assert.That(source.SourceName, Is.EqualTo("MultipleBrowserTags__chrome"));
+            Assert.That(source.Category, Is.EqualTo("chrome"));
+
+        }
+
         [Test]
         public void Should_add_one_test_case_per_browser_for_each_row_in_a_scenario_ouline_example()
         {
