@@ -14,31 +14,30 @@
         [Test]
         public void Should_be_able_to_construct_a_test_class()
         {
-            var testProject = "TestSample.DefaultSettings";
+            const string testProject = "TestSample.DefaultSettings";
+            const string featureFile = "BrowserRequiredTest.feature";
             var testProjectFolder = Path.Combine(AssemblyDirectory, @"..\..\..\", testProject);
-            var featureFile = "BrowserRequiredTest.feature";
-
-            var configurationHolder = new SpecFlowConfigurationHolder(AppConfig);
             
+            var configurationHolder = new SpecFlowConfigurationHolder(AppConfig);
             var projectSettings = new ProjectSettings
                 {
-                    AssemblyName = testProject,
-                    ConfigurationHolder = configurationHolder,
-                    DefaultNamespace = testProject,
-                    ProjectFolder = testProjectFolder,
-                    ProjectName = testProject,
-                    ProjectPlatformSettings = new ProjectPlatformSettings()
+                    AssemblyName =          testProject,
+                    DefaultNamespace =      testProject,
+                    ProjectName =           testProject,
+                    ProjectFolder =         testProjectFolder,
+                    ConfigurationHolder =   configurationHolder,
+                    ProjectPlatformSettings=new ProjectPlatformSettings()
                 };
             var specflowProject = new SpecFlowProject {ProjectSettings = projectSettings};
+            var featurefileInput = specflowProject.GetOrCreateFeatureFile(featureFile);
+            
             var container = GeneratorContainerBuilder.CreateContainer(configurationHolder, projectSettings);
             var generator = container.Resolve<ITestGenerator>();
 
-            var featurefileInput = specflowProject.GetOrCreateFeatureFile(featureFile);
             var testFile = generator.GenerateTestFile(featurefileInput, new GenerationSettings());
-
             var testFileContent = testFile.GeneratedTestCode;
-            Console.WriteLine(testFileContent);
 
+            Console.WriteLine(testFileContent);
             Assert.That(testFile.Success);
         }
 
