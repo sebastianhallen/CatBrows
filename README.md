@@ -1,7 +1,7 @@
 CatBrows
 ======
 
-CatBrows is a SpecFlow generator plugin that adds @Browser:browser tags to scenarios. Actually, when using this generator you are forced to add a Browser-tag or else your scenario will throw an NoBrowserDefinedException.
+CatBrows is a SpecFlow generator plugin that adds @Browser:browser tags to scenarios. Actually, when using this generator you are forced to add a Browser-tag or else your scenario will throw an Exception (unless configured not to).
 
 You can specify multiple browsers per scenario or scenario outline and each will be run separately. 
 
@@ -24,7 +24,9 @@ Will generate (not really but almost):
 public void RunSameTestCaseWithMultipleBrowsers(string browser)
 {
   ScenarioContext.Current.Add("Browser", browser);
-  /* ... */
+  /* 
+    ... Specflow's standard content goes here.
+  */
 }
 ```
   
@@ -40,6 +42,29 @@ yields
 [Test]
 public void RunATestWithoutABrowserTag()
 {
-  throw new NoBrowserDefinedException()
+  throw new Exception("No browser defined, please specify @Browser:someBrowser for your scenario.")
 }
+```
+The forced @Browser:browser tag check can be removed by specifying the following in your App.config:
+```xml
+  <appSettings>
+    <add key="CatBrows-RequiresBrowser" value="false" />
+  </appSettings>
+```
+Custom browser missing messages are specified with the setting:
+```xml
+  <appSettings>
+    <add key="CatBrows-RequiresBrowser" value="true" /> <!-- defaults to true -->
+    <add key="CatBrows-BrowserMissingMessage" value="Oh noes, there is no @Browser-tag present." />
+  </appSettings>
+```
+
+To repeat a specific scenario multiple times, use the @Repeat:<int> tag
+
+```Cucumber
+@Repeat:3
+Scenario: Run a scenario multiple times
+  Given I have a scenario with a repeat tag
+  When I run my Repeat-tagged scenario with repeats x 3
+  Then the scenario should be run three times
 ```
