@@ -103,7 +103,76 @@ namespace TestSample.DefaultSettings
             }
         }
         
+        internal static object[] Repeat3Times__browser
+        {
+            get
+            {
+                int repeats = 3;
+                System.Collections.Generic.List<NUnit.Framework.TestCaseData> rows = new System.Collections.Generic.List<NUnit.Framework.TestCaseData>();
+                rows.Add(new NUnit.Framework.TestCaseData("browser"));
+                System.Collections.Generic.List<NUnit.Framework.TestCaseData> repeatedRows = new System.Collections.Generic.List<NUnit.Framework.TestCaseData>();
+                System.Collections.Generic.List<NUnit.Framework.TestCaseData>.Enumerator repeatedEnumerator = rows.GetEnumerator();
+                for (
+                ; repeatedEnumerator.MoveNext(); 
+                )
+                {
+                    NUnit.Framework.TestCaseData current = repeatedEnumerator.Current;
+                    for (int i = 0; (i < repeats); i = (i + 1))
+                    {
+                        repeatedRows.Add(current);
+                    }
+                }
+                return repeatedRows.ToArray();
+            }
+        }
+        
+        internal static object[] Repeats3Times__browser
+        {
+            get
+            {
+                int repeats = 3;
+                System.Collections.Generic.List<NUnit.Framework.TestCaseData> rows = new System.Collections.Generic.List<NUnit.Framework.TestCaseData>();
+                rows.Add(new NUnit.Framework.TestCaseData("browser"));
+                System.Collections.Generic.List<NUnit.Framework.TestCaseData> repeatedRows = new System.Collections.Generic.List<NUnit.Framework.TestCaseData>();
+                System.Collections.Generic.List<NUnit.Framework.TestCaseData>.Enumerator repeatedEnumerator = rows.GetEnumerator();
+                for (
+                ; repeatedEnumerator.MoveNext(); 
+                )
+                {
+                    NUnit.Framework.TestCaseData current = repeatedEnumerator.Current;
+                    for (int i = 0; (i < repeats); i = (i + 1))
+                    {
+                        repeatedRows.Add(current);
+                    }
+                }
+                return repeatedRows.ToArray();
+            }
+        }
+        
         internal static object[] Repeated3Times__browser
+        {
+            get
+            {
+                int repeats = 3;
+                System.Collections.Generic.List<NUnit.Framework.TestCaseData> rows = new System.Collections.Generic.List<NUnit.Framework.TestCaseData>();
+                rows.Add(new NUnit.Framework.TestCaseData("browser"));
+                System.Collections.Generic.List<NUnit.Framework.TestCaseData> repeatedRows = new System.Collections.Generic.List<NUnit.Framework.TestCaseData>();
+                System.Collections.Generic.List<NUnit.Framework.TestCaseData>.Enumerator repeatedEnumerator = rows.GetEnumerator();
+                for (
+                ; repeatedEnumerator.MoveNext(); 
+                )
+                {
+                    NUnit.Framework.TestCaseData current = repeatedEnumerator.Current;
+                    for (int i = 0; (i < repeats); i = (i + 1))
+                    {
+                        repeatedRows.Add(current);
+                    }
+                }
+                return repeatedRows.ToArray();
+            }
+        }
+        
+        internal static object[] Repeat3TimesLowerCase__browser
         {
             get
             {
@@ -548,6 +617,40 @@ namespace TestSample.DefaultSettings
         [NUnit.Framework.TestAttribute()]
         [NUnit.Framework.CategoryAttribute("Repeat:3")]
         [NUnit.Framework.Property("Repeat", "3")]
+        [NUnit.Framework.TestCaseSourceAttribute("Repeat3Times__browser", Category="browser")]
+        public virtual void Repeat3Times(string browser)
+        {
+            this.Browser = browser;
+            this.GuardBrowserTagMissing();
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Repeat 3 times", new string[] {
+                        "Browser:browser",
+                        "Repeat:3"});
+            this.ScenarioSetup(scenarioInfo);
+            this.FeatureBackground();
+            testRunner.Then("the test method should have 1 testcase", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+            this.ScenarioCleanup();
+        }
+        
+        [NUnit.Framework.TestAttribute()]
+        [NUnit.Framework.CategoryAttribute("Repeats:3")]
+        [NUnit.Framework.Property("Repeats", "3")]
+        [NUnit.Framework.TestCaseSourceAttribute("Repeats3Times__browser", Category="browser")]
+        public virtual void Repeats3Times(string browser)
+        {
+            this.Browser = browser;
+            this.GuardBrowserTagMissing();
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Repeats 3 times", new string[] {
+                        "Browser:browser",
+                        "Repeats:3"});
+            this.ScenarioSetup(scenarioInfo);
+            this.FeatureBackground();
+            testRunner.Then("the test method should have 1 testcase", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+            this.ScenarioCleanup();
+        }
+        
+        [NUnit.Framework.TestAttribute()]
+        [NUnit.Framework.CategoryAttribute("Repeated:3")]
+        [NUnit.Framework.Property("Repeated", "3")]
         [NUnit.Framework.TestCaseSourceAttribute("Repeated3Times__browser", Category="browser")]
         public virtual void Repeated3Times(string browser)
         {
@@ -555,7 +658,24 @@ namespace TestSample.DefaultSettings
             this.GuardBrowserTagMissing();
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Repeated 3 times", new string[] {
                         "Browser:browser",
-                        "Repeat:3"});
+                        "Repeated:3"});
+            this.ScenarioSetup(scenarioInfo);
+            this.FeatureBackground();
+            testRunner.Then("the test method should have 1 testcase", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+            this.ScenarioCleanup();
+        }
+        
+        [NUnit.Framework.TestAttribute()]
+        [NUnit.Framework.CategoryAttribute("repeat:3")]
+        [NUnit.Framework.Property("repeat", "3")]
+        [NUnit.Framework.TestCaseSourceAttribute("Repeat3TimesLowerCase__browser", Category="browser")]
+        public virtual void Repeat3TimesLowerCase(string browser)
+        {
+            this.Browser = browser;
+            this.GuardBrowserTagMissing();
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Repeat 3 times lower case", new string[] {
+                        "Browser:browser",
+                        "repeat:3"});
             this.ScenarioSetup(scenarioInfo);
             this.FeatureBackground();
             testRunner.Then("the test method should have 1 testcase", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");

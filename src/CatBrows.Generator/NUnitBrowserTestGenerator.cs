@@ -391,7 +391,11 @@
             int repeats = 1;
             string repeatValue;
 
-            var repeatKey = uniqueProperties.Keys.FirstOrDefault(key => "Repeat".Equals(key)) ?? "Repeat";
+            var allowedRepeatTags = new[] {"repeat", "repeats", "repeated"};
+
+            var repeatKey = uniqueProperties.Keys.FirstOrDefault(key => 
+                    allowedRepeatTags.Any(allowed => allowed.Equals(key, StringComparison.InvariantCultureIgnoreCase))
+                ) ?? "Repeat";
             if (uniqueProperties.TryGetValue(repeatKey, out repeatValue) && int.TryParse(repeatValue, out repeats))
             {
                 return repeats;

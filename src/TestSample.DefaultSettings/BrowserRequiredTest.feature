@@ -31,7 +31,23 @@ Scenario: Multiple browser tags
 
 @Browser:browser
 @Repeat:3
+Scenario: Repeat 3 times
+	Then the test method should have 1 testcase
+
+@Browser:browser
+@Repeats:3
+Scenario: Repeats 3 times
+	Then the test method should have 1 testcase
+
+@Browser:browser
+@Repeated:3
 Scenario: Repeated 3 times
+	Then the test method should have 1 testcase
+
+
+@Browser:browser
+@repeat:3
+Scenario: Repeat 3 times lower case
 	Then the test method should have 1 testcase
 
 @Browser:browser
