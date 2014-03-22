@@ -23,8 +23,8 @@ Scenario: Single browser tag chrome
 
 @Browser:firefox
 @Browser:chrome
-@Duplicate:Property
-@Duplicate:Property
+@Duplicate:Property0
+@Duplicate:Property1
 Scenario: Multiple browser tags
 	Then the test method should have 2 testcases
 

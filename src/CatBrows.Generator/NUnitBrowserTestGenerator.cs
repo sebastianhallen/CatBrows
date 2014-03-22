@@ -376,34 +376,28 @@
         {
             var properties = categories
                 .Select(category => category.Split(':'))
-                .Where(property => property.Count() == 2)
-                .Select(property => new
-                {
-                    Key = property[0].Trim(),
-                    Value = property[1].Trim()
-                })
-                .Where(property => !string.IsNullOrEmpty(property.Key) && !string.IsNullOrEmpty(property.Value));
+                .Where(property => property.Count() == 2) //don't allow @key:value:other
+                .Select(property => Tuple.Create(property[0].Trim(), property[1].Trim()))
+                .Where(property => !string.IsNullOrEmpty(property.Item1) && !string.IsNullOrEmpty(property.Item2));
 
-            //filter out duplicate property keys
+            //merge duplicate properties separated by ',' since nunit does not support duplicate keys in properties
             return properties
-                .GroupBy(property => property.Key)
-                .Where(group => group.Count() == 1)
-                .Select(group => group.First())
-                .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+                .GroupBy(property => property.Item1)
+                .ToDictionary(kvp => kvp.Key, kvp => string.Join(",", kvp.Select(values => values.Item2)));
         }
 
         private static int GetRepeats(IDictionary<string, string> uniqueProperties)
         {
-            var repeatTag = "";
             int repeats = 1;
-            if (uniqueProperties.TryGetValue("repeat", out repeatTag) || uniqueProperties.TryGetValue("Repeat", out repeatTag))
+            string repeatValue;
+
+            var repeatKey = uniqueProperties.Keys.FirstOrDefault(key => "Repeat".Equals(key)) ?? "Repeat";
+            if (uniqueProperties.TryGetValue(repeatKey, out repeatValue) && int.TryParse(repeatValue, out repeats))
             {
-                if (!int.TryParse(repeatTag, out repeats))
-                {
-                    repeats = 1;
-                }
+                return repeats;
             }
-            return repeats;
+
+            return 1;
         }
 
         /// <summary>

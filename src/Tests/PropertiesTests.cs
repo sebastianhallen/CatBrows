@@ -34,11 +34,16 @@
         }
 
         [Test]
-        public void Should_not_include_duplicate_property_keys()
+        public void Should_be_possible_to_have_multiple_values_for_properties()
         {
             var properties = this.GetMethodAttributes<PropertyAttribute>(() => this.Sample.MultipleBrowserTags(null));
 
-            Assert.That(properties.Any(), Is.False);
+            var duplicatePropertyValue = properties.Single().Properties;
+            var key = duplicatePropertyValue.Keys.OfType<string>().Single();
+            var value = duplicatePropertyValue.Values.OfType<string>().Single();
+
+            Assert.That(key, Is.EqualTo("Duplicate"));
+            Assert.That(value, Is.EqualTo("Property0,Property1"));
         }
 
         private TAttribute[] GetClassAttributes<T, TAttribute>()
