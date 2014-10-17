@@ -5,6 +5,7 @@
 @-illegal-char-hyphen-
 @+illegal+char+plus+
 @!illegal!char!exclamation!mark!
+@Feature-PropertyWithIllegalCategoryChars:Property-With-Illegal-Chars-For-Category-+-!,
 Feature: BrowserRequiredTest
 	In order to avoid silly mistakes
 	As a math idiot
@@ -32,6 +33,12 @@ Scenario: Single browser tag chrome
 @Duplicate:Property1
 Scenario: Multiple browser tags
 	Then the test method should have 2 testcases
+
+
+@Browser:chrome
+@Scenario-PropertyWithIllegalCategoryChars:Property-With-Illegal-Chars-For-Category-+-!,
+Scenario: Scenario with property value not allowed for categories
+	Then the test method should have 1 testcases
 
 
 @Browser:browser

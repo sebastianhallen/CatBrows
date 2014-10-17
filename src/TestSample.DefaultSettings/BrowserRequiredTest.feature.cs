@@ -25,6 +25,7 @@ namespace TestSample.DefaultSettings
     [NUnit.Framework.CategoryAttribute("BrowserRequiredTestFeature")]
     [NUnit.Framework.CategoryAttribute("DefaultSettings")]
     [NUnit.Framework.Property("Config", "Default")]
+    [NUnit.Framework.Property("Feature-PropertyWithIllegalCategoryChars", "Property-With-Illegal-Chars-For-Category-+-!,")]
     [NUnit.Framework.CategoryAttribute("Sample")]
     [NUnit.Framework.CategoryAttribute("FeatureTag")]
     [NUnit.Framework.CategoryAttribute("Config:Default")]
@@ -32,6 +33,7 @@ namespace TestSample.DefaultSettings
     [NUnit.Framework.CategoryAttribute("illegalcharhyphen")]
     [NUnit.Framework.CategoryAttribute("illegalcharplus")]
     [NUnit.Framework.CategoryAttribute("illegalcharexclamationmark")]
+    [NUnit.Framework.CategoryAttribute("FeaturePropertyWithIllegalCategoryChars:PropertyWithIllegalCharsForCategory")]
     public partial class BrowserRequiredTestFeature
     {
         
@@ -86,6 +88,29 @@ namespace TestSample.DefaultSettings
         }
         
         internal static object[] MultipleBrowserTags__chrome
+        {
+            get
+            {
+                int repeats = 1;
+                System.Collections.Generic.List<NUnit.Framework.TestCaseData> rows = new System.Collections.Generic.List<NUnit.Framework.TestCaseData>();
+                rows.Add(new NUnit.Framework.TestCaseData("chrome"));
+                System.Collections.Generic.List<NUnit.Framework.TestCaseData> repeatedRows = new System.Collections.Generic.List<NUnit.Framework.TestCaseData>();
+                System.Collections.Generic.List<NUnit.Framework.TestCaseData>.Enumerator repeatedEnumerator = rows.GetEnumerator();
+                for (
+                ; repeatedEnumerator.MoveNext(); 
+                )
+                {
+                    NUnit.Framework.TestCaseData current = repeatedEnumerator.Current;
+                    for (int i = 0; (i < repeats); i = (i + 1))
+                    {
+                        repeatedRows.Add(current);
+                    }
+                }
+                return repeatedRows.ToArray();
+            }
+        }
+        
+        internal static object[] ScenarioWithPropertyValueNotAllowedForCategories__chrome
         {
             get
             {
@@ -568,7 +593,9 @@ namespace TestSample.DefaultSettings
                         ",illegal,char,comma,",
                         "-illegal-char-hyphen-",
                         "+illegal+char+plus+",
-                        "!illegal!char!exclamation!mark!"});
+                        "!illegal!char!exclamation!mark!",
+                        "Feature-PropertyWithIllegalCategoryChars:Property-With-Illegal-Chars-For-Category" +
+                            "-+-!,"});
             testRunner.OnFeatureStart(featureInfo);
         }
         
@@ -690,6 +717,24 @@ namespace TestSample.DefaultSettings
             this.ScenarioSetup(scenarioInfo);
             this.FeatureBackground();
             testRunner.Then("the test method should have 2 testcases", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+            this.ScenarioCleanup();
+        }
+        
+        [NUnit.Framework.TestAttribute()]
+        [NUnit.Framework.CategoryAttribute("ScenarioPropertyWithIllegalCategoryChars:PropertyWithIllegalCharsForCategory")]
+        [NUnit.Framework.Property("Scenario-PropertyWithIllegalCategoryChars", "Property-With-Illegal-Chars-For-Category-+-!,")]
+        [NUnit.Framework.TestCaseSourceAttribute("ScenarioWithPropertyValueNotAllowedForCategories__chrome", Category="chrome")]
+        public virtual void ScenarioWithPropertyValueNotAllowedForCategories(string browser)
+        {
+            this.Browser = browser;
+            this.GuardBrowserTagMissing();
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Scenario with property value not allowed for categories", new string[] {
+                        "Browser:chrome",
+                        "Scenario-PropertyWithIllegalCategoryChars:Property-With-Illegal-Chars-For-Categor" +
+                            "y-+-!,"});
+            this.ScenarioSetup(scenarioInfo);
+            this.FeatureBackground();
+            testRunner.Then("the test method should have 1 testcases", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
             this.ScenarioCleanup();
         }
         

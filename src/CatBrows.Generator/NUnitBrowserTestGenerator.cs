@@ -132,9 +132,10 @@
 
         public void SetTestClassCategories(TestClassGenerationContext generationContext, IEnumerable<string> featureCategories)
         {
-            var categories = this.LegalizeCategories(featureCategories).ToArray();
+            var featureCategoriesArray = featureCategories.ToArray();
+            var categories = this.LegalizeCategories(featureCategoriesArray).ToArray();
 
-            var properties = this.ExtractProperties(categories);
+            var properties = this.ExtractProperties(featureCategoriesArray);
             foreach (var property in properties)
             {
                 CodeDomHelper.AddAttribute(generationContext.TestClass, PROPERTY_ATTR, property.Key, property.Value);
@@ -213,11 +214,12 @@
         {
             //we don't want "@Browser:browser" as separate categories. We only want these categories on the actual test case rows.
             var categories = scenarioCategories.ToArray();
-            var categoriesForAllTests = LegalizeCategories(categories.Where(category => !category.StartsWith(BROWSER_TAG_PREFIX))).ToArray();
+            var categoriesWithoutBrowser = categories.Where(category => !category.StartsWith(BROWSER_TAG_PREFIX)).ToArray();
+            var categoriesForAllTests = LegalizeCategories(categoriesWithoutBrowser).ToArray();
             CodeDomHelper.AddAttributeForEachValue(testMethod, CATEGORY_ATTR, categoriesForAllTests);
 
             //add Property attributes for all tags containing a ':' separated key value pair (except for browser)
-            var properties = this.ExtractProperties(categoriesForAllTests);
+            var properties = this.ExtractProperties(categoriesWithoutBrowser);
 
             foreach (var property in properties)
             {
