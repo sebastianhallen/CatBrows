@@ -43,7 +43,7 @@
         //    var value = duplicatePropertyValue.Values.OfType<string>().Single();
 
         //    Assert.That(key, Is.EqualTo("Duplicate"));
-        //    Assert.That(value, Is.EquivalentTo(new [] { "Property0", "Property1" }));
+        //    Assert.That(value, Is.EquivalentTo(new[] { "Property0", "Property1" }));
         //}
 
         private TAttribute[] GetClassAttributes<T, TAttribute>()

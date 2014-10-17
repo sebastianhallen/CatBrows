@@ -71,14 +71,14 @@
         public void Should_strip_illegal_chars_from_scenario_outline_example_categories()
         {
             var rows = this.GetMethodAttributes<TestCaseSourceAttribute>(() =>
-                                                                               this.Sample.ScenarioOutlineWithIllegalCategoriesInTaggedExamples("header", null)).ToArray();
+                                                                               this.Sample.OutlineWithIllegalCategoriesInTaggedExamples("browser", "header", null)).ToArray();
 
-            var tagCombinations = rows.Select(row => row.Category.Split(','));
+            var tagCombinations = rows.Select(row => row.Category.Split(',')).OrderBy(_ => _).ToArray();
 
             Assert.That(tagCombinations, Is.EquivalentTo(new[]
                 {
-                    new [] {"illegalcharcomma", "illegalcharhyphen", "illegalcharplus", "illegalcharexclamationmark" }
-                }));
+                    new [] {"illegalcharcomma", "illegalcharhyphen", "illegalcharplus", "illegalcharexclamationmark", "foo" }
+                }.OrderBy(_ => _).ToArray()));
         }
 
 

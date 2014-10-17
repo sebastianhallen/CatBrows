@@ -487,6 +487,29 @@ namespace TestSample.DefaultSettings
             }
         }
         
+        internal static object[] OutlineWithIllegalCategoriesInTaggedExamples_outline___foo__illegalcharcomma__illegalcharhyphen__illegalcharplus__illegalcharexclamationmark
+        {
+            get
+            {
+                int repeats = 1;
+                System.Collections.Generic.List<NUnit.Framework.TestCaseData> rows = new System.Collections.Generic.List<NUnit.Framework.TestCaseData>();
+                rows.Add(new NUnit.Framework.TestCaseData("foo", "illegal tags", null));
+                System.Collections.Generic.List<NUnit.Framework.TestCaseData> repeatedRows = new System.Collections.Generic.List<NUnit.Framework.TestCaseData>();
+                System.Collections.Generic.List<NUnit.Framework.TestCaseData>.Enumerator repeatedEnumerator = rows.GetEnumerator();
+                for (
+                ; repeatedEnumerator.MoveNext(); 
+                )
+                {
+                    NUnit.Framework.TestCaseData current = repeatedEnumerator.Current;
+                    for (int i = 0; (i < repeats); i = (i + 1))
+                    {
+                        repeatedRows.Add(current);
+                    }
+                }
+                return repeatedRows.ToArray();
+            }
+        }
+        
         internal static object[] ScenarioOutlineWithIllegalCategories_outline___foo
         {
             get
@@ -877,12 +900,20 @@ namespace TestSample.DefaultSettings
         }
         
         [NUnit.Framework.TestAttribute()]
-        [NUnit.Framework.TestCaseSourceAttribute("ScenarioOutlineWithIllegalCategoriesInTaggedExamples_outline___no_browser__illega" +
-            "lcharcomma__illegalcharhyphen__illegalcharplus__illegalcharexclamationmark", Category="illegalcharcomma,illegalcharhyphen,illegalcharplus,illegalcharexclamationmark")]
-        public virtual void ScenarioOutlineWithIllegalCategoriesInTaggedExamples(string header, string[] exampleTags)
+        [NUnit.Framework.TestCaseSourceAttribute("OutlineWithIllegalCategoriesInTaggedExamples_outline___foo__illegalcharcomma__ill" +
+            "egalcharhyphen__illegalcharplus__illegalcharexclamationmark", Category="illegalcharcomma,illegalcharhyphen,illegalcharplus,illegalcharexclamationmark,foo" +
+            "")]
+        public virtual void OutlineWithIllegalCategoriesInTaggedExamples(string browser, string header, string[] exampleTags)
         {
+            this.Browser = browser;
             this.GuardBrowserTagMissing();
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("scenario outline with illegal categories in tagged examples", exampleTags);
+            string[] @__tags = new string[] {
+                    "Browser:foo"};
+            if ((exampleTags != null))
+            {
+                @__tags = System.Linq.Enumerable.ToArray(System.Linq.Enumerable.Concat(@__tags, exampleTags));
+            }
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Outline with illegal categories in tagged examples", @__tags);
             this.ScenarioSetup(scenarioInfo);
             this.FeatureBackground();
             testRunner.Then("the test method should have 4 testcases", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");

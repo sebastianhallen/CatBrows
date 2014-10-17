@@ -121,8 +121,8 @@ Examples:
 | each-commit       |
 | each-commit other |
 
-
-Scenario Outline: scenario outline with illegal categories in tagged examples
+@Browser:foo
+Scenario Outline: Outline with illegal categories in tagged examples
 	Then the test method should have 4 testcases
 @,illegal,char,comma,
 @-illegal-char-hyphen-
