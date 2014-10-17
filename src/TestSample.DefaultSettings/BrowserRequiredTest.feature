@@ -1,5 +1,10 @@
-﻿@FeatureTag
+﻿@Sample
+@FeatureTag
 @Config:Default
+@,illegal,char,comma,
+@-illegal-char-hyphen-
+@+illegal+char+plus+
+@!illegal!char!exclamation!mark!
 Feature: BrowserRequiredTest
 	In order to avoid silly mistakes
 	As a math idiot
@@ -115,3 +120,34 @@ Examples:
 | header            |
 | each-commit       |
 | each-commit other |
+
+
+Scenario Outline: scenario outline with illegal categories in tagged examples
+	Then the test method should have 4 testcases
+@,illegal,char,comma,
+@-illegal-char-hyphen-
+@+illegal+char+plus+
+@!illegal!char!exclamation!mark!
+Examples:
+| header         |
+| illegal tags   |
+
+@,illegal,char,comma,
+@-illegal-char-hyphen-
+@+illegal+char+plus+
+@!illegal!char!exclamation!mark!
+@Browser:foo
+Scenario Outline: scenario outline with illegal categories
+	Then the test method should have 4 testcases
+Examples:
+| header         |
+| illegal tags   |
+
+
+@,illegal,char,comma,
+@-illegal-char-hyphen-
+@+illegal+char+plus+
+@!illegal!char!exclamation!mark!
+@Browser:foo
+Scenario: scenario with illegal categories
+	Then the test method should have 1 testcases

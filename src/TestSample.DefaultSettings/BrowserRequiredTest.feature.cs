@@ -25,8 +25,13 @@ namespace TestSample.DefaultSettings
     [NUnit.Framework.CategoryAttribute("BrowserRequiredTestFeature")]
     [NUnit.Framework.CategoryAttribute("DefaultSettings")]
     [NUnit.Framework.Property("Config", "Default")]
+    [NUnit.Framework.CategoryAttribute("Sample")]
     [NUnit.Framework.CategoryAttribute("FeatureTag")]
     [NUnit.Framework.CategoryAttribute("Config:Default")]
+    [NUnit.Framework.CategoryAttribute("illegalcharcomma")]
+    [NUnit.Framework.CategoryAttribute("illegalcharhyphen")]
+    [NUnit.Framework.CategoryAttribute("illegalcharplus")]
+    [NUnit.Framework.CategoryAttribute("illegalcharexclamationmark")]
     public partial class BrowserRequiredTestFeature
     {
         
@@ -482,14 +487,65 @@ namespace TestSample.DefaultSettings
             }
         }
         
+        internal static object[] ScenarioOutlineWithIllegalCategories_outline___foo
+        {
+            get
+            {
+                int repeats = 1;
+                System.Collections.Generic.List<NUnit.Framework.TestCaseData> rows = new System.Collections.Generic.List<NUnit.Framework.TestCaseData>();
+                rows.Add(new NUnit.Framework.TestCaseData("foo", "illegal tags", null));
+                System.Collections.Generic.List<NUnit.Framework.TestCaseData> repeatedRows = new System.Collections.Generic.List<NUnit.Framework.TestCaseData>();
+                System.Collections.Generic.List<NUnit.Framework.TestCaseData>.Enumerator repeatedEnumerator = rows.GetEnumerator();
+                for (
+                ; repeatedEnumerator.MoveNext(); 
+                )
+                {
+                    NUnit.Framework.TestCaseData current = repeatedEnumerator.Current;
+                    for (int i = 0; (i < repeats); i = (i + 1))
+                    {
+                        repeatedRows.Add(current);
+                    }
+                }
+                return repeatedRows.ToArray();
+            }
+        }
+        
+        internal static object[] ScenarioWithIllegalCategories__foo
+        {
+            get
+            {
+                int repeats = 1;
+                System.Collections.Generic.List<NUnit.Framework.TestCaseData> rows = new System.Collections.Generic.List<NUnit.Framework.TestCaseData>();
+                rows.Add(new NUnit.Framework.TestCaseData("foo"));
+                System.Collections.Generic.List<NUnit.Framework.TestCaseData> repeatedRows = new System.Collections.Generic.List<NUnit.Framework.TestCaseData>();
+                System.Collections.Generic.List<NUnit.Framework.TestCaseData>.Enumerator repeatedEnumerator = rows.GetEnumerator();
+                for (
+                ; repeatedEnumerator.MoveNext(); 
+                )
+                {
+                    NUnit.Framework.TestCaseData current = repeatedEnumerator.Current;
+                    for (int i = 0; (i < repeats); i = (i + 1))
+                    {
+                        repeatedRows.Add(current);
+                    }
+                }
+                return repeatedRows.ToArray();
+            }
+        }
+        
         [NUnit.Framework.TestFixtureSetUpAttribute()]
         public virtual void FeatureSetup()
         {
             testRunner = TechTalk.SpecFlow.TestRunnerManager.GetTestRunner();
             TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "BrowserRequiredTest", "In order to avoid silly mistakes\r\nAs a math idiot\r\nI want to be told the sum of t" +
                     "wo numbers", ProgrammingLanguage.CSharp, new string[] {
+                        "Sample",
                         "FeatureTag",
-                        "Config:Default"});
+                        "Config:Default",
+                        ",illegal,char,comma,",
+                        "-illegal-char-hyphen-",
+                        "+illegal+char+plus+",
+                        "!illegal!char!exclamation!mark!"});
             testRunner.OnFeatureStart(featureInfo);
         }
         
@@ -798,8 +854,8 @@ namespace TestSample.DefaultSettings
         [NUnit.Framework.TestCaseSourceAttribute("ScenarioOutlineWithTwoBrowserTagsAndTaggedExamples_outline___firefox", Category="firefox")]
         [NUnit.Framework.TestCaseSourceAttribute("ScenarioOutlineWithTwoBrowserTagsAndTaggedExamples_outline___chrome__nightly", Category="nightly,chrome")]
         [NUnit.Framework.TestCaseSourceAttribute("ScenarioOutlineWithTwoBrowserTagsAndTaggedExamples_outline___firefox__nightly", Category="nightly,firefox")]
-        [NUnit.Framework.TestCaseSourceAttribute("ScenarioOutlineWithTwoBrowserTagsAndTaggedExamples_outline___chrome__eachcommit", Category="each-commit,chrome")]
-        [NUnit.Framework.TestCaseSourceAttribute("ScenarioOutlineWithTwoBrowserTagsAndTaggedExamples_outline___firefox__eachcommit", Category="each-commit,firefox")]
+        [NUnit.Framework.TestCaseSourceAttribute("ScenarioOutlineWithTwoBrowserTagsAndTaggedExamples_outline___chrome__eachcommit", Category="eachcommit,chrome")]
+        [NUnit.Framework.TestCaseSourceAttribute("ScenarioOutlineWithTwoBrowserTagsAndTaggedExamples_outline___firefox__eachcommit", Category="eachcommit,firefox")]
         public virtual void ScenarioOutlineWithTwoBrowserTagsAndTaggedExamples(string browser, string header, string[] exampleTags)
         {
             this.Browser = browser;
@@ -817,6 +873,68 @@ namespace TestSample.DefaultSettings
             this.ScenarioSetup(scenarioInfo);
             this.FeatureBackground();
             testRunner.Then("the test method should have 4 testcases", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+            this.ScenarioCleanup();
+        }
+        
+        [NUnit.Framework.TestAttribute()]
+        [NUnit.Framework.TestCaseSourceAttribute("ScenarioOutlineWithIllegalCategoriesInTaggedExamples_outline___no_browser__illega" +
+            "lcharcomma__illegalcharhyphen__illegalcharplus__illegalcharexclamationmark", Category="illegalcharcomma,illegalcharhyphen,illegalcharplus,illegalcharexclamationmark")]
+        public virtual void ScenarioOutlineWithIllegalCategoriesInTaggedExamples(string header, string[] exampleTags)
+        {
+            this.GuardBrowserTagMissing();
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("scenario outline with illegal categories in tagged examples", exampleTags);
+            this.ScenarioSetup(scenarioInfo);
+            this.FeatureBackground();
+            testRunner.Then("the test method should have 4 testcases", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+            this.ScenarioCleanup();
+        }
+        
+        [NUnit.Framework.TestAttribute()]
+        [NUnit.Framework.CategoryAttribute("illegalcharcomma")]
+        [NUnit.Framework.CategoryAttribute("illegalcharhyphen")]
+        [NUnit.Framework.CategoryAttribute("illegalcharplus")]
+        [NUnit.Framework.CategoryAttribute("illegalcharexclamationmark")]
+        [NUnit.Framework.TestCaseSourceAttribute("ScenarioOutlineWithIllegalCategories_outline___foo", Category="foo")]
+        public virtual void ScenarioOutlineWithIllegalCategories(string browser, string header, string[] exampleTags)
+        {
+            this.Browser = browser;
+            this.GuardBrowserTagMissing();
+            string[] @__tags = new string[] {
+                    ",illegal,char,comma,",
+                    "-illegal-char-hyphen-",
+                    "+illegal+char+plus+",
+                    "!illegal!char!exclamation!mark!",
+                    "Browser:foo"};
+            if ((exampleTags != null))
+            {
+                @__tags = System.Linq.Enumerable.ToArray(System.Linq.Enumerable.Concat(@__tags, exampleTags));
+            }
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("scenario outline with illegal categories", @__tags);
+            this.ScenarioSetup(scenarioInfo);
+            this.FeatureBackground();
+            testRunner.Then("the test method should have 4 testcases", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+            this.ScenarioCleanup();
+        }
+        
+        [NUnit.Framework.TestAttribute()]
+        [NUnit.Framework.CategoryAttribute("illegalcharcomma")]
+        [NUnit.Framework.CategoryAttribute("illegalcharhyphen")]
+        [NUnit.Framework.CategoryAttribute("illegalcharplus")]
+        [NUnit.Framework.CategoryAttribute("illegalcharexclamationmark")]
+        [NUnit.Framework.TestCaseSourceAttribute("ScenarioWithIllegalCategories__foo", Category="foo")]
+        public virtual void ScenarioWithIllegalCategories(string browser)
+        {
+            this.Browser = browser;
+            this.GuardBrowserTagMissing();
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("scenario with illegal categories", new string[] {
+                        ",illegal,char,comma,",
+                        "-illegal-char-hyphen-",
+                        "+illegal+char+plus+",
+                        "!illegal!char!exclamation!mark!",
+                        "Browser:foo"});
+            this.ScenarioSetup(scenarioInfo);
+            this.FeatureBackground();
+            testRunner.Then("the test method should have 1 testcases", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
             this.ScenarioCleanup();
         }
     }

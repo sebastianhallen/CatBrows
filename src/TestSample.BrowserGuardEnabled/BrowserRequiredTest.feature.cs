@@ -24,6 +24,7 @@ namespace TestSample.BrowserGuardEnabled
     [NUnit.Framework.DescriptionAttribute("BrowserRequiredTest")]
     [NUnit.Framework.CategoryAttribute("BrowserRequiredTestFeature")]
     [NUnit.Framework.CategoryAttribute("BrowserGuardEnabled")]
+    [NUnit.Framework.CategoryAttribute("Sample")]
     public partial class BrowserRequiredTestFeature
     {
         
@@ -314,7 +315,8 @@ namespace TestSample.BrowserGuardEnabled
         {
             testRunner = TechTalk.SpecFlow.TestRunnerManager.GetTestRunner();
             TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "BrowserRequiredTest", "In order to avoid silly mistakes\r\nAs a math idiot\r\nI want to be told the sum of t" +
-                    "wo numbers", ProgrammingLanguage.CSharp, ((string[])(null)));
+                    "wo numbers", ProgrammingLanguage.CSharp, new string[] {
+                        "Sample"});
             testRunner.OnFeatureStart(featureInfo);
         }
         
@@ -518,8 +520,8 @@ namespace TestSample.BrowserGuardEnabled
         [NUnit.Framework.CategoryAttribute("OutlineTag")]
         [NUnit.Framework.TestCaseSourceAttribute("ScenarioOutlineWithTwoBrowserTagsAndTaggedExamples_outline___chrome__nightly", Category="nightly,chrome")]
         [NUnit.Framework.TestCaseSourceAttribute("ScenarioOutlineWithTwoBrowserTagsAndTaggedExamples_outline___firefox__nightly", Category="nightly,firefox")]
-        [NUnit.Framework.TestCaseSourceAttribute("ScenarioOutlineWithTwoBrowserTagsAndTaggedExamples_outline___chrome__eachcommit", Category="each-commit,chrome")]
-        [NUnit.Framework.TestCaseSourceAttribute("ScenarioOutlineWithTwoBrowserTagsAndTaggedExamples_outline___firefox__eachcommit", Category="each-commit,firefox")]
+        [NUnit.Framework.TestCaseSourceAttribute("ScenarioOutlineWithTwoBrowserTagsAndTaggedExamples_outline___chrome__eachcommit", Category="eachcommit,chrome")]
+        [NUnit.Framework.TestCaseSourceAttribute("ScenarioOutlineWithTwoBrowserTagsAndTaggedExamples_outline___firefox__eachcommit", Category="eachcommit,firefox")]
         public virtual void ScenarioOutlineWithTwoBrowserTagsAndTaggedExamples(string browser, string header, string[] exampleTags)
         {
             this.Browser = browser;

@@ -132,7 +132,7 @@
 
         public void SetTestClassCategories(TestClassGenerationContext generationContext, IEnumerable<string> featureCategories)
         {
-            var categories = featureCategories.ToArray();
+            var categories = this.LegalizeCategories(featureCategories).ToArray();
 
             var properties = this.ExtractProperties(categories);
             foreach (var property in properties)
@@ -213,7 +213,7 @@
         {
             //we don't want "@Browser:browser" as separate categories. We only want these categories on the actual test case rows.
             var categories = scenarioCategories.ToArray();
-            var categoriesForAllTests = categories.Where(category => !category.StartsWith(BROWSER_TAG_PREFIX)).ToArray();
+            var categoriesForAllTests = LegalizeCategories(categories.Where(category => !category.StartsWith(BROWSER_TAG_PREFIX))).ToArray();
             CodeDomHelper.AddAttributeForEachValue(testMethod, CATEGORY_ATTR, categoriesForAllTests);
 
             //add Property attributes for all tags containing a ':' separated key value pair (except for browser)
@@ -290,7 +290,7 @@
             var repeats = int.Parse(testMethod.UserData[REPEATS_KEY] as string ?? "1");
             var testCaseSourceRows = new Dictionary<string, IEnumerable<string>>();
             var testCaseSourceRowBase = arguments.ToArray();
-            var testCaseSourceRowTags = tags.ToArray();
+            var testCaseSourceRowTags = LegalizeCategories(tags).ToArray();
 
             //handle the case when no @browser tag is specified
             if (!browsers.Any())
@@ -370,6 +370,15 @@
 	    public void SetTestMethodAsRow(TestClassGenerationContext generationContext, CodeMemberMethod testMethod, string scenarioTitle, string exampleSetName, string variantName, IEnumerable<KeyValuePair<string, string>> arguments)
         {
             // doing nothing since we support RowTest
+        }
+
+        private IEnumerable<string> LegalizeCategories(IEnumerable<string> categories)
+        {
+            return categories.Select(category => category
+                                                     .Replace("-", "")
+                                                     .Replace("+", "")
+                                                     .Replace("!", "")
+                                                     .Replace(",", ""));
         }
 
         private IDictionary<string, string> ExtractProperties(IEnumerable<string> categories)
