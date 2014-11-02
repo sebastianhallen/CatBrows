@@ -20,7 +20,7 @@
         <tags>specflow nunit browser test</tags>
     </metadata>
     <files>
-        <file src="..\CatBrows.Generator\bin\Release\CatBrows.Generator.SpecFlowPlugin.dll" target="tools\CatBrows.Generator.SpecFlowPlugin.dll" />
+        <file src="plugin\CatBrows.Generator.SpecFlowPlugin.dll" target="tools\CatBrows.Generator.SpecFlowPlugin.dll" />
         <file src="App.config.install.xdt" target="content" />
         <file src="App.config.uninstall.xdt" target="content" />
     </files>
