@@ -2,7 +2,7 @@
 <configuration xmlns:xdt="http://schemas.microsoft.com/XML-Document-Transform">
   <specFlow>
     <plugins>
-      <add name="CatBrows" path="..\packages\CatBrows.0.7.4\tools" type="Generator" xdt:Transform="Remove " xdt:Locator="Match(key)"/>
+      <add name="CatBrows" path="..\packages\CatBrows.0.7.5\tools" type="Generator" xdt:Transform="Remove " xdt:Locator="Match(key)"/>
     </plugins>
   </specFlow>
 

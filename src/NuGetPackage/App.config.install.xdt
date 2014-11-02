@@ -9,7 +9,7 @@
 
     <plugins>
       <add name="CatBrows" type="Generator" xdt:Transform="InsertIfMissing" xdt:Locator="Match(type)"/>
-      <add name="CatBrows" path="..\packages\CatBrows.0.7.4\tools" type="Generator" xdt:Transform="SetAttributes" xdt:Locator="Match(type)"/>
+      <add name="CatBrows" path="..\packages\CatBrows.0.7.5\tools" type="Generator" xdt:Transform="SetAttributes" xdt:Locator="Match(type)"/>
     </plugins>
     
   </specFlow>

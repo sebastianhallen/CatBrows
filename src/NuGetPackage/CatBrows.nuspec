@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2013/01/nuspec.xsd">
-    <metadata minClientVersion="0.7.4">
+    <metadata minClientVersion="0.7.5">
         <id>CatBrows</id>
-        <version>0.7.4</version>
+        <version>0.7.5</version>
         <title>CatBrows</title>
         <authors>Sebastian Hallén</authors>
         <projectUrl>https://github.com/sebastianhallen/CatBrows</projectUrl>
