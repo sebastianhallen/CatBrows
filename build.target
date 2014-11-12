@@ -12,6 +12,6 @@
 			<Projects Include="src\TestSample.DefaultSettings\TestSample.DefaultSettings.csproj"/>
 			<Projects Include="src\Tests\CatBrows.Generator.Tests.csproj"/>
 		</ItemGroup>
-		<MSBuild Projects="@(Projects)" Targets="Build"/>
+		<MSBuild Projects="src\CatBrows.sln" Targets="Build"/>
 	</Target>
 </Project>
